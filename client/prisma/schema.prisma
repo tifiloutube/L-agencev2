@@ -12,3 +12,100 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum UserRole {
+  BUYER
+  SELLER
+  BROKER
+}
+
+enum PropertyStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum SellerPlan {
+  STANDARD
+  INTERMEDIATE
+  ADVANCED
+}
+
+model User {
+  id                 String              @id @default(uuid())
+  email              String              @unique
+  password           String
+  name               String?
+  phone              String?
+  roles              UserRole[]
+  properties         Property[]
+  favorites          Favorite[]
+  sellerSubscription SellerSubscription?
+  brokerSubscription BrokerSubscription?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+}
+
+model Property {
+  id          String          @id @default(uuid())
+  title       String
+  description String
+  type        String
+  price       Float
+  surface     Float
+  rooms       Int?
+  bathrooms   Int?
+  hasGarage   Boolean         @default(false)
+  floor       Int?
+  address     String
+  city        String
+  zipCode     String
+  country     String
+  status      PropertyStatus  @default(DRAFT)
+  userId      String
+  user        User            @relation(fields: [userId], references: [id])
+  images      PropertyImage[]
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  Favorite    Favorite[]
+}
+
+model PropertyImage {
+  id         String   @id @default(uuid())
+  propertyId String
+  url        String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+}
+
+model Favorite {
+  id         String   @id @default(uuid())
+  userId     String
+  propertyId String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, propertyId])
+}
+
+model SellerSubscription {
+  id        String     @id @default(uuid())
+  userId    String     @unique
+  plan      SellerPlan
+  startedAt DateTime   @default(now())
+  expiresAt DateTime
+  user      User       @relation(fields: [userId], references: [id])
+}
+
+model BrokerSubscription {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  company   String?
+  bio       String?
+  website   String?
+  phone     String?
+  email     String?
+  avatarUrl String?
+  startedAt DateTime @default(now())
+  expiresAt DateTime
+  user      User     @relation(fields: [userId], references: [id])
+}
