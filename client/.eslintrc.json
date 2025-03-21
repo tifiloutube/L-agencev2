@@ -1,0 +1,17 @@
+{
+  "extends": ["next", "next/core-web-vitals", "eslint:recommended"],
+  "plugins": [],
+  "rules": {
+    "react/jsx-key": "off",
+    "react/react-in-jsx-scope": "off",
+    "no-console": "warn",
+    "no-unused-vars": [
+      "warn",
+      {
+        "vars": "all",
+        "args": "after-used",
+        "ignoreRestSiblings": true
+      }
+    ]
+  }
+}
