@@ -15,7 +15,13 @@ export default async function AccountPage() {
         include: {
             sellerSubscription: true,
             brokerSubscription: true,
-            properties: true,
+            properties: {
+                include: {
+                    images: {
+                        take: 1, // uniquement la première image
+                    },
+                },
+            },
         },
     })
 
