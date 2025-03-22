@@ -16,9 +16,23 @@ export default function AccountProperties({ properties }: Props) {
             ) : (
                 <ul style={{ paddingLeft: 0 }}>
                     {properties.map(property => (
-                        <li key={property.id} style={{ marginBottom: 20 }}>
-                            <strong>{property.title}</strong> — {property.status.toLowerCase()}<br />
-                            {property.city}, {property.price} €
+                        <li
+                            key={property.id}
+                            style={{
+                                marginBottom: 20,
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <div>
+                                <strong>{property.title}</strong> — {property.status.toLowerCase()}<br />
+                                {property.city}, {property.price} €
+                            </div>
+
+                            <Link href={`/properties/${property.id}/edit`}>
+                                <button style={{ marginLeft: 20 }}>Modifier</button>
+                            </Link>
                         </li>
                     ))}
                 </ul>

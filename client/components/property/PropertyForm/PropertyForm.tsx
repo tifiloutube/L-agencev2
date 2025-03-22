@@ -4,21 +4,27 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import PropertyImageUpload from '@/components/property/PropertyImageUpload/PropertyImageUpload'
 
-export default function PropertyForm() {
+type Props = {
+    mode?: 'edit' | 'create'
+    property?: any
+}
+
+export default function PropertyForm({ mode = 'create', property }: Props) {
     const router = useRouter()
-    const [title, setTitle] = useState('')
-    const [description, setDescription] = useState('')
-    const [type, setType] = useState('Maison')
-    const [price, setPrice] = useState('')
-    const [surface, setSurface] = useState('')
-    const [rooms, setRooms] = useState('')
-    const [bathrooms, setBathrooms] = useState('')
-    const [hasGarage, setHasGarage] = useState(false)
-    const [floor, setFloor] = useState('')
-    const [address, setAddress] = useState('')
-    const [city, setCity] = useState('')
-    const [zipCode, setZipCode] = useState('')
-    const [country, setCountry] = useState('')
+
+    const [title, setTitle] = useState(property?.title || '')
+    const [description, setDescription] = useState(property?.description || '')
+    const [type, setType] = useState(property?.type || 'Maison')
+    const [price, setPrice] = useState(property?.price?.toString() || '')
+    const [surface, setSurface] = useState(property?.surface?.toString() || '')
+    const [rooms, setRooms] = useState(property?.rooms?.toString() || '')
+    const [bathrooms, setBathrooms] = useState(property?.bathrooms?.toString() || '')
+    const [hasGarage, setHasGarage] = useState(property?.hasGarage || false)
+    const [floor, setFloor] = useState(property?.floor?.toString() || '')
+    const [address, setAddress] = useState(property?.address || '')
+    const [city, setCity] = useState(property?.city || '')
+    const [zipCode, setZipCode] = useState(property?.zipCode || '')
+    const [country, setCountry] = useState(property?.country || '')
     const [images, setImages] = useState<string[]>([])
 
     const [loading, setLoading] = useState(false)
@@ -30,45 +36,75 @@ export default function PropertyForm() {
         setError('')
 
         try {
-            // 1. Crée le bien
-            const res = await fetch('/api/properties', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    title,
-                    description,
-                    type,
-                    price: parseFloat(price),
-                    surface: parseFloat(surface),
-                    rooms: rooms ? parseInt(rooms) : null,
-                    bathrooms: bathrooms ? parseInt(bathrooms) : null,
-                    hasGarage,
-                    floor: floor ? parseInt(floor) : null,
-                    address,
-                    city,
-                    zipCode,
-                    country,
-                }),
-            })
+            if (mode === 'edit') {
+                const res = await fetch(`/api/properties/${property.id}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        title,
+                        description,
+                        type,
+                        price: parseFloat(price),
+                        surface: parseFloat(surface),
+                        rooms: rooms ? parseInt(rooms) : null,
+                        bathrooms: bathrooms ? parseInt(bathrooms) : null,
+                        hasGarage,
+                        floor: floor ? parseInt(floor) : null,
+                        address,
+                        city,
+                        zipCode,
+                        country,
+                    }),
+                })
 
-            const data = await res.json()
-            if (!res.ok) {
-                setError(data.error || 'Erreur lors de la création du bien')
-                return
-            }
+                if (!res.ok) {
+                    const data = await res.json()
+                    setError(data.error || 'Erreur lors de la mise à jour')
+                    return
+                }
 
-            const propertyId = data.property.id
-
-            // 2. Upload des images
-            for (const url of images) {
-                await fetch('/api/properties/images', {
+                router.push('/account')
+            } else {
+                // CREATE
+                const res = await fetch('/api/properties', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ propertyId, url }),
+                    body: JSON.stringify({
+                        title,
+                        description,
+                        type,
+                        price: parseFloat(price),
+                        surface: parseFloat(surface),
+                        rooms: rooms ? parseInt(rooms) : null,
+                        bathrooms: bathrooms ? parseInt(bathrooms) : null,
+                        hasGarage,
+                        floor: floor ? parseInt(floor) : null,
+                        address,
+                        city,
+                        zipCode,
+                        country,
+                    }),
                 })
-            }
 
-            router.push('/account')
+                const data = await res.json()
+                if (!res.ok) {
+                    setError(data.error || 'Erreur lors de la création du bien')
+                    return
+                }
+
+                const propertyId = data.property.id
+
+                // Upload des images
+                for (const url of images) {
+                    await fetch('/api/properties/images', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ propertyId, url }),
+                    })
+                }
+
+                router.push('/account')
+            }
         } catch (err) {
             console.error(err)
             setError('Erreur inconnue')
@@ -79,9 +115,8 @@ export default function PropertyForm() {
 
     return (
         <form onSubmit={handleSubmit}>
-            <h2>Créer un bien</h2>
+            <h2>{mode === 'edit' ? 'Modifier le bien' : 'Créer un bien'}</h2>
 
-            {/* Champs standards */}
             <input placeholder="Titre" value={title} onChange={e => setTitle(e.target.value)} required />
             <textarea
                 placeholder="Description"
@@ -146,13 +181,63 @@ export default function PropertyForm() {
                 required
             />
 
-            {/* Upload images */}
-            <PropertyImageUpload onImageUploaded={url => setImages(prev => [...prev, url])} />
+            {mode === 'create' && (
+                <>
+                    <PropertyImageUpload onImageUploaded={url => setImages(prev => [...prev, url])} />
+
+                    {images.length > 0 && (
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginTop: 16 }}>
+                            {images.map((url, index) => (
+                                <div
+                                    key={index}
+                                    style={{
+                                        position: 'relative',
+                                        width: 100,
+                                        height: 100,
+                                        borderRadius: 8,
+                                        overflow: 'hidden',
+                                        border: '1px solid #ccc',
+                                    }}
+                                >
+                                    <img
+                                        src={url}
+                                        alt={`Image ${index + 1}`}
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() =>
+                                            setImages(prev => prev.filter(img => img !== url))
+                                        }
+                                        style={{
+                                            position: 'absolute',
+                                            top: 4,
+                                            right: 4,
+                                            background: 'rgba(0,0,0,0.6)',
+                                            color: '#fff',
+                                            border: 'none',
+                                            borderRadius: '50%',
+                                            width: 20,
+                                            height: 20,
+                                            fontSize: 12,
+                                            cursor: 'pointer',
+                                            lineHeight: '20px',
+                                            textAlign: 'center',
+                                        }}
+                                    >
+                                        ×
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </>
+            )}
 
             {error && <p style={{ color: 'red' }}>{error}</p>}
 
             <button type="submit" disabled={loading}>
-                {loading ? 'En cours...' : 'Créer le bien'}
+                {loading ? 'En cours...' : mode === 'edit' ? 'Mettre à jour' : 'Créer le bien'}
             </button>
         </form>
     )
