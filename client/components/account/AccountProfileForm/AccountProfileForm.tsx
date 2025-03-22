@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useToast } from '@/lib/context/ToastContext'
 
 type Props = {
     user: {
@@ -15,14 +16,13 @@ export default function AccountProfileForm({ user }: Props) {
     const [name, setName] = useState(user.name || '')
     const [phone, setPhone] = useState(user.phone || '')
     const [loading, setLoading] = useState(false)
-    const [success, setSuccess] = useState(false)
+    const { showToast } = useToast()
     const [error, setError] = useState('')
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setLoading(true)
         setError('')
-        setSuccess(false)
 
         const res = await fetch('/api/account/update', {
             method: 'PATCH',
@@ -32,8 +32,9 @@ export default function AccountProfileForm({ user }: Props) {
 
         if (!res.ok) {
             setError('Erreur lors de la mise à jour')
+            showToast({ message: 'Erreur lors de la mise à jour', type: 'error' })
         } else {
-            setSuccess(true)
+            showToast({ message: 'Profil mis à jour' })
         }
 
         setLoading(false)
@@ -54,7 +55,6 @@ export default function AccountProfileForm({ user }: Props) {
                 <button type="submit" disabled={loading}>
                     {loading ? 'Sauvegarde...' : 'Mettre à jour'}
                 </button>
-                {success && <p style={{ color: 'green' }}>Profil mis à jour ✅</p>}
                 {error && <p style={{ color: 'red' }}>{error}</p>}
             </form>
         </section>

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import PropertyImageUpload from '@/components/property/PropertyImageUpload/PropertyImageUpload'
+import { useToast } from '@/lib/context/ToastContext'
 
 type Props = {
     mode?: 'edit' | 'create'
@@ -10,6 +11,7 @@ type Props = {
 }
 
 export default function PropertyForm({ mode = 'create', property }: Props) {
+    const { showToast } = useToast()
     const router = useRouter()
 
     const [title, setTitle] = useState(property?.title || '')
@@ -63,9 +65,9 @@ export default function PropertyForm({ mode = 'create', property }: Props) {
                     return
                 }
 
+                showToast({ message: 'Bien mis à jour ✅' })
                 router.push('/account')
             } else {
-                // CREATE
                 const res = await fetch('/api/properties', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -94,7 +96,6 @@ export default function PropertyForm({ mode = 'create', property }: Props) {
 
                 const propertyId = data.property.id
 
-                // Upload des images
                 for (const url of images) {
                     await fetch('/api/properties/images', {
                         method: 'POST',
@@ -103,11 +104,13 @@ export default function PropertyForm({ mode = 'create', property }: Props) {
                     })
                 }
 
+                showToast({ message: 'Bien créé avec succès ✅' })
                 router.push('/account')
             }
         } catch (err) {
             console.error(err)
             setError('Erreur inconnue')
+            showToast({ message: 'Erreur serveur ❌', type: 'error' })
         } finally {
             setLoading(false)
         }

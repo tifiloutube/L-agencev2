@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { Favorite, PropertyImage } from '@prisma/client'
+import { useToast } from '@/lib/context/ToastContext'
 
 type PropertyWithImages = {
     id: string
@@ -21,6 +22,8 @@ type Props = {
 export default function AccountFavorites({ favorites: initialFavorites }: Props) {
     const [favorites, setFavorites] = useState(initialFavorites)
 
+    const { showToast } = useToast()
+
     const handleRemove = async (propertyId: string) => {
         const res = await fetch('/api/favorites', {
             method: 'POST',
@@ -30,6 +33,9 @@ export default function AccountFavorites({ favorites: initialFavorites }: Props)
 
         if (res.ok) {
             setFavorites(prev => prev.filter(f => f.property.id !== propertyId))
+            showToast({ message: 'Retiré des favoris' })
+        } else {
+            showToast({ message: 'Erreur lors du retrait du favori', type: 'error' })
         }
     }
 

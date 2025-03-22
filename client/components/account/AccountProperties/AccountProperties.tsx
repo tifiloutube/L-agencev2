@@ -3,6 +3,7 @@
 import { Property, PropertyImage, PropertyStatus } from '@prisma/client'
 import Link from 'next/link'
 import { useState } from 'react'
+import { useToast } from '@/lib/context/ToastContext'
 
 type PropertyWithImage = Property & { images: PropertyImage[] }
 
@@ -12,7 +13,7 @@ type Props = {
 
 export default function AccountProperties({ properties: initialProperties }: Props) {
     const [properties, setProperties] = useState(initialProperties)
-    const [toast, setToast] = useState('')
+    const { showToast } = useToast()
 
     const updateStatus = async (propertyId: string, newStatus: PropertyStatus) => {
         await fetch(`/api/properties/${propertyId}/status`, {
@@ -26,6 +27,10 @@ export default function AccountProperties({ properties: initialProperties }: Pro
                 p.id === propertyId ? { ...p, status: newStatus } : p
             )
         )
+
+        showToast({
+            message: `Bien ${newStatus === 'PUBLISHED' ? 'publié' : newStatus === 'DRAFT' ? 'remis en brouillon' : 'archivé'}`,
+        })
     }
 
     const handleDelete = async (propertyId: string) => {
@@ -38,33 +43,15 @@ export default function AccountProperties({ properties: initialProperties }: Pro
 
         if (res.ok) {
             setProperties(prev => prev.filter(p => p.id !== propertyId))
-            setToast('✅ Bien supprimé avec succès')
-            setTimeout(() => setToast(''), 3000)
+            showToast({ message: 'Bien supprimé avec succès' })
+        } else {
+            showToast({ message: 'Erreur lors de la suppression', type: 'error' })
         }
     }
 
     return (
         <section style={{ marginTop: 40, position: 'relative' }}>
             <h2>Mes biens</h2>
-
-            {toast && (
-                <div
-                    style={{
-                        position: 'fixed',
-                        top: 20,
-                        right: 20,
-                        backgroundColor: '#3c3',
-                        color: '#fff',
-                        padding: '10px 20px',
-                        borderRadius: 6,
-                        zIndex: 1000,
-                        boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
-                    }}
-                >
-                    {toast}
-                </div>
-            )}
-
             {properties.length === 0 ? (
                 <p>Vous n'avez encore ajouté aucun bien.</p>
             ) : (
