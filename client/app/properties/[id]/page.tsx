@@ -1,11 +1,30 @@
 import { prisma } from '@/lib/prisma'
 import { notFound } from 'next/navigation'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
+import FavoriteButton from '@/components/property/FavoriteButton/FavoriteButton'
 
 type Props = {
     params: { id: string }
 }
 
 export default async function PropertyDetailPage({ params }: Props) {
+    const session = await getServerSession(authOptions)
+
+    let isFavorite = false
+
+    if (session?.user?.id) {
+        const favorite = await prisma.favorite.findUnique({
+            where: {
+                userId_propertyId: {
+                    userId: session.user.id,
+                    propertyId: params.id,
+                },
+            },
+        })
+        isFavorite = !!favorite
+    }
+
     const property = await prisma.property.findUnique({
         where: { id: params.id },
         include: {
@@ -20,7 +39,12 @@ export default async function PropertyDetailPage({ params }: Props) {
 
     return (
         <main className="wrapper" style={{ paddingBlock: '40px' }}>
-            <h1>{property.title}</h1>
+            <h1 style={{display: 'flex', alignItems: 'center'}}>
+                {property.title}
+                {session?.user && (
+                    <FavoriteButton propertyId={property.id} initialIsFavorite={isFavorite}/>
+                )}
+            </h1>
             <p><strong>Ville :</strong> {property.city} — {property.zipCode} — {property.country}</p>
             <p><strong>Prix :</strong> {property.price} €</p>
 

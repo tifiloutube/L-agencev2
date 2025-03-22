@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 import AccountProperties from '@/components/account/AccountProperties/AccountProperties'
 import AccountProfileForm from '@/components/account/AccountProfileForm/AccountProfileForm'
+import AccountFavorites from '@/components/account/AccountFavorites/AccountFavorites'
 
 export default async function AccountPage() {
     const session = await getServerSession(authOptions)
@@ -18,7 +19,18 @@ export default async function AccountPage() {
             properties: {
                 include: {
                     images: {
-                        take: 1, // uniquement la première image
+                        take: 1,
+                    },
+                },
+            },
+            favorites: {
+                include: {
+                    property: {
+                        include: {
+                            images: {
+                                take: 1,
+                            },
+                        },
                     },
                 },
             },
@@ -35,6 +47,7 @@ export default async function AccountPage() {
 
             <AccountProperties properties={user.properties} />
             <AccountProfileForm user={{ id: user.id, name: user.name, email: user.email, phone: user.phone }} />
+            <AccountFavorites favorites={user.favorites} />
         </main>
     )
 }
