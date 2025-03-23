@@ -21,9 +21,17 @@ export async function checkUserCanPostProperty(userId: string): Promise<{
     }
 
     const propertyCount = user.properties.length
+    const subscription = user.sellerSubscription
 
-    // Aucun abonnement : 1 bien autorisé
-    if (!user.sellerSubscription) {
+    const isValidSubscription =
+        subscription &&
+        (subscription.status === 'active' ||
+            (subscription.status === 'canceled' &&
+                subscription.currentPeriodEnd &&
+                new Date(subscription.currentPeriodEnd) > new Date()))
+
+    // Pas d'abonnement actif/valide => 1 bien gratuit
+    if (!isValidSubscription) {
         if (propertyCount >= 1) {
             return {
                 canPost: false,
@@ -38,19 +46,27 @@ export async function checkUserCanPostProperty(userId: string): Promise<{
         }
     }
 
+    // 💡 Mapping entre plan Stripe et plan logique
+    const planMap = {
+        seller_standard: 'STANDARD',
+        seller_intermediate: 'INTERMEDIATE',
+        seller_advanced: 'ADVANCED',
+    } as const
+
     const planLimits = {
         STANDARD: 10,
         INTERMEDIATE: 50,
         ADVANCED: 100,
     } as const
 
-    const plan = user.sellerSubscription.plan as keyof typeof planLimits
-    const maxAllowed = planLimits[plan]
+    const rawPlan = subscription.plan as keyof typeof planMap
+    const mappedPlan = planMap[rawPlan] as keyof typeof planLimits
+    const maxAllowed = planLimits[mappedPlan]
 
     if (propertyCount >= maxAllowed) {
         return {
             canPost: false,
-            reason: `Limite atteinte pour l'abonnement ${plan} (${maxAllowed} biens max)`,
+            reason: `Limite atteinte pour l'abonnement ${mappedPlan} (${maxAllowed} biens max)`,
             maxAllowed,
         }
     }

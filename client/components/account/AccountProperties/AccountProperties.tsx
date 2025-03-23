@@ -2,34 +2,51 @@
 
 import { Property, PropertyImage, PropertyStatus } from '@prisma/client'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useToast } from '@/lib/context/ToastContext'
 
 type PropertyWithImage = Property & { images: PropertyImage[] }
 
 type Props = {
     properties: PropertyWithImage[]
+    maxProperties: number
 }
 
-export default function AccountProperties({ properties: initialProperties }: Props) {
+export default function AccountProperties({ properties: initialProperties, maxProperties }: Props) {
     const [properties, setProperties] = useState(initialProperties)
     const { showToast } = useToast()
 
+    const activeCount = useMemo(
+        () => properties.filter(p => p.status !== 'ARCHIVED').length,
+        [properties]
+    )
+
+    const atQuotaLimit = activeCount >= maxProperties
+
     const updateStatus = async (propertyId: string, newStatus: PropertyStatus) => {
-        await fetch(`/api/properties/${propertyId}/status`, {
+        const res = await fetch(`/api/properties/${propertyId}/status`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ status: newStatus }),
         })
 
+        const data = await res.json()
+
+        if (!res.ok) {
+            return showToast({ message: data.error || 'Erreur', type: 'error' })
+        }
+
         setProperties(prev =>
-            prev.map(p =>
-                p.id === propertyId ? { ...p, status: newStatus } : p
-            )
+            prev.map(p => (p.id === propertyId ? { ...p, status: newStatus } : p))
         )
 
         showToast({
-            message: `Bien ${newStatus === 'PUBLISHED' ? 'publié' : newStatus === 'DRAFT' ? 'remis en brouillon' : 'archivé'}`,
+            message:
+                newStatus === 'PUBLISHED'
+                    ? 'Bien publié'
+                    : newStatus === 'DRAFT'
+                        ? 'Mis en brouillon'
+                        : 'Archivé',
         })
     }
 
@@ -80,7 +97,17 @@ export default function AccountProperties({ properties: initialProperties }: Pro
 
                                 <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
                                     {property.status === 'DRAFT' && (
-                                        <button onClick={() => updateStatus(property.id, 'PUBLISHED')}>📢 Publier</button>
+                                        <button
+                                            onClick={() => updateStatus(property.id, 'PUBLISHED')}
+                                            disabled={atQuotaLimit}
+                                            title={
+                                                atQuotaLimit
+                                                    ? `Vous avez atteint votre quota de ${maxProperties} bien${maxProperties > 1 ? 's' : ''}`
+                                                    : ''
+                                            }
+                                        >
+                                            📢 Publier
+                                        </button>
                                     )}
                                     {property.status === 'PUBLISHED' && (
                                         <>
@@ -89,7 +116,17 @@ export default function AccountProperties({ properties: initialProperties }: Pro
                                         </>
                                     )}
                                     {property.status === 'ARCHIVED' && (
-                                        <button onClick={() => updateStatus(property.id, 'PUBLISHED')}>Remettre en ligne</button>
+                                        <button
+                                            onClick={() => updateStatus(property.id, 'PUBLISHED')}
+                                            disabled={atQuotaLimit}
+                                            title={
+                                                atQuotaLimit
+                                                    ? `Vous avez atteint votre quota de ${maxProperties} bien${maxProperties > 1 ? 's' : ''}`
+                                                    : ''
+                                            }
+                                        >
+                                            Remettre en ligne
+                                        </button>
                                     )}
                                 </div>
                             </div>
