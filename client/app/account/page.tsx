@@ -77,9 +77,6 @@ export default async function AccountPage() {
                 </div>
             )}
 
-            <AccountProperties properties={user.properties} />
-            <AccountProfileForm user={{ id: user.id, name: user.name, email: user.email, phone: user.phone }} />
-            <AccountFavorites favorites={user.favorites} />
             <AccountProperties
                 properties={user.properties}
                 maxProperties={
@@ -91,6 +88,9 @@ export default async function AccountPage() {
                         : 1
                 }
             />
+            <AccountProfileForm user={{ id: user.id, name: user.name, email: user.email, phone: user.phone }} />
+            <AccountFavorites favorites={user.favorites} />
+            <AccountSubscription subscription={user.sellerSubscription} />
         </main>
     )
 }
