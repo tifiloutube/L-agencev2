@@ -9,7 +9,7 @@ type Props = {
         status: string
         maxProperties: number
         stripeSubscriptionId: string
-        currentPeriodEnd?: Date
+        currentPeriodEnd?: Date | null
     } | null
 }
 
