@@ -38,30 +38,33 @@ model User {
   brokerSubscription BrokerSubscription?
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
+  conversations      Conversation[]      @relation("ConversationParticipants")
+  messages           Message[]
 }
 
 model Property {
-  id          String          @id @default(uuid())
-  title       String
-  description String
-  type        String
-  price       Float
-  surface     Float
-  rooms       Int?
-  bathrooms   Int?
-  hasGarage   Boolean         @default(false)
-  floor       Int?
-  address     String
-  city        String
-  zipCode     String
-  country     String
-  status      PropertyStatus  @default(DRAFT)
-  userId      String
-  user        User            @relation(fields: [userId], references: [id])
-  images      PropertyImage[]
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
-  Favorite    Favorite[]
+  id           String          @id @default(uuid())
+  title        String
+  description  String
+  type         String
+  price        Float
+  surface      Float
+  rooms        Int?
+  bathrooms    Int?
+  hasGarage    Boolean         @default(false)
+  floor        Int?
+  address      String
+  city         String
+  zipCode      String
+  country      String
+  status       PropertyStatus  @default(DRAFT)
+  userId       String
+  user         User            @relation(fields: [userId], references: [id])
+  images       PropertyImage[]
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  Favorite     Favorite[]
+  Conversation Conversation[]
 }
 
 model PropertyImage {
@@ -109,4 +112,27 @@ model BrokerSubscription {
   startedAt DateTime @default(now())
   expiresAt DateTime
   user      User     @relation(fields: [userId], references: [id])
+}
+
+model Conversation {
+  id           String    @id @default(uuid())
+  participants User[]    @relation("ConversationParticipants")
+  messages     Message[]
+  propertyId   String?
+  property     Property? @relation(fields: [propertyId], references: [id], onDelete: SetNull)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@unique([propertyId, id])
+}
+
+model Message {
+  id             String       @id @default(uuid())
+  conversationId String
+  senderId       String
+  content        String
+  read           Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
 }

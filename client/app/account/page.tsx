@@ -7,6 +7,7 @@ import AccountProperties from '@/components/account/AccountProperties/AccountPro
 import AccountProfileForm from '@/components/account/AccountProfileForm/AccountProfileForm'
 import AccountFavorites from '@/components/account/AccountFavorites/AccountFavorites'
 import AccountSubscription from '@/components/account/AccountSubscription/AccountSubscription'
+import AccountConversations from '@/components/account/AccountConversations/AccountConversations'
 
 import { enforceUserPropertyQuota } from '@/lib/services/enforceUserPropertyQuota'
 
@@ -14,7 +15,6 @@ export default async function AccountPage() {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) redirect('/login')
 
-    // 🔒 Appliquer la règle de quota avant de charger les données
     await enforceUserPropertyQuota(session.user.id)
 
     const user = await prisma.user.findUnique({
@@ -47,6 +47,19 @@ export default async function AccountPage() {
                             },
                         },
                     },
+                },
+            },
+            conversations: {
+                include: {
+                    property: true,
+                    messages: {
+                        orderBy: { createdAt: 'desc' },
+                        take: 1,
+                        include: {
+                            sender: true,
+                        },
+                    },
+                    participants: true,
                 },
             },
         },
@@ -91,6 +104,7 @@ export default async function AccountPage() {
             <AccountProfileForm user={{ id: user.id, name: user.name, email: user.email, phone: user.phone }} />
             <AccountFavorites favorites={user.favorites} />
             <AccountSubscription subscription={user.sellerSubscription} />
+            <AccountConversations conversations={user.conversations} currentUserId={user.id} />
         </main>
     )
 }

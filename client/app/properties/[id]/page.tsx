@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import FavoriteButton from '@/components/property/FavoriteButton/FavoriteButton'
+import ContactOwnerButton from '@/components/property/ContactOwnerButton/ContactOwnerButton'
 
 type Props = {
     params: { id: string }
@@ -73,6 +74,10 @@ export default async function PropertyDetailPage({ params }: Props) {
                 <h2>Contacter le propriétaire</h2>
                 <p><strong>Nom :</strong> {property.user.name ?? 'Non renseigné'}</p>
                 <p><strong>Email :</strong> {property.user.email}</p>
+
+                {session?.user?.id !== property.user.id && (
+                    <ContactOwnerButton propertyId={property.id}/>
+                )}
             </section>
         </main>
     )
