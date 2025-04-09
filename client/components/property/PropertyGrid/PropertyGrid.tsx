@@ -20,31 +20,12 @@ export default function PropertyGrid({ properties }: Props) {
     }
 
     return (
-        <div
-            style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                gap: 20,
-            }}
-        >
+        <div>
             {properties.map((property) => (
                 <Link key={property.id} href={`/properties/${property.id}`}>
-                    <div
-                        style={{
-                            border: '1px solid #ccc',
-                            borderRadius: 8,
-                            overflow: 'hidden',
-                            textDecoration: 'none',
-                            color: 'inherit',
-                            background: '#fff',
-                        }}
-                    >
+                    <div>
                         {property.images[0] && (
-                            <img
-                                src={property.images[0].url}
-                                alt={property.title}
-                                style={{ width: '100%', height: 180, objectFit: 'cover' }}
-                            />
+                            <img src={property.images[0].url} alt={property.title} />
                         )}
                         <div style={{ padding: 12 }}>
                             <strong>{property.title}</strong>

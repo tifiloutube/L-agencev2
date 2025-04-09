@@ -13,6 +13,12 @@
   box-sizing: border-box;
 }
 
+@font-face {
+    font-family: 'Sansation Light';
+    src: url('../assets/fonts/Sansation-Light/WOFF2/Sansation_Light.woff2') format('WOFF2'),
+            url('../assets/fonts/Sansation-Light/WOFF/Sansation_Light.woff') format('WOFF')
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -56,9 +62,30 @@ a {
   text-decoration: none;
 }
 
-button {
+.button {
   cursor: pointer;
+  background: none;
+  border: 1px solid var(--primary-color);
+  padding: 10px 20px;
+  border-radius: 8px;
+  color: #3B3B3B;
+  text-align: center;
+  font-family: Roboto, sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 12px; /* 100% */
+  letter-spacing: 2.4px;
+  text-transform: uppercase;
+  transition: color 0.500s ease, background-color 0.500s ease;
 }
+
+.button:hover {
+  color: var(--tertiary-color);
+  background: var(--primary-color);
+}
+
+
 
 img {
   max-width: 100%;

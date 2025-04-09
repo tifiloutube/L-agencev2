@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import PropertyGrid from '@/components/property/PropertyGrid/PropertyGrid';
 import PropertyFilters from '@/components/property/PropertyFilters/PropertyFilters';
+import styles from './page.module.css'
 
 interface SearchParams {
     city?: string;
@@ -84,8 +85,9 @@ export default async function PropertiesPage({
 
     return (
         <main className="wrapper" style={{ paddingBlock: '40px' }}>
-            <h1>Biens disponibles</h1>
+            <h1 className={styles.h1}>Find your <span className={styles.tag}>home</span></h1>
             <PropertyFilters
+                className={styles.filters}
                 cities={cities.map((c) => c.city)}
                 types={types.map((t) => t.type)}
                 countries={countries.map((c) => c.country)}

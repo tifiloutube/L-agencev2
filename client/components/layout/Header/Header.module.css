@@ -9,7 +9,7 @@
     width: 100%;
     gap: 30px;
     transform: translateY(-150px);
-    transition: transform 0.75s ease;
+    transition: transform 0.500s ease;
 }
 
 .headerVisible {
@@ -31,7 +31,7 @@
         align-items: center;
         justify-content: center;
         color: var(--secondary-color);
-        font-family: Sansation, sans-serif;
+        font-family: 'Sansation Regular', sans-serif;
         height: 100px;
         width: 150px;
         font-size: 20px;

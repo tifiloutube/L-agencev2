@@ -2,41 +2,39 @@
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import styles from './PropertyFilters.module.css';
 
 interface Props {
     cities: string[];
     types: string[];
     countries: string[];
+    className?: string;
 }
 
-export default function PropertyFilters({ cities, types, countries }: Props) {
+export default function PropertyFilters({ cities, types, countries, className }: Props) {
     const router = useRouter();
     const searchParams = useSearchParams();
 
+    const [transactionType, setTransactionType] = useState('buy');
     const [city, setCity] = useState('');
     const [type, setType] = useState('');
     const [country, setCountry] = useState('');
     const [priceMin, setPriceMin] = useState('');
     const [priceMax, setPriceMax] = useState('');
     const [surfaceMin, setSurfaceMin] = useState('');
-    const [surfaceMax, setSurfaceMax] = useState('');
     const [rooms, setRooms] = useState('');
-    const [bathrooms, setBathrooms] = useState('');
-    const [hasGarage, setHasGarage] = useState('');
-    const [floor, setFloor] = useState('');
+    const [bedrooms, setBedrooms] = useState('');
 
     useEffect(() => {
+        setTransactionType(searchParams.get('transactionType') || 'buy');
         setCity(searchParams.get('city') || '');
         setCountry(searchParams.get('country') || '');
         setType(searchParams.get('type') || '');
         setPriceMin(searchParams.get('priceMin') || '');
         setPriceMax(searchParams.get('priceMax') || '');
         setSurfaceMin(searchParams.get('surfaceMin') || '');
-        setSurfaceMax(searchParams.get('surfaceMax') || '');
         setRooms(searchParams.get('rooms') || '');
-        setBathrooms(searchParams.get('bathrooms') || '');
-        setHasGarage(searchParams.get('hasGarage') || '');
-        setFloor(searchParams.get('floor') || '');
+        setBedrooms(searchParams.get('bedrooms') || '');
     }, [searchParams]);
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -47,24 +45,17 @@ export default function PropertyFilters({ cities, types, countries }: Props) {
             return;
         }
 
-        if (surfaceMin && surfaceMax && parseFloat(surfaceMax) < parseFloat(surfaceMin)) {
-            alert('La surface maximale ne peut pas être inférieure à la surface minimale.');
-            return;
-        }
-
         const params = new URLSearchParams();
 
+        params.set('transactionType', transactionType);
         if (city) params.set('city', city);
         if (country) params.set('country', country);
         if (type) params.set('type', type);
         if (priceMin) params.set('priceMin', priceMin);
         if (priceMax) params.set('priceMax', priceMax);
         if (surfaceMin) params.set('surfaceMin', surfaceMin);
-        if (surfaceMax) params.set('surfaceMax', surfaceMax);
         if (rooms) params.set('rooms', rooms);
-        if (bathrooms) params.set('bathrooms', bathrooms);
-        if (floor) params.set('floor', floor);
-        if (hasGarage !== '') params.set('hasGarage', hasGarage);
+        if (bedrooms) params.set('bedrooms', bedrooms);
 
         router.push(`/properties?${params.toString()}`);
     };
@@ -74,51 +65,65 @@ export default function PropertyFilters({ cities, types, countries }: Props) {
     };
 
     return (
-        <form onSubmit={handleSubmit} style={{ marginBottom: 32 }}>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
-                <select value={city} onChange={(e) => setCity(e.target.value)}>
-                    <option value="">Ville</option>
-                    {cities.map((c) => (
-                        <option key={c} value={c}>
-                            {c}
-                        </option>
-                    ))}
+        <form onSubmit={handleSubmit} className={className} style={{ marginBottom: 32 }}>
+            <div className={styles.phraseWrapper}>
+                <span>Je cherche à</span>
+                <select value={transactionType} onChange={(e) => setTransactionType(e.target.value)}>
+                    <option value="buy">acheter</option>
+                    <option value="rent">louer</option>
                 </select>
 
-                <select value={country} onChange={(e) => setCountry(e.target.value)}>
-                    <option value="">Pays</option>
-                    {countries.map((c) => (
-                        <option key={c} value={c}>
-                            {c}
-                        </option>
-                    ))}
-                </select>
-
+                <span> un </span>
                 <select value={type} onChange={(e) => setType(e.target.value)}>
-                    <option value="">Type</option>
+                    <option value="">type de bien</option>
                     {types.map((t) => (
-                        <option key={t} value={t}>
-                            {t}
-                        </option>
+                        <option key={t} value={t}>{t}</option>
                     ))}
                 </select>
 
-                <input placeholder="Prix min" type="number" value={priceMin} onChange={(e) => setPriceMin(e.target.value)} />
-                <input placeholder="Prix max" type="number" value={priceMax} onChange={(e) => setPriceMax(e.target.value)} />
-                <input placeholder="Surface min" type="number" value={surfaceMin} onChange={(e) => setSurfaceMin(e.target.value)} />
-                <input placeholder="Surface max" type="number" value={surfaceMax} onChange={(e) => setSurfaceMax(e.target.value)} />
-                <input placeholder="Pièces min" type="number" value={rooms} onChange={(e) => setRooms(e.target.value)} />
-                <input placeholder="Salle de bain min" type="number" value={bathrooms} onChange={(e) => setBathrooms(e.target.value)} />
-                <input placeholder="Étage min" type="number" value={floor} onChange={(e) => setFloor(e.target.value)} />
-
-                <select value={hasGarage} onChange={(e) => setHasGarage(e.target.value)}>
-                    <option value="">Garage</option>
-                    <option value="true">Oui</option>
-                    <option value="false">Non</option>
+                <span> situé à </span>
+                <select value={city} onChange={(e) => setCity(e.target.value)}>
+                    <option value="">ville</option>
+                    {cities.map((c) => (
+                        <option key={c} value={c}>{c}</option>
+                    ))}
                 </select>
 
-                <button type="submit">Filtrer</button>
-                <button type="button" onClick={resetFilters}>
+                <span> en </span>
+                <select value={country} onChange={(e) => setCountry(e.target.value)}>
+                    <option value="">pays</option>
+                    {countries.map((c) => (
+                        <option key={c} value={c}>{c}</option>
+                    ))}
+                </select>
+
+                <span>, avec un budget entre </span>
+                <input type="number" placeholder="min" value={priceMin} onChange={(e) => setPriceMin(e.target.value)} style={{ width: 100 }} />
+                <span> et </span>
+                <input type="number" placeholder="max" value={priceMax} onChange={(e) => setPriceMax(e.target.value)} style={{ width: 100 }} />
+                <span> euros, une surface habitable minimale de </span>
+                <input type="number" placeholder="min m²" value={surfaceMin} onChange={(e) => setSurfaceMin(e.target.value)} style={{ width: 100 }} />
+                <span> m², de type </span>
+                <select value={rooms} onChange={(e) => setRooms(e.target.value)}>
+                    <option value="">choix</option>
+                    <option value="1">Studio</option>
+                    <option value="2">T1</option>
+                    <option value="3">T2</option>
+                    <option value="4">T3</option>
+                    <option value="5">T4</option>
+                    <option value="6">T5+</option>
+                </select>
+
+                <span>, avec au moins </span>
+                <input type="number" placeholder="pièces" value={rooms} onChange={(e) => setRooms(e.target.value)} style={{ width: 60 }} />
+                <span> pièces et </span>
+                <input type="number" placeholder="chambres" value={bedrooms} onChange={(e) => setBedrooms(e.target.value)} style={{ width: 60 }} />
+                <span> chambres.</span>
+            </div>
+
+            <div style={{ marginTop: 16 }}>
+                <button type="submit" className={`button`}>Filtrer</button>
+                <button type="button" className={`button`} onClick={resetFilters} style={{ marginLeft: 8 }}>
                     Réinitialiser
                 </button>
             </div>
