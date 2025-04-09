@@ -1,46 +1,62 @@
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 24px;
-    border-bottom: 1px solid #eee;
-    background: #fff;
-    position: sticky;
+    position: fixed;
+    z-index: 9999;
     top: 0;
-    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    gap: 30px;
+    transform: translateY(-150px);
+    transition: transform 0.75s ease;
 }
 
-.logo {
-    font-weight: bold;
-    font-size: 18px;
-    text-decoration: none;
-    color: black;
+.headerVisible {
+    transform: translateY(0px);
 }
 
 .nav {
+    background: var(--fourth--color);
+    padding: 10px;
     display: flex;
-    gap: 12px;
     align-items: center;
+    justify-content: center;
+    border-radius: 70px;
+    margin-top: 20px;
+    a, button {
+        border-radius: 55px;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--secondary-color);
+        font-family: Sansation, sans-serif;
+        height: 100px;
+        width: 150px;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        position: relative;
+        z-index: 5;
+    }
+    button {
+        background: none;
+        border: none;
+    }
 }
 
-.link {
-    text-decoration: none;
-    color: #555;
-    padding: 6px 12px;
-    border-radius: 4px;
-    transition: background 0.2s ease;
+.line {
+    display: block;
+    width: 180px;
+    height: 5px;
+    border-radius: 106px;
+    background: var(--fourth--color);
 }
 
 .active {
-    background: #f0f0f0;
-    color: #000;
-    font-weight: bold;
-}
-
-.logout {
-    background: none;
-    border: none;
-    color: #f44336;
-    cursor: pointer;
-    font-size: 14px;
+    background: var(--tertiary-color);
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
 }
