@@ -9,7 +9,7 @@ type Props = {
         messages: {
             id: string
             content: string
-            createdAt: string
+            createdAt: string | Date
             read: boolean
             sender: { id: string; name: string | null }
         }[]
@@ -67,8 +67,8 @@ export default function AccountConversations({ conversations, currentUserId }: P
                                             {last.sender.id === currentUserId ? 'Vous :' : `${last.sender.name ?? 'Utilisateur'} :`} {last.content.slice(0, 60)}...
                                             <br />
                                             <span style={{ fontSize: 12, color: '#999' }}>
-                        {new Date(last.createdAt).toLocaleString('fr-FR')}
-                      </span>
+                                                {new Date(last.createdAt).toLocaleString('fr-FR')}
+                                            </span>
                                         </p>
                                     )}
                                 </div>

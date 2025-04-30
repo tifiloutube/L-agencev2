@@ -10,7 +10,7 @@ type Message = {
         id: string
         name: string | null
     }
-    createdAt: string
+    createdAt: string | Date
 }
 
 type Props = {
