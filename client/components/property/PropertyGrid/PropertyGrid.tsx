@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Styles from './PropertyGrid.module.css';
 
 interface Property {
     id: string;
@@ -20,16 +21,16 @@ export default function PropertyGrid({ properties }: Props) {
     }
 
     return (
-        <div>
+        <div className={Styles.container}>
             {properties.map((property) => (
-                <Link key={property.id} href={`/properties/${property.id}`}>
-                    <div>
+                <Link key={property.id} href={`/properties/${property.id}`} className={Styles.link}>
+                    <div className={Styles.content}>
                         {property.images[0] && (
-                            <img src={property.images[0].url} alt={property.title} />
+                            <img src={property.images[0].url} alt={property.title}/>
                         )}
-                        <div style={{ padding: 12 }}>
+                        <div style={{padding: 12}}>
                             <strong>{property.title}</strong>
-                            <br />
+                            <br/>
                             {property.city}, {property.price} €
                         </div>
                     </div>

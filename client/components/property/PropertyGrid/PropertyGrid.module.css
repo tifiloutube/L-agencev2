@@ -1,0 +1,17 @@
+.container {
+    grid-column: 1/13;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    .link {
+        grid-column: span 1;
+        .content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            img {
+                object-fit: cover;
+            }
+        }
+    }
+}

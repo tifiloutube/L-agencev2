@@ -65,65 +65,111 @@ export default function PropertyFilters({ cities, types, countries, className }:
     };
 
     return (
-        <form onSubmit={handleSubmit} className={className} style={{ marginBottom: 32 }}>
+        <form onSubmit={handleSubmit} className={className}>
             <div className={styles.phraseWrapper}>
                 <span>Je cherche à</span>
-                <select value={transactionType} onChange={(e) => setTransactionType(e.target.value)}>
-                    <option value="buy">acheter</option>
-                    <option value="rent">louer</option>
-                </select>
+                <span className={styles.phraseWrapper__select}>
+                    [
+                    <select value={transactionType} onChange={(e) => setTransactionType(e.target.value)}>
+                        <option value="buy">acheter</option>
+                        <option value="rent">louer</option>
+                    </select>
+                    ]
+                </span>
 
-                <span> un </span>
-                <select value={type} onChange={(e) => setType(e.target.value)}>
-                    <option value="">type de bien</option>
-                    {types.map((t) => (
-                        <option key={t} value={t}>{t}</option>
-                    ))}
-                </select>
+                <span> un(e) </span>
+                <span className={styles.phraseWrapper__select}>
+                    [
+                    <select value={type} onChange={(e) => setType(e.target.value)}>
+                        <option value="">type de bien</option>
+                        {types.map((t) => (
+                            <option key={t} value={t}>{t}</option>
+                        ))}
+                    </select>
+                    ]
+                </span>
 
                 <span> situé à </span>
-                <select value={city} onChange={(e) => setCity(e.target.value)}>
-                    <option value="">ville</option>
-                    {cities.map((c) => (
-                        <option key={c} value={c}>{c}</option>
-                    ))}
-                </select>
+                <span className={styles.phraseWrapper__select}>
+                    [
+                    <select value={city} onChange={(e) => setCity(e.target.value)}>
+                        <option value="">ville</option>
+                        {cities.map((c) => (
+                            <option key={c} value={c}>{c}</option>
+                        ))}
+                    </select>
+                    ]
+                </span>
 
                 <span> en </span>
-                <select value={country} onChange={(e) => setCountry(e.target.value)}>
-                    <option value="">pays</option>
-                    {countries.map((c) => (
-                        <option key={c} value={c}>{c}</option>
-                    ))}
-                </select>
+                <span className={styles.phraseWrapper__select}>
+                    [
+                    <select value={country} onChange={(e) => setCountry(e.target.value)}>
+                        <option value="">pays</option>
+                        {countries.map((c) => (
+                            <option key={c} value={c}>{c}</option>
+                        ))}
+                    </select>
+                    ]
+                </span>
 
                 <span>, avec un budget entre </span>
-                <input type="number" placeholder="min" value={priceMin} onChange={(e) => setPriceMin(e.target.value)} style={{ width: 100 }} />
+                <span className={styles.phraseWrapper__select}>
+                    [
+                    <input type="number" placeholder="min" value={priceMin} onChange={(e) => setPriceMin(e.target.value)}/>
+                    ]
+                </span>
+
                 <span> et </span>
-                <input type="number" placeholder="max" value={priceMax} onChange={(e) => setPriceMax(e.target.value)} style={{ width: 100 }} />
+                <span className={styles.phraseWrapper__select}>
+                    [
+                    <input type="number" placeholder="max" value={priceMax} onChange={(e) => setPriceMax(e.target.value)}/>
+                    ]
+                </span>
+
                 <span> euros, une surface habitable minimale de </span>
-                <input type="number" placeholder="min m²" value={surfaceMin} onChange={(e) => setSurfaceMin(e.target.value)} style={{ width: 100 }} />
+                <span className={styles.phraseWrapper__select}>
+                    [
+                    <input type="number" placeholder="min m²" value={surfaceMin}
+                           onChange={(e) => setSurfaceMin(e.target.value)}/>
+                    ]
+                </span>
+
                 <span> m², de type </span>
-                <select value={rooms} onChange={(e) => setRooms(e.target.value)}>
-                    <option value="">choix</option>
-                    <option value="1">Studio</option>
-                    <option value="2">T1</option>
-                    <option value="3">T2</option>
-                    <option value="4">T3</option>
-                    <option value="5">T4</option>
-                    <option value="6">T5+</option>
-                </select>
+                <span className={styles.phraseWrapper__select}>
+                    [
+                    <select value={rooms} onChange={(e) => setRooms(e.target.value)}>
+                        <option value="">choix</option>
+                        <option value="1">Studio</option>
+                        <option value="2">T1</option>
+                        <option value="3">T2</option>
+                        <option value="4">T3</option>
+                        <option value="5">T4</option>
+                        <option value="6">T5+</option>
+                    </select>
+                    ]
+                </span>
 
                 <span>, avec au moins </span>
-                <input type="number" placeholder="pièces" value={rooms} onChange={(e) => setRooms(e.target.value)} style={{ width: 60 }} />
+                <span className={styles.phraseWrapper__select}>
+                    [
+                    <input type="number" placeholder="pièces" value={rooms} onChange={(e) => setRooms(e.target.value)}/>
+                    ]
+                </span>
+
                 <span> pièces et </span>
-                <input type="number" placeholder="chambres" value={bedrooms} onChange={(e) => setBedrooms(e.target.value)} style={{ width: 60 }} />
+                <span className={styles.phraseWrapper__select}>
+                    [
+                    <input type="number" placeholder="chambres" value={bedrooms} onChange={(e) => setBedrooms(e.target.value)}/>
+                    ]
+                </span>
+
                 <span> chambres.</span>
             </div>
 
-            <div style={{ marginTop: 16 }}>
-                <button type="submit" className={`button`}>Filtrer</button>
-                <button type="button" className={`button`} onClick={resetFilters} style={{ marginLeft: 8 }}>
+            <div className={styles.buttonContainer}>
+                <button type="submit" className="button">Filtrer</button>
+                <button type="button" className="button" onClick={resetFilters}>
                     Réinitialiser
                 </button>
             </div>

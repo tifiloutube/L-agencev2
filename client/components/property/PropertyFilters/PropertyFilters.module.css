@@ -3,29 +3,46 @@
     flex-wrap: wrap;
     gap: 6px;
     color: var(--secondary-color);
-    font-family: Sansation, sans-serif;
-    font-size: 30px;
+    font-family: Sansation Light, sans-serif;
+    font-size: 40px;
     font-style: normal;
     font-weight: 400;
-    line-height: 1.5em;
 }
 
-.phraseWrapper select,
-.phraseWrapper input {
-    color: var(--primary-color) !important;
-    margin-left: 5px;
-    margin-right: 5px;
-    background: none;
-    border:none;
-    border-bottom: 2px solid var(--primary-color);
-    font-family: Sansation, sans-serif;
-    font-size: 30px;
+.phraseWrapper__select {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-color);
+    font-family: Sansation Light, sans-serif;
+    font-size: 40px;
     font-style: normal;
     font-weight: 400;
-    min-width: 200px !important;
-    line-height: 1.5em;
+    margin: 0 10px;
+    select, input {
+        background-color: transparent;
+        border: none;
+        color: var(--primary-color);
+        font-family: Sansation Light, sans-serif;
+        font-size: 40px;
+        font-style: normal;
+        font-weight: 400;
+        cursor: pointer;
+        appearance: none;
+        width: auto;
+    }
+    input {
+        max-width: 200px;
+    }
 }
 
+.phraseWrapper__select select::placeholder,
+.phraseWrapper__select input::placeholder {
+    color: var(--primary-color);
+}
 
-.phraseWrapper input {
+.buttonContainer {
+    margin-top: 50px;
+    display: flex;
+    gap: 20px;
 }
