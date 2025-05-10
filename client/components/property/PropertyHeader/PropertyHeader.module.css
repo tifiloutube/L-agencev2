@@ -1,0 +1,15 @@
+.header {
+    grid-column: 1/13;
+    margin-top: 25vh;
+    .title {
+        width: 80%;
+        margin: auto;
+        text-align: center;
+        color: var(--secondary-color);
+        font-family: Sansation, sans-serif;
+        font-size: 129px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+    }
+}

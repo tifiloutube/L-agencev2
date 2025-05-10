@@ -22,3 +22,7 @@
     margin-top: 50px;
     grid-column: 1/13;
 }
+
+.cards {
+    grid-column: 1/13;
+}

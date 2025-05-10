@@ -2,8 +2,12 @@ import { prisma } from '@/lib/prisma'
 import { notFound } from 'next/navigation'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import FavoriteButton from '@/components/property/FavoriteButton/FavoriteButton'
-import ContactOwnerButton from '@/components/property/ContactOwnerButton/ContactOwnerButton'
+import styles from './page.module.css'
+
+import PropertyHeader from "@/components/property/PropertyHeader/PropertyHeader";
+import PropertyGalleryAndSummary from '@/components/property/PropertyGalleryAndSummary/PropertyGalleryAndSummary';
+import PropertyDetails from "@/components/property/PropertyDetails/PropertyDetails";
+import PropertyOwnerContact from '@/components/property/PropertyOwnerContact/PropertyOwnerContact';
 
 type Props = {
     params: { id: string }
@@ -39,45 +43,40 @@ export default async function PropertyDetailPage({ params }: Props) {
     }
 
     return (
-        <main className="wrapper" style={{ paddingBlock: '40px' }}>
-            <h1 style={{display: 'flex', alignItems: 'center'}}>
-                {property.title}
-                {session?.user && (
-                    <FavoriteButton propertyId={property.id} initialIsFavorite={isFavorite}/>
-                )}
-            </h1>
-            <p><strong>Ville :</strong> {property.city} — {property.zipCode} — {property.country}</p>
-            <p><strong>Prix :</strong> {property.price} €</p>
+        <main className="wrapper">
+            <PropertyHeader
+                title={property.title}
+            />
 
-            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginTop: 20 }}>
-                {property.images.map(img => (
-                    <img
-                        key={img.id}
-                        src={img.url}
-                        alt={property.title}
-                        style={{ width: 200, height: 140, objectFit: 'cover', borderRadius: 8 }}
-                    />
-                ))}
-            </div>
+            <PropertyGalleryAndSummary
+                title={property.title}
+                images={property.images}
+                address={property.address}
+                zipCode={property.zipCode}
+                city={property.city}
+                country={property.country}
+                price={property.price}
+                description={property.description}
+            />
 
-            <section style={{ marginTop: 30 }}>
-                <p><strong>Surface :</strong> {property.surface} m²</p>
-                <p><strong>Pièces :</strong> {property.rooms ?? 'N.C'}</p>
-                <p><strong>Salles de bain :</strong> {property.bathrooms ?? 'N.C'}</p>
-                <p><strong>Garage :</strong> {property.hasGarage ? 'Oui' : 'Non'}</p>
-                <p><strong>Étage :</strong> {property.floor ?? 'N.C'}</p>
-                <p><strong>Adresse :</strong> {property.address}</p>
-                <p style={{ marginTop: 20 }}><strong>Description :</strong><br />{property.description}</p>
-            </section>
-
-            <section>
-                <h2>Contacter le propriétaire</h2>
-                <p><strong>Nom :</strong> {property.user.name ?? 'Non renseigné'}</p>
-                <p><strong>Email :</strong> {property.user.email}</p>
-
-                {session?.user?.id !== property.user.id && (
-                    <ContactOwnerButton propertyId={property.id}/>
-                )}
+            <section className={styles.container}>
+                <PropertyOwnerContact
+                    ownerName={property.user.name}
+                    ownerEmail={property.user.email}
+                    userId={property.user.id}
+                    currentUserId={session?.user?.id}
+                    propertyId={property.id}
+                    isFavorite={isFavorite}
+                />
+                <PropertyDetails
+                    surface={property.surface}
+                    rooms={property.rooms}
+                    bathrooms={property.bathrooms}
+                    hasGarage={property.hasGarage}
+                    floor={property.floor}
+                    address={property.address}
+                    description={property.description}
+                />
             </section>
         </main>
     )

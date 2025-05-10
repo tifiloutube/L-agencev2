@@ -92,7 +92,9 @@ export default async function PropertiesPage({
                 types={types.map((t) => t.type)}
                 countries={countries.map((c) => c.country)}
             />
-            <PropertyGrid properties={properties} />
+            <PropertyGrid
+                className={styles.cards}
+                properties={properties} />
         </main>
     );
 }

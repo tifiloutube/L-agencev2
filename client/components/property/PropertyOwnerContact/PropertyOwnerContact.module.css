@@ -1,0 +1,30 @@
+.section {
+    width: 40%;
+    .subTitle {
+        color: var(--secondary-color);
+        font-family: Sansation, sans-serif;
+        font-size: 40px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+    }
+    .contactForm {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 20px;
+        input, textarea {
+            background-color: white;
+            border: 1px solid var(--primary-color);
+            border-radius: 9px;
+            width: 100%;
+            padding: 11px 35px;
+            ::placeholder {
+                color: var(--secondary-color);
+            }
+        }
+        .sendButton {
+            max-width: 200px;
+        }
+    }
+}

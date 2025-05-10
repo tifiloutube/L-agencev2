@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useToast } from '@/lib/context/ToastContext'
+import styles from './FavoriteButton.module.css'
 
 type Props = {
     propertyId: string
@@ -37,15 +38,7 @@ export default function FavoriteButton({ propertyId, initialIsFavorite }: Props)
         <button
             onClick={toggleFavorite}
             disabled={loading}
-            style={{
-                fontSize: 16,
-                background: 'none',
-                border: '1px solid #ccc',
-                borderRadius: 6,
-                padding: '6px 12px',
-                cursor: 'pointer',
-                marginLeft: 10,
-            }}
+            className={`button ${styles.button} ${isFavorite ? styles.active : ''}`}
         >
             {isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}
         </button>
