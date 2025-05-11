@@ -9,22 +9,27 @@
         line-height: normal;
     }
     .contactForm {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        margin-top: 20px;
-        input, textarea {
-            background-color: white;
-            border: 1px solid var(--primary-color);
-            border-radius: 9px;
-            width: 100%;
-            padding: 11px 35px;
-            ::placeholder {
-                color: var(--secondary-color);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 20px;
+            input, textarea {
+                background-color: white;
+                border: 1px solid var(--primary-color);
+                border-radius: 9px;
+                width: 100%;
+                padding: 11px 35px;
+                ::placeholder {
+                    color: var(--secondary-color);
+                }
+            }
+            .sendButton {
+                max-width: 200px;
             }
         }
-        .sendButton {
-            max-width: 200px;
-        }
+    button:nth-child(2) {
+        margin-top: 20px;
+        margin-right: 20px;
+        margin-bottom: 15px;
     }
 }

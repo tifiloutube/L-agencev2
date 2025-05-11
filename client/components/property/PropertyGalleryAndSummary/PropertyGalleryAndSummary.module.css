@@ -23,7 +23,7 @@
             position: sticky;
             top: 150px;
             left: 0;
-            .adress {
+            .address {
                 color: var(--secondary-color);
                 font-family: Sansation, sans-serif;
                 font-size: 30px;

@@ -1,4 +1,7 @@
 import { prisma } from '@/lib/prisma';
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
+
 import PropertyGrid from '@/components/property/PropertyGrid/PropertyGrid';
 import PropertyFilters from '@/components/property/PropertyFilters/PropertyFilters';
 import styles from './page.module.css'
@@ -22,21 +25,23 @@ export default async function PropertiesPage({
                                              }: {
     searchParams: SearchParams;
 }) {
-    const {
-        city,
-        country,
-        type,
-        priceMin,
-        priceMax,
-        surfaceMin,
-        surfaceMax,
-        rooms,
-        bathrooms,
-        floor,
-        hasGarage,
-    } = searchParams;
+    const session = await getServerSession(authOptions)
 
-    // 🔄 Get unique values for dynamic filters
+    let favoriteIds: Set<string> = new Set()
+
+    if (session?.user?.id) {
+        const favorites = await prisma.favorite.findMany({
+            where: {
+                userId: session.user.id,
+            },
+            select: {
+                propertyId: true,
+            },
+        })
+
+        favoriteIds = new Set(favorites.map((f) => f.propertyId))
+    }
+
     const [cities, types, countries] = await Promise.all([
         prisma.property.findMany({
             where: { status: 'PUBLISHED' },
@@ -58,19 +63,19 @@ export default async function PropertiesPage({
     const properties = await prisma.property.findMany({
         where: {
             status: 'PUBLISHED',
-            ...(city && { city: { contains: city, mode: 'insensitive' } }),
-            ...(country && { country: { contains: country, mode: 'insensitive' } }),
-            ...(type && { type: { equals: type } }),
-            ...(priceMin && { price: { gte: parseFloat(priceMin) } }),
-            ...(priceMax && { price: { lte: parseFloat(priceMax) } }),
-            ...(surfaceMin && { surface: { gte: parseFloat(surfaceMin) } }),
-            ...(surfaceMax && { surface: { lte: parseFloat(surfaceMax) } }),
-            ...(rooms && { rooms: { gte: parseInt(rooms) } }),
-            ...(bathrooms && { bathrooms: { gte: parseInt(bathrooms) } }),
-            ...(floor && { floor: { gte: parseInt(floor) } }),
-            ...(hasGarage !== undefined &&
-                hasGarage !== '' && {
-                    hasGarage: hasGarage === 'true',
+            ...(searchParams.city && { city: { contains: searchParams.city, mode: 'insensitive' } }),
+            ...(searchParams.country && { country: { contains: searchParams.country, mode: 'insensitive' } }),
+            ...(searchParams.type && { type: { equals: searchParams.type } }),
+            ...(searchParams.priceMin && { price: { gte: parseFloat(searchParams.priceMin) } }),
+            ...(searchParams.priceMax && { price: { lte: parseFloat(searchParams.priceMax) } }),
+            ...(searchParams.surfaceMin && { surface: { gte: parseFloat(searchParams.surfaceMin) } }),
+            ...(searchParams.surfaceMax && { surface: { lte: parseFloat(searchParams.surfaceMax) } }),
+            ...(searchParams.rooms && { rooms: { gte: parseInt(searchParams.rooms) } }),
+            ...(searchParams.bathrooms && { bathrooms: { gte: parseInt(searchParams.bathrooms) } }),
+            ...(searchParams.floor && { floor: { gte: parseInt(searchParams.floor) } }),
+            ...(searchParams.hasGarage !== undefined &&
+                searchParams.hasGarage !== '' && {
+                    hasGarage: searchParams.hasGarage === 'true',
                 }),
         },
         include: {
@@ -83,18 +88,26 @@ export default async function PropertiesPage({
         },
     });
 
+    const propertiesWithFavorite = properties.map((property) => ({
+        ...property,
+        isFavorite: favoriteIds.has(property.id),
+    }));
+
     return (
         <main className="wrapper" style={{ paddingBlock: '40px' }}>
             <h1 className={styles.h1}>Find your <span className={styles.tag}>home</span></h1>
+
             <PropertyFilters
                 className={styles.filters}
                 cities={cities.map((c) => c.city)}
                 types={types.map((t) => t.type)}
                 countries={countries.map((c) => c.country)}
             />
+
             <PropertyGrid
                 className={styles.cards}
-                properties={properties} />
+                properties={propertiesWithFavorite}
+            />
         </main>
     );
 }

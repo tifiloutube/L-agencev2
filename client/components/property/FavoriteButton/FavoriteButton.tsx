@@ -6,7 +6,7 @@ import styles from './FavoriteButton.module.css'
 
 type Props = {
     propertyId: string
-    initialIsFavorite: boolean
+    initialIsFavorite: boolean | undefined
 }
 
 export default function FavoriteButton({ propertyId, initialIsFavorite }: Props) {

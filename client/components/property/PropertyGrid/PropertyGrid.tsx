@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 import Styles from './PropertyGrid.module.css';
 import FavoriteButton from '@/components/property/FavoriteButton/FavoriteButton';
 
@@ -12,6 +11,7 @@ interface Property {
     description: string;
     price: number;
     images: { url: string }[];
+    isFavorite?: boolean;
 }
 
 interface Props {
@@ -20,34 +20,12 @@ interface Props {
 }
 
 export default function PropertyGrid({ properties, className }: Props) {
-    const [favorites, setFavorites] = useState<Record<string, boolean>>({});
-
-    useEffect(() => {
-        const fetchFavorites = async () => {
-            const updates: Record<string, boolean> = {};
-            await Promise.all(
-                properties.map(async (p) => {
-                    const res = await fetch('/api/favorites/check', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ propertyId: p.id }),
-                    });
-                    const data = await res.json();
-                    updates[p.id] = data.isFavorite;
-                })
-            );
-            setFavorites(updates);
-        };
-
-        fetchFavorites();
-    }, [properties]);
-
     if (properties.length === 0) {
         return <p>Aucun bien publié pour le moment.</p>;
     }
 
     return (
-        <section className={`${Styles.propertyGrid} ${className}`}>
+        <section className={`${Styles.propertyGrid} ${className || ''}`}>
             <div className={Styles.container}>
                 {properties.map((property) => (
                     <div key={property.id} className={Styles.card}>
@@ -70,12 +48,12 @@ export default function PropertyGrid({ properties, className }: Props) {
                                 </p>
                             </div>
                             <div className={Styles.actions}>
-                                <Link href={`/properties/${property.id}`} className={`button`}>
+                                <Link href={`/properties/${property.id}`} className="button">
                                     Voir le bien
                                 </Link>
                                 <FavoriteButton
                                     propertyId={property.id}
-                                    initialIsFavorite={favorites[property.id] ?? false}
+                                    initialIsFavorite={property.isFavorite ?? false}
                                 />
                             </div>
                         </div>

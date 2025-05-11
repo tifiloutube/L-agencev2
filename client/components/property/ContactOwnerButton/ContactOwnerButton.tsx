@@ -29,8 +29,8 @@ export default function ContactOwnerButton({ propertyId }: { propertyId: string 
     }
 
     return (
-        <button onClick={handleClick}>
-            💬 Contacter le propriétaire
+        <button onClick={handleClick} className={`button`}>
+            💬 Messagerie interne
         </button>
     )
 }

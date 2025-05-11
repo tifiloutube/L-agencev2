@@ -10,7 +10,7 @@ type Props = {
     userId: string
     currentUserId?: string
     propertyId: string
-    isFavorite?: boolean
+    isFavorite?: boolean | undefined
 }
 
 export default function PropertyOwnerContact({
@@ -25,7 +25,7 @@ export default function PropertyOwnerContact({
         <div className={styles.section}>
             <h2 className={styles.subTitle}>Contact</h2>
 
-            <FavoriteButton propertyId={propertyId} initialIsFavorite={isFavorite} />
+            <FavoriteButton propertyId={propertyId} initialIsFavorite={isFavorite}/>
 
             {currentUserId !== userId && (
                 <>
