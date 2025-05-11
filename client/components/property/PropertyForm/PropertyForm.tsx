@@ -2,12 +2,17 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import PropertyImageUpload from '@/components/property/PropertyImageUpload/PropertyImageUpload'
 import { useToast } from '@/lib/context/ToastContext'
+import styles from './PropertyForm.module.css'
+
+import PropertyBasicInfo from "@/components/property/PropertyForm/PropertyBasicInfo/PropertyBasicInfo";
+import PropertyMainDetails from "@/components/property/PropertyForm/PropertyMainDetails/PropertyMainDetails";
+import PropertyAdditionalInfo from "@/components/property/PropertyForm/PropertyAdditionalInfo/PropertyAdditionalInfo";
 
 type Props = {
     mode?: 'edit' | 'create'
     property?: any
+    transactionType: 'vente' | 'location'
 }
 
 export default function PropertyForm({ mode = 'create', property }: Props) {
@@ -117,131 +122,46 @@ export default function PropertyForm({ mode = 'create', property }: Props) {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <h2>{mode === 'edit' ? 'Modifier le bien' : 'Créer un bien'}</h2>
+        <section className={styles.container}>
+            <form onSubmit={handleSubmit}>
+                <h2 className={styles.h2}>{mode === 'edit' ? 'Modifier le bien' : 'Créer votre bien'}</h2>
 
-            <input placeholder="Titre" value={title} onChange={e => setTitle(e.target.value)} required />
-            <textarea
-                placeholder="Description"
-                value={description}
-                onChange={e => setDescription(e.target.value)}
-                required
-            />
-            <input placeholder="Type" value={type} onChange={e => setType(e.target.value)} required />
-            <input
-                placeholder="Prix"
-                type="number"
-                value={price}
-                onChange={e => setPrice(e.target.value)}
-                required
-            />
-            <input
-                placeholder="Surface"
-                type="number"
-                value={surface}
-                onChange={e => setSurface(e.target.value)}
-                required
-            />
-            <input
-                placeholder="Pièces"
-                type="number"
-                value={rooms}
-                onChange={e => setRooms(e.target.value)}
-            />
-            <input
-                placeholder="Salles de bain"
-                type="number"
-                value={bathrooms}
-                onChange={e => setBathrooms(e.target.value)}
-            />
-            <label>
-                Garage
-                <input type="checkbox" checked={hasGarage} onChange={e => setHasGarage(e.target.checked)} />
-            </label>
-            <input
-                placeholder="Étage"
-                type="number"
-                value={floor}
-                onChange={e => setFloor(e.target.value)}
-            />
-            <input
-                placeholder="Adresse"
-                value={address}
-                onChange={e => setAddress(e.target.value)}
-                required
-            />
-            <input placeholder="Ville" value={city} onChange={e => setCity(e.target.value)} required />
-            <input
-                placeholder="Code postal"
-                value={zipCode}
-                onChange={e => setZipCode(e.target.value)}
-                required
-            />
-            <input
-                placeholder="Pays"
-                value={country}
-                onChange={e => setCountry(e.target.value)}
-                required
-            />
+                <PropertyBasicInfo
+                    title={title}
+                    setTitle={setTitle}
+                    description={description}
+                    setDescription={setDescription}
+                    type={type}
+                    setType={setType}
+                    price={price}
+                    setPrice={setPrice}
+                    address={address}
+                    setAddress={setAddress}
+                    city={city}
+                    setCity={setCity}
+                    zipCode={zipCode}
+                    setZipCode={setZipCode}
+                    country={country}
+                    setCountry={setCountry}
+                />
 
-            {mode === 'create' && (
-                <>
-                    <PropertyImageUpload onImageUploaded={url => setImages(prev => [...prev, url])} />
+                <PropertyMainDetails
+                    surface={surface} setSurface={setSurface}
+                    rooms={rooms} setRooms={setRooms}
+                    bathrooms={bathrooms} setBathrooms={setBathrooms}
+                />
 
-                    {images.length > 0 && (
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginTop: 16 }}>
-                            {images.map((url, index) => (
-                                <div
-                                    key={index}
-                                    style={{
-                                        position: 'relative',
-                                        width: 100,
-                                        height: 100,
-                                        borderRadius: 8,
-                                        overflow: 'hidden',
-                                        border: '1px solid #ccc',
-                                    }}
-                                >
-                                    <img
-                                        src={url}
-                                        alt={`Image ${index + 1}`}
-                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            setImages(prev => prev.filter(img => img !== url))
-                                        }
-                                        style={{
-                                            position: 'absolute',
-                                            top: 4,
-                                            right: 4,
-                                            background: 'rgba(0,0,0,0.6)',
-                                            color: '#fff',
-                                            border: 'none',
-                                            borderRadius: '50%',
-                                            width: 20,
-                                            height: 20,
-                                            fontSize: 12,
-                                            cursor: 'pointer',
-                                            lineHeight: '20px',
-                                            textAlign: 'center',
-                                        }}
-                                    >
-                                        ×
-                                    </button>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </>
-            )}
+                <PropertyAdditionalInfo
+                    hasGarage={hasGarage} setHasGarage={setHasGarage}
+                    floor={floor} setFloor={setFloor}
+                    images={images} setImages={setImages}
+                    mode={mode}
+                />
 
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-
-            <button type="submit" disabled={loading}>
-                {loading ? 'En cours...' : mode === 'edit' ? 'Mettre à jour' : 'Créer le bien'}
-            </button>
-        </form>
+                <button type="submit" disabled={loading}>
+                    {loading ? 'En cours...' : mode === 'edit' ? 'Mettre à jour' : 'Créer le bien'}
+                </button>
+            </form>
+        </section>
     )
 }

@@ -1,0 +1,16 @@
+.wrapper {
+    .h1 {
+        color: var(--secondary-color);
+        text-align: center;
+        font-family: Sansation, sans-serif;
+        font-size: 129px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        grid-column: 1/13;
+        margin-top: 25vh;
+        .h1orange {
+            color: var(--primary-color);
+        }
+    }
+}

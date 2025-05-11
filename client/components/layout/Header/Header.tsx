@@ -19,7 +19,7 @@ export default function Header() {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            <div className={`${styles.header} ${isHovered ? styles.headerVisible : ''}`}>
+            <header className={`${styles.header} ${isHovered ? styles.headerVisible : ''}`}>
                 <nav className={styles.nav}>
                     <Link href="/" className={`${styles.logo} ${isActive('/') ? styles.active : ''}`}>
                         Acceuil
@@ -53,7 +53,7 @@ export default function Header() {
                     )}
                 </nav>
                 <span className={styles.line}></span>
-            </div>
+            </header>
         </div>
     )
 }

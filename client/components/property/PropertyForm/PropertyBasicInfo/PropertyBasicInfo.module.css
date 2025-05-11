@@ -1,0 +1,58 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    margin-top: 5vh;
+    .infos {
+        .h3 {
+            color: var(--secondary-color);
+            font-family: Sansation, sans-serif;
+            font-size: 55px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+        }
+    }
+    .infosTitle {
+        input {
+            background-color: transparent;
+            border-bottom: 1px solid var(--primary-color);
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            height: 25px;
+        }
+    }
+
+    .infosType {
+        .infosTypeContainer {
+            display: flex;
+            gap: 5px;
+            margin-top: 20px;
+            p {
+                color: var(--secondary-color);
+                font-family: Sansation, sans-serif;
+                font-size: 30px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: normal;
+            }
+            input {
+                background-color: transparent;
+                border: none;
+            }
+            input::placeholder {
+                color: var(--primary-color);
+                font-family: Sansation, sans-serif;
+                font-size: 30px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: normal;
+                display: flex
+            ;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+    }
+}
