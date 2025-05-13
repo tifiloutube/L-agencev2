@@ -34,17 +34,21 @@ export default function PropertyAdditionalInfo({
                         checked={hasGarage}
                         onChange={(e) => setHasGarage(e.target.checked)}
                     />
+                    <button className={`button`}>Oui</button>
+                    <button className={`button`}>Non</button>
                 </label>
             </div>
 
             <div>
-                <h3>Étage :</h3>
+                <h3>Combien d'étage votre bien possède t'il ? :</h3>
+                <button className={`button`}>-</button>
                 <input
                     placeholder="Étage"
                     type="number"
                     value={floor}
                     onChange={(e) => setFloor(e.target.value)}
                 />
+                <button className={`button`}>+</button>
             </div>
 
             <div>

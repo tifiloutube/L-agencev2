@@ -5,9 +5,11 @@ import { useRouter } from 'next/navigation'
 import { useToast } from '@/lib/context/ToastContext'
 import styles from './PropertyForm.module.css'
 
-import PropertyBasicInfo from "@/components/property/PropertyForm/PropertyBasicInfo/PropertyBasicInfo";
-import PropertyMainDetails from "@/components/property/PropertyForm/PropertyMainDetails/PropertyMainDetails";
-import PropertyAdditionalInfo from "@/components/property/PropertyForm/PropertyAdditionalInfo/PropertyAdditionalInfo";
+import PropertyBasicInfo from '@/components/property/PropertyForm/PropertyBasicInfo/PropertyBasicInfo'
+import PropertyMainDetails from '@/components/property/PropertyForm/PropertyMainDetails/PropertyMainDetails'
+import PropertyAdditionalInfo from '@/components/property/PropertyForm/PropertyAdditionalInfo/PropertyAdditionalInfo'
+import PropertyOtherInformation from '@/components/property/PropertyForm/PropertyOtherInformation/PropertyOtherInformation'
+import PropertyEnergyBalance from '@/components/property/PropertyForm/PropertyEnergyBalance/PropertyEnergyBalance'
 
 type Props = {
     mode?: 'edit' | 'create'
@@ -15,7 +17,7 @@ type Props = {
     transactionType: 'vente' | 'location'
 }
 
-export default function PropertyForm({ mode = 'create', property }: Props) {
+export default function PropertyForm({ mode = 'create', property, transactionType }: Props) {
     const { showToast } = useToast()
     const router = useRouter()
 
@@ -34,6 +36,29 @@ export default function PropertyForm({ mode = 'create', property }: Props) {
     const [country, setCountry] = useState(property?.country || '')
     const [images, setImages] = useState<string[]>([])
 
+    const [kitchenEquipped, setKitchenEquipped] = useState(false)
+    const [terrace, setTerrace] = useState(false)
+    const [balcony, setBalcony] = useState(false)
+    const [terraceCount, setTerraceCount] = useState('')
+    const [terraceSurface, setTerraceSurface] = useState('')
+    const [balconyCount, setBalconyCount] = useState('')
+    const [balconySurface, setBalconySurface] = useState('')
+    const [garden, setGarden] = useState(false)
+    const [pool, setPool] = useState(false)
+    const [disabledAccess, setDisabledAccess] = useState(false)
+    const [basement, setBasement] = useState(false)
+
+    const [constructionYear, setConstructionYear] = useState('')
+    const [landSurface, setLandSurface] = useState('')
+    const [condition, setCondition] = useState('')
+
+    const [energyConsumption, setEnergyConsumption] = useState('')
+    const [greenhouseGasEmission, setGreenhouseGasEmission] = useState('')
+    const [finalEnergyConsumption, setFinalEnergyConsumption] = useState('')
+    const [energyCostMin, setEnergyCostMin] = useState('')
+    const [energyCostMax, setEnergyCostMax] = useState('')
+    const [energyIndexDate, setEnergyIndexDate] = useState('')
+
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
 
@@ -42,26 +67,50 @@ export default function PropertyForm({ mode = 'create', property }: Props) {
         setLoading(true)
         setError('')
 
+        const payload = {
+            title,
+            description,
+            type,
+            price: parseFloat(price),
+            surface: parseFloat(surface),
+            rooms: rooms ? parseInt(rooms) : null,
+            bathrooms: bathrooms ? parseInt(bathrooms) : null,
+            hasGarage,
+            floor: floor ? parseInt(floor) : null,
+            address,
+            city,
+            zipCode,
+            country,
+            kitchenEquipped,
+            terrace,
+            balcony,
+            terraceCount: terrace ? parseInt(terraceCount) || null : null,
+            terraceSurface: terrace ? parseFloat(terraceSurface) || null : null,
+            balconyCount: balcony ? parseInt(balconyCount) || null : null,
+            balconySurface: balcony ? parseFloat(balconySurface) || null : null,
+            garden,
+            pool,
+            disabledAccess,
+            basement,
+            constructionYear: constructionYear ? parseInt(constructionYear) : null,
+            landSurface: landSurface ? parseFloat(landSurface) : null,
+            condition: transactionType === 'vente' ? condition : null,
+            transactionType,
+            energyConsumption,
+            greenhouseGasEmission,
+            finalEnergyConsumption: finalEnergyConsumption ? parseFloat(finalEnergyConsumption) : null,
+            energyCostMin: energyCostMin ? parseFloat(energyCostMin) : null,
+            energyCostMax: energyCostMax ? parseFloat(energyCostMax) : null,
+            energyIndexDate: energyIndexDate || null,
+
+        }
+
         try {
             if (mode === 'edit') {
                 const res = await fetch(`/api/properties/${property.id}`, {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        title,
-                        description,
-                        type,
-                        price: parseFloat(price),
-                        surface: parseFloat(surface),
-                        rooms: rooms ? parseInt(rooms) : null,
-                        bathrooms: bathrooms ? parseInt(bathrooms) : null,
-                        hasGarage,
-                        floor: floor ? parseInt(floor) : null,
-                        address,
-                        city,
-                        zipCode,
-                        country,
-                    }),
+                    body: JSON.stringify(payload),
                 })
 
                 if (!res.ok) {
@@ -76,21 +125,7 @@ export default function PropertyForm({ mode = 'create', property }: Props) {
                 const res = await fetch('/api/properties', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        title,
-                        description,
-                        type,
-                        price: parseFloat(price),
-                        surface: parseFloat(surface),
-                        rooms: rooms ? parseInt(rooms) : null,
-                        bathrooms: bathrooms ? parseInt(bathrooms) : null,
-                        hasGarage,
-                        floor: floor ? parseInt(floor) : null,
-                        address,
-                        city,
-                        zipCode,
-                        country,
-                    }),
+                    body: JSON.stringify(payload),
                 })
 
                 const data = await res.json()
@@ -146,16 +181,69 @@ export default function PropertyForm({ mode = 'create', property }: Props) {
                 />
 
                 <PropertyMainDetails
-                    surface={surface} setSurface={setSurface}
-                    rooms={rooms} setRooms={setRooms}
-                    bathrooms={bathrooms} setBathrooms={setBathrooms}
+                    surface={surface}
+                    setSurface={setSurface}
+                    rooms={rooms}
+                    setRooms={setRooms}
+                    bathrooms={bathrooms}
+                    setBathrooms={setBathrooms}
                 />
 
                 <PropertyAdditionalInfo
-                    hasGarage={hasGarage} setHasGarage={setHasGarage}
-                    floor={floor} setFloor={setFloor}
-                    images={images} setImages={setImages}
+                    hasGarage={hasGarage}
+                    setHasGarage={setHasGarage}
+                    floor={floor}
+                    setFloor={setFloor}
+                    images={images}
+                    setImages={setImages}
                     mode={mode}
+                />
+
+                <PropertyOtherInformation
+                    kitchenEquipped={kitchenEquipped}
+                    setKitchenEquipped={setKitchenEquipped}
+                    terrace={terrace}
+                    setTerrace={setTerrace}
+                    balcony={balcony}
+                    setBalcony={setBalcony}
+                    garden={garden}
+                    setGarden={setGarden}
+                    pool={pool}
+                    setPool={setPool}
+                    disabledAccess={disabledAccess}
+                    setDisabledAccess={setDisabledAccess}
+                    basement={basement}
+                    setBasement={setBasement}
+                    constructionYear={constructionYear}
+                    setConstructionYear={setConstructionYear}
+                    landSurface={landSurface}
+                    setLandSurface={setLandSurface}
+                    condition={condition}
+                    setCondition={setCondition}
+                    transactionType={transactionType}
+                    terraceCount={terraceCount}
+                    setTerraceCount={setTerraceCount}
+                    terraceSurface={terraceSurface}
+                    setTerraceSurface={setTerraceSurface}
+                    balconyCount={balconyCount}
+                    setBalconyCount={setBalconyCount}
+                    balconySurface={balconySurface}
+                    setBalconySurface={setBalconySurface}
+                />
+
+                <PropertyEnergyBalance
+                    energyConsumption={energyConsumption}
+                    setEnergyConsumption={setEnergyConsumption}
+                    greenhouseGasEmission={greenhouseGasEmission}
+                    setGreenhouseGasEmission={setGreenhouseGasEmission}
+                    finalEnergyConsumption={finalEnergyConsumption}
+                    setFinalEnergyConsumption={setFinalEnergyConsumption}
+                    energyCostMin={energyCostMin}
+                    setEnergyCostMin={setEnergyCostMin}
+                    energyCostMax={energyCostMax}
+                    setEnergyCostMax={setEnergyCostMax}
+                    energyIndexDate={energyIndexDate}
+                    setEnergyIndexDate={setEnergyIndexDate}
                 />
 
                 <button type="submit" disabled={loading}>

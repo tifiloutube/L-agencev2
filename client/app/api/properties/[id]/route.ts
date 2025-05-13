@@ -32,6 +32,27 @@ export async function PATCH(req: Request, { params }: Params) {
         city,
         zipCode,
         country,
+        transactionType,
+        kitchenEquipped,
+        terrace,
+        balcony,
+        terraceCount,
+        terraceSurface,
+        balconyCount,
+        balconySurface,
+        garden,
+        pool,
+        disabledAccess,
+        basement,
+        constructionYear,
+        landSurface,
+        condition,
+        energyConsumption,
+        greenhouseGasEmission,
+        finalEnergyConsumption,
+        energyCostMin,
+        energyCostMax,
+        energyIndexDate,
     } = await req.json()
 
     const updated = await prisma.property.update({
@@ -50,6 +71,27 @@ export async function PATCH(req: Request, { params }: Params) {
             city,
             zipCode,
             country,
+            transactionType,
+            kitchenEquipped,
+            terrace,
+            balcony,
+            terraceCount,
+            terraceSurface,
+            balconyCount,
+            balconySurface,
+            garden,
+            pool,
+            disabledAccess,
+            basement,
+            constructionYear,
+            landSurface,
+            condition,
+            energyConsumption,
+            greenhouseGasEmission,
+            finalEnergyConsumption,
+            energyCostMin,
+            energyCostMax,
+            energyIndexDate,
         },
     })
 
@@ -69,7 +111,6 @@ export async function DELETE(_: Request, { params }: Params) {
         return NextResponse.json({ error: 'Accès refusé' }, { status: 403 })
     }
 
-    // 1. Supprimer toutes les images du blob
     for (const image of property.images) {
         try {
             const url = new URL(image.url)
@@ -79,8 +120,7 @@ export async function DELETE(_: Request, { params }: Params) {
             console.error(`Erreur suppression blob ${image.url}`, err)
         }
     }
-
-    // 2. Supprimer la propriété
+    
     await prisma.property.delete({
         where: { id: params.id },
     })

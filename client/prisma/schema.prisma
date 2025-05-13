@@ -43,21 +43,51 @@ model User {
 }
 
 model Property {
-  id           String          @id @default(uuid())
-  title        String
-  description  String
-  type         String
-  price        Float
-  surface      Float
-  rooms        Int?
-  bathrooms    Int?
-  hasGarage    Boolean         @default(false)
-  floor        Int?
-  address      String
-  city         String
-  zipCode      String
-  country      String
-  status       PropertyStatus  @default(DRAFT)
+  id              String         @id @default(uuid())
+  title           String
+  description     String
+  type            String
+  price           Float
+  surface         Float
+  rooms           Int?
+  bathrooms       Int?
+  hasGarage       Boolean        @default(false)
+  floor           Int?
+  address         String
+  city            String
+  zipCode         String
+  country         String
+  status          PropertyStatus @default(DRAFT)
+  transactionType String?
+
+  // New booleans
+  kitchenEquipped Boolean @default(false)
+  terrace         Boolean @default(false)
+  balcony         Boolean @default(false)
+  garden          Boolean @default(false)
+  pool            Boolean @default(false)
+  disabledAccess  Boolean @default(false)
+  basement        Boolean @default(false)
+
+  // Terrace / Balcony details
+  terraceCount   Int?
+  terraceSurface Float?
+  balconyCount   Int?
+  balconySurface Float?
+
+  // Additional infos
+  constructionYear Int?
+  landSurface      Float?
+  condition        String?
+
+  // Energy balance
+  energyConsumption      String?
+  greenhouseGasEmission  String?
+  finalEnergyConsumption Float?
+  energyCostMin          Float?
+  energyCostMax          Float?
+  energyIndexDate        String?
+
   userId       String
   user         User            @relation(fields: [userId], references: [id])
   images       PropertyImage[]

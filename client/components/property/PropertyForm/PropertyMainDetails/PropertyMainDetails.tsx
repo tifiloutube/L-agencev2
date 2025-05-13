@@ -36,22 +36,38 @@ export default function PropertyMainDetails({
 
             <div>
                 <h3>Nombre de pièces</h3>
+                <button className={`button`}>-</button>
                 <input
                     placeholder="Pièces"
                     type="number"
                     value={rooms}
                     onChange={(e) => setRooms(e.target.value)}
                 />
+                <button className={`button`}>+</button>
             </div>
 
             <div>
                 <h3>Nombre de salles de bain</h3>
+                <button className={`button`}>-</button>
                 <input
                     placeholder="Salles de bain"
                     type="number"
                     value={bathrooms}
                     onChange={(e) => setBathrooms(e.target.value)}
                 />
+                <button className={`button`}>+</button>
+            </div>
+
+            <div>
+                <h3>Nombre de salles d'eau</h3>
+                <button className={`button`}>-</button>
+                <input
+                    placeholder="Salles d'eau"
+                    type="number"
+                    value={bathrooms}
+                    onChange={(e) => setBathrooms(e.target.value)}
+                />
+                <button className={`button`}>+</button>
             </div>
         </section>
     )
