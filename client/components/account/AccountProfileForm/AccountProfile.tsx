@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useToast } from '@/lib/context/ToastContext'
+import styles from './AccountProfile.module.css'
 
 type Props = {
     user: {
@@ -12,7 +13,7 @@ type Props = {
     }
 }
 
-export default function AccountProfileForm({ user }: Props) {
+export default function AccountProfile({ user }: Props) {
     const [name, setName] = useState(user.name || '')
     const [phone, setPhone] = useState(user.phone || '')
     const [loading, setLoading] = useState(false)
@@ -41,21 +42,24 @@ export default function AccountProfileForm({ user }: Props) {
     }
 
     return (
-        <section style={{ marginTop: 40 }}>
+        <section className={styles.profile}>
             <h2>Modifier mon profil</h2>
+            <p><strong>Nom :</strong> {user.name || 'Non renseigné'}</p>
+            <p><strong>Email :</strong> {user.email}</p>
+
             <form onSubmit={handleSubmit}>
                 <div>
                     <label>Nom</label>
-                    <input type="text" value={name} onChange={e => setName(e.target.value)} />
+                    <input type="text" value={name} onChange={e => setName(e.target.value)}/>
                 </div>
                 <div>
                     <label>Téléphone</label>
-                    <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} />
+                    <input type="tel" value={phone} onChange={e => setPhone(e.target.value)}/>
                 </div>
-                <button type="submit" disabled={loading}>
+                <button type="submit" disabled={loading} className={`button`}>
                     {loading ? 'Sauvegarde...' : 'Mettre à jour'}
                 </button>
-                {error && <p style={{ color: 'red' }}>{error}</p>}
+                {error && <p style={{color: 'red'}}>{error}</p>}
             </form>
         </section>
     )

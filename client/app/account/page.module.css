@@ -1,0 +1,8 @@
+.wrapper {
+    margin-top: 25vh;
+    .h1 {
+        grid-column: 1/13;
+        text-align: center;
+        font-family: 'Sansation Light', sans-serif;
+    }
+}

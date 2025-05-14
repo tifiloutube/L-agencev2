@@ -4,6 +4,7 @@ import { Property, PropertyImage, PropertyStatus } from '@prisma/client'
 import Link from 'next/link'
 import { useState, useMemo } from 'react'
 import { useToast } from '@/lib/context/ToastContext'
+import styles from './AccountProperties.module.css'
 
 type PropertyWithImage = Property & { images: PropertyImage[] }
 
@@ -66,36 +67,45 @@ export default function AccountProperties({ properties: initialProperties, maxPr
         }
     }
 
+    const archivedCount = properties.filter(p => p.status === 'ARCHIVED').length
+
     return (
-        <section style={{ marginTop: 40, position: 'relative' }}>
-            <h2>Mes biens</h2>
+        <section className={styles.container}>
+            <h2 className={`h2 ${styles.h2}`}>Mes biens</h2>
+
+            <Link href="/properties/new">
+                <button className={`button ${styles.button}`}>Ajouter un nouveau bien</button>
+            </Link>
+
+            {archivedCount > 0 && (
+                <div className="account-properties__alert">
+                    ⚠️ Certains de vos biens ont été archivés automatiquement car vous avez dépassé votre quota d'abonnement ({archivedCount} bien{archivedCount > 1 ? 's' : ''}).
+                </div>
+            )}
+
             {properties.length === 0 ? (
-                <p>Vous n'avez encore ajouté aucun bien.</p>
+                <p className="account-properties__empty">Vous n'avez encore ajouté aucun bien.</p>
             ) : (
-                <ul style={{ paddingLeft: 0 }}>
+                <ul className={styles.accountPropertiesList}>
                     {properties.map(property => (
-                        <li
-                            key={property.id}
-                            style={{
-                                marginBottom: 20,
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 16,
-                            }}
-                        >
-                            {property.images[0] && (
-                                <img
-                                    src={property.images[0].url}
-                                    alt={property.title}
-                                    style={{ width: 100, height: 100, objectFit: 'cover', borderRadius: 8 }}
-                                />
-                            )}
+                        <li key={property.id} className={styles.accountPpropertiesItem}>
+                            <div className={styles.containerImage}>
+                                {property.images[0] && (
+                                    <img
+                                        src={property.images[0].url}
+                                        alt={property.title}
+                                        className={styles.accountPropertiesImage}
+                                    />
+                                )}
+                            </div>
 
-                            <div style={{ flex: 1 }}>
-                                <strong>{property.title}</strong> — {property.status.toLowerCase()}<br />
-                                {property.city}, {property.price} €
+                            <div className="account-properties__content">
+                                <div className="account-properties__info">
+                                    <strong>{property.title}</strong> — {property.status.toLowerCase()}<br />
+                                    {property.city}, {property.price} €
+                                </div>
 
-                                <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+                                <div className="account-properties__actions">
                                     {property.status === 'DRAFT' && (
                                         <button
                                             onClick={() => updateStatus(property.id, 'PUBLISHED')}
@@ -105,14 +115,25 @@ export default function AccountProperties({ properties: initialProperties, maxPr
                                                     ? `Vous avez atteint votre quota de ${maxProperties} bien${maxProperties > 1 ? 's' : ''}`
                                                     : ''
                                             }
+                                            className="account-properties__button"
                                         >
                                             📢 Publier
                                         </button>
                                     )}
                                     {property.status === 'PUBLISHED' && (
                                         <>
-                                            <button onClick={() => updateStatus(property.id, 'ARCHIVED')}>Archiver</button>
-                                            <button onClick={() => updateStatus(property.id, 'DRAFT')}>Brouillon</button>
+                                            <button
+                                                onClick={() => updateStatus(property.id, 'ARCHIVED')}
+                                                className="account-properties__button"
+                                            >
+                                                Archiver
+                                            </button>
+                                            <button
+                                                onClick={() => updateStatus(property.id, 'DRAFT')}
+                                                className="account-properties__button"
+                                            >
+                                                Brouillon
+                                            </button>
                                         </>
                                     )}
                                     {property.status === 'ARCHIVED' && (
@@ -124,6 +145,7 @@ export default function AccountProperties({ properties: initialProperties, maxPr
                                                     ? `Vous avez atteint votre quota de ${maxProperties} bien${maxProperties > 1 ? 's' : ''}`
                                                     : ''
                                             }
+                                            className="account-properties__button"
                                         >
                                             Remettre en ligne
                                         </button>
@@ -131,11 +153,14 @@ export default function AccountProperties({ properties: initialProperties, maxPr
                                 </div>
                             </div>
 
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                            <div className="account-properties__actions-column">
                                 <Link href={`/properties/${property.id}/edit`}>
-                                    <button style={{ marginLeft: 8 }}>Modifier</button>
+                                    <button className="account-properties__edit-button">Modifier</button>
                                 </Link>
-                                <button onClick={() => handleDelete(property.id)}>
+                                <button
+                                    onClick={() => handleDelete(property.id)}
+                                    className="account-properties__delete-button"
+                                >
                                     Supprimer
                                 </button>
                             </div>
@@ -143,10 +168,6 @@ export default function AccountProperties({ properties: initialProperties, maxPr
                     ))}
                 </ul>
             )}
-
-            <Link href="/properties/new">
-                <button>Ajouter un nouveau bien</button>
-            </Link>
         </section>
     )
 }

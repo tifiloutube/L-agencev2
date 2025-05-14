@@ -1,0 +1,23 @@
+.container {
+    grid-column: 1/13;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    .accountPropertiesList {
+        margin-top: 50px;
+        .accountPpropertiesItem {
+            display: flex;
+            gap: 20px;
+            .containerImage {
+                width: 50%;
+                min-height: 500px;
+                height: 100%;
+                .accountPropertiesImage {
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 8px;
+                }
+            }
+        }
+    }
+}

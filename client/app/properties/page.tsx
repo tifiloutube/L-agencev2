@@ -94,7 +94,7 @@ export default async function PropertiesPage({
     }));
 
     return (
-        <main className="wrapper" style={{ paddingBlock: '40px' }}>
+        <main className="wrapper">
             <h1 className={styles.h1}>Find your <span className={styles.tag}>home</span></h1>
 
             <PropertyFilters
