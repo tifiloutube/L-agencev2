@@ -17,7 +17,7 @@ export default function AccountProperties({ properties: initialProperties, maxPr
     const { showToast } = useToast()
 
     const activeCount = useMemo(
-        () => properties.filter(p => p.status !== 'ARCHIVED').length,
+        () => properties.filter(p => p.status === 'PUBLISHED').length,
         [properties]
     )
 

@@ -58,7 +58,7 @@ export async function PATCH(req: Request, { params }: Params) {
             ? planLimits[user.sellerSubscription?.plan as keyof typeof planLimits] ?? 1
             : 1
 
-        const activeCount = user.properties.filter(p => p.status !== 'ARCHIVED').length
+        const activeCount = user.properties.filter(p => p.status === 'PUBLISHED').length
 
         if (activeCount >= maxAllowed) {
             return NextResponse.json(
