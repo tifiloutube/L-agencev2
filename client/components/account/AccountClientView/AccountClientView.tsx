@@ -65,7 +65,7 @@ export default function AccountClientView({
                     onClick={() => setActiveTab('conversations')}
                     className={`button ${activeTab === 'conversations' ? styles.active : ''}`}
                 >
-                    Conversations
+                    Discussions
                 </button>
             </div>
 

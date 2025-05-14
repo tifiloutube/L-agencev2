@@ -2,9 +2,10 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
-import AccountClientView from '@/components/account/AccountClientView/AccountClientView'
-import styles from './page.module.css'
 import { enforceUserPropertyQuota } from '@/lib/services/enforceUserPropertyQuota'
+import styles from './page.module.css'
+
+import AccountClientView from '@/components/account/AccountClientView/AccountClientView'
 
 export default async function AccountPage() {
     const session = await getServerSession(authOptions)
