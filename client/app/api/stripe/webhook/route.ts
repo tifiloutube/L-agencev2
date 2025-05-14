@@ -13,7 +13,7 @@ export const config = {
     },
 }
 
-// Buffer util
+// Convertir ReadableStream vers Buffer
 async function buffer(readable: ReadableStream<Uint8Array>) {
     const reader = readable.getReader()
     const chunks: Uint8Array[] = []
@@ -38,14 +38,23 @@ export async function POST(req: NextRequest) {
             process.env.STRIPE_WEBHOOK_SECRET!
         )
     } catch (err) {
-        console.error('❌ Erreur Webhook Stripe :', err)
+        console.error('❌ Signature Stripe invalide :', err)
         return new Response('Webhook error', { status: 400 })
     }
+
+    // Log de l’event entier pour inspecter
+    console.log('📦 EVENT TYPE:', event.type)
+    console.log('📦 EVENT OBJECT:', JSON.stringify(event.data.object, null, 2))
 
     if (event.type === 'checkout.session.completed') {
         const session = event.data.object as Stripe.Checkout.Session
         const customerId = session.customer as string
         const subscriptionId = session.subscription as string
+
+        console.log('🔍 session.customer:', customerId)
+        console.log('🔍 session.subscription:', subscriptionId)
+        console.log('🔍 session.metadata:', session.metadata)
+
         const stripeSub = await stripe.subscriptions.retrieve(subscriptionId)
         const userId = session.metadata?.userId
         const plan = session.metadata?.plan
@@ -53,8 +62,20 @@ export async function POST(req: NextRequest) {
         const priceId = session.metadata?.priceId || ''
 
         if (!userId || !plan || !subscriptionId || !customerId) {
+            console.error('❌ Données manquantes dans metadata Stripe')
             return new Response('Missing data', { status: 400 })
         }
+
+        // Log final avant insertion
+        console.log('📥 Sauvegarde dans la BDD :', {
+            userId,
+            plan,
+            subscriptionId,
+            customerId,
+            priceId,
+            maxProperties,
+            currentPeriodEnd: new Date(stripeSub.current_period_end * 1000),
+        })
 
         await prisma.sellerSubscription.upsert({
             where: { userId },
@@ -65,7 +86,9 @@ export async function POST(req: NextRequest) {
                 maxProperties,
                 priceId,
                 status: 'active',
-                currentPeriodEnd: new Date(stripeSub.current_period_end * 1000),
+                currentPeriodEnd: stripeSub.current_period_end
+                    ? new Date(stripeSub.current_period_end * 1000)
+                    : null,
             },
             create: {
                 userId,
@@ -75,11 +98,13 @@ export async function POST(req: NextRequest) {
                 maxProperties,
                 priceId,
                 status: 'active',
-                currentPeriodEnd: new Date(stripeSub.current_period_end * 1000),
+                currentPeriodEnd: stripeSub.current_period_end
+                    ? new Date(stripeSub.current_period_end * 1000)
+                    : null,
             },
         })
 
-        console.log(`✅ Abonnement enregistré pour user ${userId}`)
+        console.log(`✅ Abonnement Stripe enregistré pour l'utilisateur ${userId}`)
     }
 
     return new Response('OK', { status: 200 })

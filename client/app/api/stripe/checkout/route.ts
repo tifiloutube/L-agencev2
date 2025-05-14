@@ -44,6 +44,7 @@ export async function POST(req: NextRequest) {
                 plan,
                 userId: user.id,
                 maxProperties: maxProperties.toString(),
+                priceId,
             },
         })
 
