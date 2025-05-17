@@ -104,6 +104,7 @@ export default async function PropertyDetailPage({ params }: Props) {
                     energyCostMin={property.energyCostMin}
                     energyCostMax={property.energyCostMax}
                     energyIndexDate={property.energyIndexDate}
+
                 />
             </section>
         </main>

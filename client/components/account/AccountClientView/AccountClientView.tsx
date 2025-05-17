@@ -1,7 +1,6 @@
 'use client'
 
-import { useState } from 'react'
-
+import { useEffect, useState } from 'react'
 import styles from './AccountClientView.module.css'
 import type { Property, SellerSubscription, Favorite, Conversation, User } from '@prisma/client'
 import AccountProfile from "@/components/account/AccountProfileForm/AccountProfile";
@@ -18,6 +17,9 @@ type Props = {
     conversations: Conversation[]
 }
 
+type Tab = 'profile' | 'properties' | 'favorites' | 'subscription' | 'conversations'
+const STORAGE_KEY = 'account_active_tab'
+
 export default function AccountClientView({
                                               user,
                                               properties,
@@ -25,10 +27,25 @@ export default function AccountClientView({
                                               subscription,
                                               conversations,
                                           }: Props) {
-    const [activeTab, setActiveTab] = useState<'profile' | 'properties' | 'favorites' | 'subscription' | 'conversations'>('profile')
+    const [activeTab, setActiveTab] = useState<Tab | null>(null)
 
     const archivedCount = properties.filter(p => p.status === 'ARCHIVED').length
     const maxProperties = subscription?.status === 'active' ? subscription?.maxProperties ?? 1 : 1
+
+    // Load from sessionStorage once
+    useEffect(() => {
+        const storedTab = sessionStorage.getItem(STORAGE_KEY) as Tab | null
+        setActiveTab(storedTab ?? 'profile')
+    }, [])
+
+    useEffect(() => {
+        if (activeTab) {
+            sessionStorage.setItem(STORAGE_KEY, activeTab)
+        }
+    }, [activeTab])
+
+    // ⛔️ Wait for activeTab to be determined
+    if (!activeTab) return null
 
     return (
         <>
@@ -69,11 +86,11 @@ export default function AccountClientView({
                 </button>
             </div>
 
-            {activeTab === 'profile' && (<AccountProfile user={user}/>)}
-            {activeTab === 'properties' && (<AccountProperties properties={properties} maxProperties={maxProperties}/>)}
-            {activeTab === 'favorites' && <AccountFavorites favorites={favorites}/>}
-            {activeTab === 'subscription' && <AccountSubscription subscription={subscription}/>}
-            {activeTab === 'conversations' && <AccountConversations conversations={conversations} currentUserId={user.id}/>}
+            {activeTab === 'profile' && <AccountProfile user={user} />}
+            {activeTab === 'properties' && (<AccountProperties properties={properties} maxProperties={maxProperties} subscriptionStatus={subscription?.status ?? null}/>)}
+            {activeTab === 'favorites' && <AccountFavorites favorites={favorites} />}
+            {activeTab === 'subscription' && <AccountSubscription subscription={subscription} />}
+            {activeTab === 'conversations' && (<AccountConversations conversations={conversations} currentUserId={user.id} />)}
         </>
     )
 }

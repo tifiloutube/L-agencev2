@@ -4,6 +4,7 @@ import { Property, PropertyImage, PropertyStatus } from '@prisma/client'
 import Link from 'next/link'
 import { useState, useMemo } from 'react'
 import { useToast } from '@/lib/context/ToastContext'
+
 import styles from './AccountProperties.module.css'
 
 type PropertyWithImage = Property & { images: PropertyImage[] }
@@ -11,9 +12,10 @@ type PropertyWithImage = Property & { images: PropertyImage[] }
 type Props = {
     properties: PropertyWithImage[]
     maxProperties: number
+    subscriptionStatus: string | null
 }
 
-export default function AccountProperties({ properties: initialProperties, maxProperties }: Props) {
+export default function AccountProperties({ properties: initialProperties, maxProperties, subscriptionStatus }: Props) {
     const [properties, setProperties] = useState(initialProperties)
     const { showToast } = useToast()
 
@@ -77,18 +79,18 @@ export default function AccountProperties({ properties: initialProperties, maxPr
                 <button className={`button ${styles.button}`}>Ajouter un nouveau bien</button>
             </Link>
 
-            {archivedCount > 0 && (
-                <div className="account-properties__alert">
-                    ⚠️ Certains de vos biens ont été archivés automatiquement car vous avez dépassé votre quota d'abonnement ({archivedCount} bien{archivedCount > 1 ? 's' : ''}).
+            {archivedCount > 0 && subscriptionStatus !== 'active' && (
+                <div className={`${styles.alert}`}>
+                    ⚠️ Certains de vos biens ont été archivés automatiquement car votre abonnement est inactif. Vous ne pouvez publier que {maxProperties} bien{maxProperties > 1 ? 's' : ''}.
                 </div>
             )}
 
             {properties.length === 0 ? (
-                <p className="account-properties__empty">Vous n'avez encore ajouté aucun bien.</p>
+                <p className={`${styles.empty}`}>Vous n'avez encore ajouté aucun bien.</p>
             ) : (
                 <ul className={styles.accountPropertiesList}>
                     {properties.map(property => (
-                        <li key={property.id} className={styles.accountPpropertiesItem}>
+                        <li key={property.id} className={styles.accountPropertiesItem}>
                             <div className={styles.containerImage}>
                                 {property.images[0] && (
                                     <img
@@ -99,13 +101,12 @@ export default function AccountProperties({ properties: initialProperties, maxPr
                                 )}
                             </div>
 
-                            <div className="account-properties__content">
-                                <div className="account-properties__info">
+                            <div className={styles.content}>
+                                <div>
                                     <strong>{property.title}</strong> — {property.status.toLowerCase()}<br />
                                     {property.city}, {property.price} €
                                 </div>
-
-                                <div className="account-properties__actions">
+                                <div className={styles.statusActions}>
                                     {property.status === 'DRAFT' && (
                                         <button
                                             onClick={() => updateStatus(property.id, 'PUBLISHED')}
@@ -115,22 +116,22 @@ export default function AccountProperties({ properties: initialProperties, maxPr
                                                     ? `Vous avez atteint votre quota de ${maxProperties} bien${maxProperties > 1 ? 's' : ''}`
                                                     : ''
                                             }
-                                            className="account-properties__button"
+                                            className="button"
                                         >
-                                            📢 Publier
+                                            Publier
                                         </button>
                                     )}
                                     {property.status === 'PUBLISHED' && (
                                         <>
                                             <button
                                                 onClick={() => updateStatus(property.id, 'ARCHIVED')}
-                                                className="account-properties__button"
+                                                className="button"
                                             >
                                                 Archiver
                                             </button>
                                             <button
                                                 onClick={() => updateStatus(property.id, 'DRAFT')}
-                                                className="account-properties__button"
+                                                className="button"
                                             >
                                                 Brouillon
                                             </button>
@@ -145,7 +146,7 @@ export default function AccountProperties({ properties: initialProperties, maxPr
                                                     ? `Vous avez atteint votre quota de ${maxProperties} bien${maxProperties > 1 ? 's' : ''}`
                                                     : ''
                                             }
-                                            className="account-properties__button"
+                                            className="button"
                                         >
                                             Remettre en ligne
                                         </button>
@@ -153,14 +154,11 @@ export default function AccountProperties({ properties: initialProperties, maxPr
                                 </div>
                             </div>
 
-                            <div className="account-properties__actions-column">
+                            <div className={styles.actionsColumn}>
                                 <Link href={`/properties/${property.id}/edit`}>
-                                    <button className="account-properties__edit-button">Modifier</button>
+                                    <button className="button">Modifier</button>
                                 </Link>
-                                <button
-                                    onClick={() => handleDelete(property.id)}
-                                    className="account-properties__delete-button"
-                                >
+                                <button onClick={() => handleDelete(property.id)} className="button">
                                     Supprimer
                                 </button>
                             </div>

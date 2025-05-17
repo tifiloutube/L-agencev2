@@ -2,6 +2,18 @@
 
 import { useEffect, useState } from 'react'
 import { useToast } from '@/lib/context/ToastContext'
+import SubscriptionExpiredBlock from "@/components/account/AccountSubscription/SubscriptionExpiredBlock/SubscriptionExpiredBlock";
+import SubscriptionActiveBlock from "@/components/account/AccountSubscription/SubscriptionActiveBlock/SubscriptionActiveBlock";
+import SubscriptionCanceledBlock from "@/components/account/AccountSubscription/SubscriptionCanceledBlock/SubscriptionCanceledBlock";
+
+import styles from './AccountSubscription.module.css'
+
+type Plan = {
+    id: string
+    name: string
+    priceId: string
+    maxProperties: number
+}
 
 type Props = {
     subscription: {
@@ -11,13 +23,6 @@ type Props = {
         stripeSubscriptionId: string
         currentPeriodEnd?: Date | null
     } | null
-}
-
-type Plan = {
-    id: string
-    name: string
-    priceId: string
-    maxProperties: number
 }
 
 export default function AccountSubscription({ subscription }: Props) {
@@ -96,76 +101,59 @@ export default function AccountSubscription({ subscription }: Props) {
         }
     }
 
-    if (subscription) {
-        const { plan, status, maxProperties, currentPeriodEnd } = subscription
+    const now = new Date()
+    const periodEndDate = subscription?.currentPeriodEnd ? new Date(subscription.currentPeriodEnd) : null
+    const isFuture = periodEndDate && periodEndDate > now
+    const remainingDays = isFuture
+        ? Math.ceil((periodEndDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+        : 0
+
+    const showResubscribeUI = !subscription || (
+        subscription.status === 'canceled' && (!periodEndDate || periodEndDate < now)
+    )
+
+    if (showResubscribeUI) {
+        const previousPlan = subscription
+            ? plans.find(p => p.id === subscription.plan)
+            : null
 
         return (
-            <section style={{ marginTop: 60 }}>
-                <h2>
-                    Abonnement vendeur{' '}
-                    {status === 'active' ? 'actif' : 'en cours de résiliation'}
-                </h2>
-                <p><strong>Plan :</strong> {plan}</p>
-                <p><strong>Biens max :</strong> {maxProperties}</p>
-                <p><strong>Status :</strong> {status}</p>
-
-                {currentPeriodEnd && (
-                    <p style={{ marginTop: 8 }}>
-                        ✅ Abonnement actif jusqu’au{' '}
-                        <strong>{new Date(currentPeriodEnd).toLocaleDateString('fr-FR')}</strong>
-                    </p>
-                )}
-
-                {status === 'canceled' && (
-                    <>
-                        <p style={{ marginTop: 8, color: 'orange' }}>
-                            ⚠️ Votre abonnement sera résilié à la fin de la période.
-                        </p>
-                        <button onClick={reactivateSubscription} style={{ marginTop: 12 }}>
-                            🔁 Reprendre mon abonnement
-                        </button>
-                    </>
-                )}
-
-                {status === 'active' && (
-                    <>
-                        <div style={{ marginTop: 20 }}>
-                            <h3>Changer d’abonnement</h3>
-                            {plans
-                                .filter(p => p.id !== plan)
-                                .map(plan => (
-                                    <button
-                                        key={plan.id}
-                                        onClick={() => changePlan(plan)}
-                                        style={{ display: 'block', marginBottom: 10 }}
-                                    >
-                                        Passer à {plan.name} – {plan.maxProperties} biens
-                                    </button>
-                                ))}
-                        </div>
-
-                        <button onClick={cancelSubscription} style={{ marginTop: 20 }}>
-                            Résilier mon abonnement
-                        </button>
-                    </>
-                )}
-            </section>
+            <SubscriptionExpiredBlock
+                plans={plans}
+                previousPlan={previousPlan}
+                onSubscribe={subscribe}
+            />
         )
     }
 
-    return (
-        <section style={{ marginTop: 60 }}>
-            <h2>Souscrire à un abonnement vendeur</h2>
+    const { plan, status, maxProperties } = subscription!
 
-            {plans.map(plan => (
-                <button
-                    key={plan.id}
-                    onClick={() => subscribe(plan.priceId, plan.id, plan.maxProperties)}
-                    style={{ display: 'block', marginBottom: 10 }}
-                >
-                    {plan.name} – {plan.maxProperties} biens
-                </button>
-            ))}
+    return (
+        <section className={styles.container}>
+            <h2 className={styles.h2}>
+                Abonnement vendeur {status === 'active' ? 'actif' : 'en cours de résiliation'}
+            </h2>
+
+            <div>
+                {status === 'active' && (
+                    <SubscriptionActiveBlock
+                        currentPlanId={plan}
+                        currentPlanName={plans.find(p => p.id === plan)?.name ?? plan}
+                        maxProperties={maxProperties}
+                        plans={plans}
+                        onChangePlan={changePlan}
+                        onCancel={cancelSubscription}
+                    />
+                )}
+
+                {status === 'canceled' && isFuture && (
+                    <SubscriptionCanceledBlock
+                        periodEndDate={periodEndDate!}
+                        remainingDays={remainingDays}
+                        onReactivate={reactivateSubscription}
+                    />
+                )}
+            </div>
         </section>
     )
 }

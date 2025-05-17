@@ -67,7 +67,7 @@ export default function PropertyFilters({ cities, types, countries, className }:
     return (
         <form onSubmit={handleSubmit} className={className}>
             <div className={styles.phraseWrapper}>
-                <span>Je cherche à</span>
+                <p>Je cherche à</p>
                 <span className={styles.phraseWrapper__select}>
                     [
                     <select value={transactionType} onChange={(e) => setTransactionType(e.target.value)}>
@@ -77,7 +77,7 @@ export default function PropertyFilters({ cities, types, countries, className }:
                     ]
                 </span>
 
-                <span> un(e) </span>
+                <p> un(e) </p>
                 <span className={styles.phraseWrapper__select}>
                     [
                     <select value={type} onChange={(e) => setType(e.target.value)}>
@@ -89,7 +89,7 @@ export default function PropertyFilters({ cities, types, countries, className }:
                     ]
                 </span>
 
-                <span> situé à </span>
+                <p> situé à </p>
                 <span className={styles.phraseWrapper__select}>
                     [
                     <select value={city} onChange={(e) => setCity(e.target.value)}>
@@ -101,7 +101,7 @@ export default function PropertyFilters({ cities, types, countries, className }:
                     ]
                 </span>
 
-                <span> en </span>
+                <p> en </p>
                 <span className={styles.phraseWrapper__select}>
                     [
                     <select value={country} onChange={(e) => setCountry(e.target.value)}>
@@ -113,21 +113,21 @@ export default function PropertyFilters({ cities, types, countries, className }:
                     ]
                 </span>
 
-                <span>, avec un budget entre </span>
+                <p>, avec un budget entre </p>
                 <span className={styles.phraseWrapper__select}>
                     [
                     <input type="number" placeholder="min" value={priceMin} onChange={(e) => setPriceMin(e.target.value)}/>
                     ]
                 </span>
 
-                <span> et </span>
+                <p> et </p>
                 <span className={styles.phraseWrapper__select}>
                     [
                     <input type="number" placeholder="max" value={priceMax} onChange={(e) => setPriceMax(e.target.value)}/>
                     ]
                 </span>
 
-                <span> euros, une surface habitable minimale de </span>
+                <p> euros, une surface habitable minimale de </p>
                 <span className={styles.phraseWrapper__select}>
                     [
                     <input type="number" placeholder="min m²" value={surfaceMin}
@@ -135,7 +135,7 @@ export default function PropertyFilters({ cities, types, countries, className }:
                     ]
                 </span>
 
-                <span> m², de type </span>
+                <p> m², de type </p>
                 <span className={styles.phraseWrapper__select}>
                     [
                     <select value={rooms} onChange={(e) => setRooms(e.target.value)}>
@@ -150,21 +150,21 @@ export default function PropertyFilters({ cities, types, countries, className }:
                     ]
                 </span>
 
-                <span>, avec au moins </span>
+                <p>, avec au moins </p>
                 <span className={styles.phraseWrapper__select}>
                     [
                     <input type="number" placeholder="pièces" value={rooms} onChange={(e) => setRooms(e.target.value)}/>
                     ]
                 </span>
 
-                <span> pièces et </span>
+                <p> pièces et </p>
                 <span className={styles.phraseWrapper__select}>
                     [
                     <input type="number" placeholder="chambres" value={bedrooms} onChange={(e) => setBedrooms(e.target.value)}/>
                     ]
                 </span>
 
-                <span> chambres.</span>
+                <p> chambres.</p>
             </div>
 
             <div className={styles.buttonContainer}>
