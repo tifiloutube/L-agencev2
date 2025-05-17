@@ -74,7 +74,7 @@ export default async function PropertyDetailPage({ params }: Props) {
                     isFavorite={isFavorite}
                 />
 
-                <PropertyDeétails
+                <PropertyDetails
                     transactionType={property.transactionType as 'vente' | 'location' }
                     price={property.price}
                     surface={property.surface}
