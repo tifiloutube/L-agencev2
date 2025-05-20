@@ -1,6 +1,12 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import styles from './PropertyDetails.module.css'
+
+const PropertyMapView = dynamic(
+    () => import('@/components/property/PropertyMapView/PropertyMapView'),
+    { ssr: false }
+)
 
 type Props = {
     surface: number
@@ -33,6 +39,11 @@ type Props = {
     energyCostMin: number | null
     energyCostMax: number | null
     energyIndexDate: string | null
+
+    latitude: number
+    longitude: number
+    id: string
+    title: string
 }
 
 export default function PropertyDetails({
@@ -66,6 +77,11 @@ export default function PropertyDetails({
                                             energyCostMin,
                                             energyCostMax,
                                             energyIndexDate,
+
+                                            latitude,
+                                            longitude,
+                                            id,
+                                            title,
                                         }: Props) {
     const isSale = transactionType === 'vente'
     const isRent = transactionType === 'location'
@@ -75,10 +91,10 @@ export default function PropertyDetails({
     return (
         <section className={styles.section}>
             <div className={styles.infoRow}>
-                <span className={styles.price}>
-                    {price.toLocaleString('fr-FR', { maximumFractionDigits: 0 })} €
-                    {isRent && ' /mois'}
-                </span>
+        <span className={styles.price}>
+          {price.toLocaleString('fr-FR', { maximumFractionDigits: 0 })} €
+            {isRent && ' /mois'}
+        </span>
                 {pricePerM2 && (
                     <span className={styles.subText}>soit {pricePerM2} €/m²</span>
                 )}
@@ -88,8 +104,8 @@ export default function PropertyDetails({
                 <div className={styles.infoRow}>
                     <span className={styles.label}>Type de transaction :</span>
                     <span className={styles.value}>
-                        {transactionType === 'vente' ? 'Vente' : 'Location'}
-                    </span>
+            {transactionType === 'vente' ? 'Vente' : 'Location'}
+          </span>
                 </div>
             )}
 
@@ -125,14 +141,14 @@ export default function PropertyDetails({
             <div className={styles.infoRow}>
                 <span className={styles.label}>Terrasse :</span>
                 <span className={styles.value}>
-                    {terrace ? `${terraceCount ?? 1} — ${terraceSurface ?? '?'} m²` : 'Non'}
-                </span>
+          {terrace ? `${terraceCount ?? 1} — ${terraceSurface ?? '?'} m²` : 'Non'}
+        </span>
             </div>
             <div className={styles.infoRow}>
                 <span className={styles.label}>Balcon :</span>
                 <span className={styles.value}>
-                    {balcony ? `${balconyCount ?? 1} — ${balconySurface ?? '?'} m²` : 'Non'}
-                </span>
+          {balcony ? `${balconyCount ?? 1} — ${balconySurface ?? '?'} m²` : 'Non'}
+        </span>
             </div>
             <div className={styles.infoRow}>
                 <span className={styles.label}>Jardin :</span>
@@ -189,14 +205,31 @@ export default function PropertyDetails({
                 <div className={styles.infoRow}>
                     <span className={styles.label}>Estimation coût énergie :</span>
                     <span className={styles.value}>
-                        {energyCostMin ?? '?'} € – {energyCostMax ?? '?'} €
-                    </span>
+            {energyCostMin ?? '?'} € – {energyCostMax ?? '?'} €
+          </span>
                 </div>
             )}
             {energyIndexDate && (
                 <div className={styles.infoRow}>
                     <span className={styles.label}>Date d’indexation :</span>
                     <span className={styles.value}>{energyIndexDate}</span>
+                </div>
+            )}
+
+            {/* 🗺️ MAP */}
+            {latitude && longitude && (
+                <div className={styles.mapWrapper}>
+                    <PropertyMapView
+                        properties={[
+                            {
+                                id,
+                                title,
+                                price,
+                                latitude,
+                                longitude,
+                            },
+                        ]}
+                    />
                 </div>
             )}
         </section>

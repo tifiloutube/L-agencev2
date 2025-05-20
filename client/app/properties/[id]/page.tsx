@@ -75,6 +75,10 @@ export default async function PropertyDetailPage({ params }: Props) {
                 />
 
                 <PropertyDetails
+                    id={property.id}
+                    title={property.title}
+                    latitude={property.latitude!}
+                    longitude={property.longitude!}
                     transactionType={property.transactionType as 'vente' | 'location' }
                     price={property.price}
                     surface={property.surface}

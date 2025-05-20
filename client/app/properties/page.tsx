@@ -1,10 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-
-import PropertyGrid from '@/components/property/PropertyGrid/PropertyGrid'
-import PropertyFilters from '@/components/property/PropertyFilters/PropertyFilters'
-import styles from './page.module.css'
+import PropertyPageContent from '@/components/property/PropertyPageContent/PropertyPageContent'
 
 export default async function PropertiesPage({
                                                  searchParams,
@@ -14,16 +11,14 @@ export default async function PropertiesPage({
     const session = await getServerSession(authOptions)
 
     let favoriteIds: Set<string> = new Set()
-
     if (session?.user?.id) {
         const favorites = await prisma.favorite.findMany({
             where: { userId: session.user.id },
             select: { propertyId: true },
         })
-
         favoriteIds = new Set(favorites.map((f) => f.propertyId))
     }
-    
+
     const city = typeof searchParams.city === 'string' ? searchParams.city : undefined
     const country = typeof searchParams.country === 'string' ? searchParams.country : undefined
     const type = typeof searchParams.type === 'string' ? searchParams.type : undefined
@@ -38,21 +33,9 @@ export default async function PropertiesPage({
         typeof searchParams.hasGarage === 'string' ? searchParams.hasGarage === 'true' : undefined
 
     const [cities, types, countries] = await Promise.all([
-        prisma.property.findMany({
-            where: { status: 'PUBLISHED' },
-            select: { city: true },
-            distinct: ['city'],
-        }),
-        prisma.property.findMany({
-            where: { status: 'PUBLISHED' },
-            select: { type: true },
-            distinct: ['type'],
-        }),
-        prisma.property.findMany({
-            where: { status: 'PUBLISHED' },
-            select: { country: true },
-            distinct: ['country'],
-        }),
+        prisma.property.findMany({ where: { status: 'PUBLISHED' }, select: { city: true }, distinct: ['city'] }),
+        prisma.property.findMany({ where: { status: 'PUBLISHED' }, select: { type: true }, distinct: ['type'] }),
+        prisma.property.findMany({ where: { status: 'PUBLISHED' }, select: { country: true }, distinct: ['country'] }),
     ])
 
     const properties = await prisma.property.findMany({
@@ -70,12 +53,8 @@ export default async function PropertiesPage({
             ...(floor && { floor: { gte: floor } }),
             ...(hasGarage !== undefined && { hasGarage }),
         },
-        include: {
-            images: { take: 1 },
-        },
-        orderBy: {
-            createdAt: 'desc',
-        },
+        include: { images: { take: 1 } },
+        orderBy: { createdAt: 'desc' },
     })
 
     const propertiesWithFavorite = properties.map((property) => ({
@@ -84,19 +63,11 @@ export default async function PropertiesPage({
     }))
 
     return (
-        <main className="wrapper">
-            <h1 className={styles.h1}>
-                Find your <span className={styles.tag}>home</span>
-            </h1>
-
-            <PropertyFilters
-                className={styles.filters}
-                cities={cities.map((c) => c.city)}
-                types={types.map((t) => t.type)}
-                countries={countries.map((c) => c.country)}
-            />
-
-            <PropertyGrid className={styles.cards} properties={propertiesWithFavorite} />
-        </main>
+        <PropertyPageContent
+            properties={propertiesWithFavorite}
+            cities={cities.map((c) => c.city)}
+            types={types.map((t) => t.type)}
+            countries={countries.map((c) => c.country)}
+        />
     )
 }

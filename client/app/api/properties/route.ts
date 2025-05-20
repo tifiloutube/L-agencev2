@@ -4,6 +4,8 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { checkUserCanPostProperty } from '@/lib/services/userAccess'
 
+const MAPBOX_TOKEN = process.env.MAPBOX_API_TOKEN!
+
 export async function POST(req: Request) {
     const session = await getServerSession(authOptions)
 
@@ -53,6 +55,29 @@ export async function POST(req: Request) {
     if (!canPost.canPost) {
         return NextResponse.json({ error: canPost.reason }, { status: 403 })
     }
+    
+    const fullAddress = `${address}, ${zipCode} ${city}, ${country}`
+
+    let latitude: number | null = null
+    let longitude: number | null = null
+
+    try {
+        const geoRes = await fetch(
+            `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+                fullAddress
+            )}.json?access_token=${MAPBOX_TOKEN}`
+        )
+
+        const geoData = await geoRes.json()
+        const [lng, lat] = geoData?.features?.[0]?.center || []
+
+        if (lat && lng) {
+            latitude = lat
+            longitude = lng
+        }
+    } catch (err) {
+        console.error('Erreur géocodage Mapbox', err)
+    }
 
     try {
         const property = await prisma.property.create({
@@ -70,9 +95,11 @@ export async function POST(req: Request) {
                 city,
                 zipCode,
                 country,
-                userId: session.user.id,
                 transactionType,
+                latitude,
+                longitude,
 
+                userId: session.user.id,
                 kitchenEquipped,
                 terrace,
                 balcony,
@@ -87,7 +114,6 @@ export async function POST(req: Request) {
                 constructionYear,
                 landSurface,
                 condition,
-
                 energyConsumption,
                 greenhouseGasEmission,
                 finalEnergyConsumption,

@@ -58,6 +58,8 @@ model Property {
   city            String
   zipCode         String
   country         String
+  latitude        Float?
+  longitude       Float?
   status          PropertyStatus @default(DRAFT)
   transactionType String?
 

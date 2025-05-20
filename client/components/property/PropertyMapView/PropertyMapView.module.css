@@ -1,0 +1,6 @@
+.mapContainer {
+    width: 100%;
+    grid-column: 1/13;
+    height: 600px;
+    border-radius: 10px;
+}
