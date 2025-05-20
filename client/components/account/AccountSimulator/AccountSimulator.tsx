@@ -1,39 +1,35 @@
 'use client'
 
 import { useState } from 'react'
+import { useToast } from '@/lib/context/ToastContext'
 import styles from './AccountSimulator.module.css'
 
 const MAX_DEBT_RATIO = 0.35
 
 export default function AccountSimulator() {
-    const [amount, setAmount] = useState<number>(200000)
-    const [rate, setRate] = useState<number>(1.5)
-    const [duration, setDuration] = useState<number>(20)
-    const [income, setIncome] = useState<number>(3000)
-    const [contribution, setContribution] = useState<number>(20000)
+    const { showToast } = useToast()
+
+    const [amount, setAmount] = useState(200000)
+    const [rate, setRate] = useState(1.5)
+    const [duration, setDuration] = useState(20)
+    const [income, setIncome] = useState(3000)
+    const [contribution, setContribution] = useState(20000)
 
     const [monthly, setMonthly] = useState<number | null>(null)
     const [isEligible, setIsEligible] = useState<boolean | null>(null)
-    const [maxAllowedMonthly, setMaxAllowedMonthly] = useState<number>(0)
-    const [saved, setSaved] = useState<boolean>(false)
-    const [saving, setSaving] = useState<boolean>(false)
+    const [maxAllowedMonthly, setMaxAllowedMonthly] = useState(0)
+    const [saving, setSaving] = useState(false)
 
     const simulate = () => {
-        setSaved(false)
-
         const amountToBorrow = amount - contribution
         const monthlyRate = rate / 100 / 12
         const months = duration * 12
 
-        let monthlyPayment = 0
-
-        if (monthlyRate === 0) {
-            monthlyPayment = amountToBorrow / months
-        } else {
-            monthlyPayment =
-                (amountToBorrow * monthlyRate) /
+        const monthlyPayment =
+            monthlyRate === 0
+                ? amountToBorrow / months
+                : (amountToBorrow * monthlyRate) /
                 (1 - Math.pow(1 + monthlyRate, -months))
-        }
 
         const maxMonthly = income * MAX_DEBT_RATIO
 
@@ -43,15 +39,13 @@ export default function AccountSimulator() {
     }
 
     const saveSimulation = async () => {
-        if (monthly === null || isEligible !== true) return
+        if (monthly === null || !isEligible) return
 
         setSaving(true)
 
         const res = await fetch('/api/simulation/save', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 amount,
                 contribution,
@@ -66,9 +60,15 @@ export default function AccountSimulator() {
         setSaving(false)
 
         if (res.ok) {
-            setSaved(true)
+            showToast({
+                message: 'Simulation enregistrée avec succès',
+                type: 'success',
+            })
         } else {
-            console.error('Erreur lors de la sauvegarde :', await res.json())
+            showToast({
+                message: 'Erreur lors de la sauvegarde',
+                type: 'error',
+            })
         }
     }
 
@@ -132,7 +132,10 @@ export default function AccountSimulator() {
                     />
                 </label>
 
-                <button className={`button ${styles.button}`} onClick={simulate}>
+                <button
+                    className={`button ${styles.button}`}
+                    onClick={simulate}
+                >
                     Simuler
                 </button>
             </div>
@@ -160,18 +163,14 @@ export default function AccountSimulator() {
                                 disabled={saving}
                                 style={{ marginTop: 20 }}
                             >
-                                {saving ? '⏳ Sauvegarde en cours...' : '💾 Sauvegarder cette simulation'}
+                                {saving
+                                    ? 'Sauvegarde en cours...'
+                                    : 'Sauvegarder cette simulation'}
                             </button>
-
-                            {saved && (
-                                <p className={styles.savedMessage}>
-                                    Simulation sauvegardée avec succès !
-                                </p>
-                            )}
                         </>
                     ) : (
                         <p className={styles.notEligible}>
-                            ❌ Mensualité trop élevée par rapport à votre capacité d'endettement
+                            Mensualité trop élevée par rapport à votre capacité d'endettement
                         </p>
                     )}
                 </div>

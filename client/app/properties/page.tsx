@@ -23,8 +23,7 @@ export default async function PropertiesPage({
 
         favoriteIds = new Set(favorites.map((f) => f.propertyId))
     }
-
-    // ✅ Safe parsing des query params
+    
     const city = typeof searchParams.city === 'string' ? searchParams.city : undefined
     const country = typeof searchParams.country === 'string' ? searchParams.country : undefined
     const type = typeof searchParams.type === 'string' ? searchParams.type : undefined
