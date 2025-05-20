@@ -1,0 +1,65 @@
+.container {
+    margin-top: 20px;
+}
+
+.heading {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 400px;
+}
+
+.label {
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+    font-size: 0.95rem;
+}
+
+.input {
+    margin-top: 5px;
+    padding: 8px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.button {
+    margin-top: 10px;
+}
+
+.result {
+    margin-top: 20px;
+    font-size: 1rem;
+}
+
+.line {
+    margin-bottom: 8px;
+}
+
+.eligible {
+    margin-top: 12px;
+    color: green;
+    font-weight: bold;
+}
+
+.notEligible {
+    margin-top: 12px;
+    color: red;
+    font-weight: bold;
+}
+
+.saveButton {
+    margin-top: 10px;
+}
+
+.savedMessage {
+    margin-top: 12px;
+    color: #1f8f1f;
+    font-weight: bold;
+}

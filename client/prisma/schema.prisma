@@ -40,6 +40,7 @@ model User {
   updatedAt          DateTime            @updatedAt
   conversations      Conversation[]      @relation("ConversationParticipants")
   messages           Message[]
+  simulations        Simulation[]
 }
 
 model Property {
@@ -165,4 +166,19 @@ model Message {
   createdAt      DateTime     @default(now())
   conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+}
+
+model Simulation {
+  id           String   @id @default(uuid())
+  userId       String   @unique
+  amount       Float
+  contribution Float
+  income       Float
+  duration     Int
+  rate         Float
+  monthly      Float
+  isEligible   Boolean
+  createdAt    DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

@@ -8,6 +8,7 @@ import AccountProperties from "@/components/account/AccountProperties/AccountPro
 import AccountFavorites from "@/components/account/AccountFavorites/AccountFavorites";
 import AccountSubscription from "@/components/account/AccountSubscription/AccountSubscription";
 import AccountConversations from "@/components/account/AccountConversations/AccountConversations";
+import AccountSimulator from "@/components/account/AccountSimulator/AccountSimulator";
 
 type Props = {
     user: Pick<User, 'id' | 'name' | 'email' | 'phone'>
@@ -17,7 +18,7 @@ type Props = {
     conversations: Conversation[]
 }
 
-type Tab = 'profile' | 'properties' | 'favorites' | 'subscription' | 'conversations'
+type Tab = 'profile' | 'properties' | 'favorites' | 'subscription' | 'conversations' | 'simulator'
 const STORAGE_KEY = 'account_active_tab'
 
 export default function AccountClientView({
@@ -84,13 +85,21 @@ export default function AccountClientView({
                 >
                     Discussions
                 </button>
+
+                <button
+                    onClick={() => setActiveTab('simulator')}
+                    className={`button ${activeTab === 'simulator' ? styles.active : ''}`}
+                >
+                    Simulation
+                </button>
             </div>
 
-            {activeTab === 'profile' && <AccountProfile user={user} />}
+            {activeTab === 'profile' && <AccountProfile user={user}/>}
             {activeTab === 'properties' && (<AccountProperties properties={properties} maxProperties={maxProperties} subscriptionStatus={subscription?.status ?? null}/>)}
             {activeTab === 'favorites' && <AccountFavorites favorites={favorites} />}
             {activeTab === 'subscription' && <AccountSubscription subscription={subscription} />}
             {activeTab === 'conversations' && (<AccountConversations conversations={conversations} currentUserId={user.id} />)}
+            {activeTab === 'simulator' && <AccountSimulator />}
         </>
     )
 }

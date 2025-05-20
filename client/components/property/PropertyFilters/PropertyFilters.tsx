@@ -11,6 +11,11 @@ interface Props {
     className?: string;
 }
 
+type Simulation = {
+    amount: number
+    isEligible: boolean
+}
+
 export default function PropertyFilters({ cities, types, countries, className }: Props) {
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -24,6 +29,7 @@ export default function PropertyFilters({ cities, types, countries, className }:
     const [surfaceMin, setSurfaceMin] = useState('');
     const [rooms, setRooms] = useState('');
     const [bedrooms, setBedrooms] = useState('');
+    const [creditAmount, setCreditAmount] = useState<number | null>(null);
 
     useEffect(() => {
         setTransactionType(searchParams.get('transactionType') || 'buy');
@@ -37,6 +43,17 @@ export default function PropertyFilters({ cities, types, countries, className }:
         setBedrooms(searchParams.get('bedrooms') || '');
     }, [searchParams]);
 
+    useEffect(() => {
+        fetch('/api/simulation/latest')
+            .then(res => res.json())
+            .then((data: { simulation: Simulation | null }) => {
+                if (data.simulation?.isEligible) {
+                    setCreditAmount(data.simulation.amount);
+                }
+            })
+            .catch(() => setCreditAmount(null));
+    }, []);
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -46,7 +63,6 @@ export default function PropertyFilters({ cities, types, countries, className }:
         }
 
         const params = new URLSearchParams();
-
         params.set('transactionType', transactionType);
         if (city) params.set('city', city);
         if (country) params.set('country', country);
@@ -62,6 +78,12 @@ export default function PropertyFilters({ cities, types, countries, className }:
 
     const resetFilters = () => {
         router.push('/properties');
+    };
+
+    const applySimulationAmount = () => {
+        if (creditAmount) {
+            setPriceMax(creditAmount.toString());
+        }
     };
 
     return (
@@ -116,14 +138,14 @@ export default function PropertyFilters({ cities, types, countries, className }:
                 <p>, avec un budget entre </p>
                 <span className={styles.phraseWrapper__select}>
                     [
-                    <input type="number" placeholder="min" value={priceMin} onChange={(e) => setPriceMin(e.target.value)}/>
+                    <input type="number" placeholder="min" value={priceMin} onChange={(e) => setPriceMin(e.target.value)} />
                     ]
                 </span>
 
                 <p> et </p>
                 <span className={styles.phraseWrapper__select}>
                     [
-                    <input type="number" placeholder="max" value={priceMax} onChange={(e) => setPriceMax(e.target.value)}/>
+                    <input type="number" placeholder="max" value={priceMax} onChange={(e) => setPriceMax(e.target.value)} />
                     ]
                 </span>
 
@@ -131,7 +153,7 @@ export default function PropertyFilters({ cities, types, countries, className }:
                 <span className={styles.phraseWrapper__select}>
                     [
                     <input type="number" placeholder="min m²" value={surfaceMin}
-                           onChange={(e) => setSurfaceMin(e.target.value)}/>
+                           onChange={(e) => setSurfaceMin(e.target.value)} />
                     ]
                 </span>
 
@@ -153,14 +175,14 @@ export default function PropertyFilters({ cities, types, countries, className }:
                 <p>, avec au moins </p>
                 <span className={styles.phraseWrapper__select}>
                     [
-                    <input type="number" placeholder="pièces" value={rooms} onChange={(e) => setRooms(e.target.value)}/>
+                    <input type="number" placeholder="pièces" value={rooms} onChange={(e) => setRooms(e.target.value)} />
                     ]
                 </span>
 
                 <p> pièces et </p>
                 <span className={styles.phraseWrapper__select}>
                     [
-                    <input type="number" placeholder="chambres" value={bedrooms} onChange={(e) => setBedrooms(e.target.value)}/>
+                    <input type="number" placeholder="chambres" value={bedrooms} onChange={(e) => setBedrooms(e.target.value)} />
                     ]
                 </span>
 
@@ -169,9 +191,18 @@ export default function PropertyFilters({ cities, types, countries, className }:
 
             <div className={styles.buttonContainer}>
                 <button type="submit" className="button">Filtrer</button>
-                <button type="button" className="button" onClick={resetFilters}>
-                    Réinitialiser
-                </button>
+                <button type="button" className="button" onClick={resetFilters}>Réinitialiser</button>
+
+                {creditAmount && (
+                    <button
+                        type="button"
+                        className="button"
+                        onClick={applySimulationAmount}
+                        title="Utiliser le montant de crédit issu de votre simulation"
+                    >
+                        Utiliser mon budget simulé ({creditAmount.toLocaleString()} €)
+                    </button>
+                )}
             </div>
         </form>
     );
