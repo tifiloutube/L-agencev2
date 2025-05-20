@@ -4,7 +4,7 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { checkUserCanPostProperty } from '@/lib/services/userAccess'
 
-const MAPBOX_TOKEN = process.env.MAPBOX_API_TOKEN!
+const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN
 
 export async function POST(req: Request) {
     const session = await getServerSession(authOptions)
