@@ -1,7 +1,7 @@
-import { prisma } from '@/lib/prisma'
+import { prisma } from '@/lib/prisma/prisma'
 import { notFound } from 'next/navigation'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { authOptions } from '@/lib/auth/auth'
 import styles from './page.module.css'
 
 import PropertyHeader from '@/components/property/PropertyHeader/PropertyHeader'

@@ -19,6 +19,7 @@
     font-style: normal;
     font-weight: 400;
     margin: 0 10px;
+    /*
     select, input {
         background-color: transparent;
         border: none;
@@ -34,12 +35,15 @@
     input {
         max-width: 200px;
     }
+     */
 }
 
+/*
 .phraseWrapper__select select::placeholder,
 .phraseWrapper__select input::placeholder {
     color: var(--primary-color);
 }
+ */
 
 .buttonContainer {
     margin-top: 50px;

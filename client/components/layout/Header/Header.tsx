@@ -21,11 +21,17 @@ export default function Header() {
         >
             <header className={`${styles.header} ${isHovered ? styles.headerVisible : ''}`}>
                 <nav className={styles.nav}>
-                    <Link href="/" className={`${styles.logo} ${isActive('/') ? styles.active : ''}`}>
+                    <Link
+                        href="/"
+                        className={`${styles.navItem} ${isActive('/') ? styles.active : ''}`}
+                    >
                         Acceuil
                     </Link>
 
-                    <Link href="/properties" className={`${styles.logo} ${isActive('/properties') ? styles.active : ''}`}>
+                    <Link
+                        href="/properties"
+                        className={`${styles.navItem} ${isActive('/properties') ? styles.active : ''}`}
+                    >
                         Biens
                     </Link>
 
@@ -33,11 +39,14 @@ export default function Header() {
                         <>
                             <Link
                                 href="/account"
-                                className={`${styles.link} ${isActive('/account') ? styles.active : ''}`}
+                                className={`${styles.navItem} ${styles.link} ${isActive('/account') ? styles.active : ''}`}
                             >
                                 Mon compte
                             </Link>
-                            <button onClick={() => signOut({callbackUrl: '/'})} className={styles.logout}>
+                            <button
+                                onClick={() => signOut({ callbackUrl: '/' })}
+                                className={`${styles.navItem} ${styles.logout}`}
+                            >
                                 Déconnexion
                             </button>
                         </>
@@ -46,7 +55,7 @@ export default function Header() {
                     {!session?.user && (
                         <Link
                             href="/login"
-                            className={`${styles.link} ${isActive('/login') ? styles.active : ''}`}
+                            className={`${styles.navItem} ${isActive('/login') ? styles.active : ''}`}
                         >
                             Connexion
                         </Link>
