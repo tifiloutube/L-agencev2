@@ -13,12 +13,12 @@ export default async function ConversationPage({ params }: Props) {
     if (!session?.user?.id) return notFound()
 
     const conversation = await prisma.conversation.findUnique({
-        where: { id: params.conversationId },
+        where: {id: params.conversationId},
         include: {
             participants: true,
             messages: {
-                include: { sender: true },
-                orderBy: { createdAt: 'asc' },
+                include: {sender: true},
+                orderBy: {createdAt: 'asc'},
             },
             property: {
                 select: {
@@ -34,11 +34,11 @@ export default async function ConversationPage({ params }: Props) {
     }
 
     return (
-        <main className="wrapper" style={{ paddingBlock: '40px' }}>
+        <main className="wrapper" style={{paddingBlock: '40px'}}>
             <h1>
                 Conversation –&nbsp;
                 {conversation.property ? (
-                    <a href={`/properties/${conversation.property.id}`} style={{ textDecoration: 'underline' }}>
+                    <a href={`/properties/${conversation.property.id}`} style={{textDecoration: 'underline'}}>
                         {conversation.property.title}
                     </a>
                 ) : 'Annonce supprimée'}
