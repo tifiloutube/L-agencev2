@@ -19,6 +19,12 @@ export default async function PropertiesPage({
         favoriteIds = new Set(favorites.map((f) => f.propertyId))
     }
 
+    const transactionType =
+        typeof searchParams.transactionType === 'string' &&
+        ['vente', 'location'].includes(searchParams.transactionType)
+            ? (searchParams.transactionType as 'vente' | 'location')
+            : undefined
+
     const city = typeof searchParams.city === 'string' ? searchParams.city : undefined
     const country = typeof searchParams.country === 'string' ? searchParams.country : undefined
     const type = typeof searchParams.type === 'string' ? searchParams.type : undefined
@@ -29,8 +35,7 @@ export default async function PropertiesPage({
     const rooms = searchParams.rooms ? parseInt(searchParams.rooms as string) : undefined
     const bathrooms = searchParams.bathrooms ? parseInt(searchParams.bathrooms as string) : undefined
     const floor = searchParams.floor ? parseInt(searchParams.floor as string) : undefined
-    const hasGarage =
-        typeof searchParams.hasGarage === 'string' ? searchParams.hasGarage === 'true' : undefined
+    const hasGarage = typeof searchParams.hasGarage === 'string' ? searchParams.hasGarage === 'true' : undefined
 
     const [cities, types, countries] = await Promise.all([
         prisma.property.findMany({ where: { status: 'PUBLISHED' }, select: { city: true }, distinct: ['city'] }),
@@ -41,6 +46,7 @@ export default async function PropertiesPage({
     const properties = await prisma.property.findMany({
         where: {
             status: 'PUBLISHED',
+            ...(transactionType && { transactionType }),
             ...(city && { city: { contains: city, mode: 'insensitive' } }),
             ...(country && { country: { contains: country, mode: 'insensitive' } }),
             ...(type && { type: { equals: type } }),

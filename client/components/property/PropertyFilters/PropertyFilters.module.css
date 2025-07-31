@@ -3,50 +3,50 @@
     flex-wrap: wrap;
     gap: 6px;
     color: var(--secondary-color);
-    font-family: Sansation Light, sans-serif;
+    font-family: 'Sansation Light', sans-serif;
     font-size: 40px;
     font-style: normal;
     font-weight: 400;
+}
+
+.phraseWrapper_phrase {
+    line-height: 1.3em;
 }
 
 .phraseWrapper__select {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    margin: 0 15px;
+}
+
+.phraseWrapper__select select,
+.phraseWrapper__select input {
+    background-color: transparent;
+    border: none;
     color: var(--primary-color);
-    font-family: Sansation Light, sans-serif;
+    font-family: 'Sansation Light', sans-serif;
     font-size: 40px;
     font-style: normal;
     font-weight: 400;
-    margin: 0 10px;
-    /*
-    select, input {
-        background-color: transparent;
-        border: none;
-        color: var(--primary-color);
-        font-family: Sansation Light, sans-serif;
-        font-size: 40px;
-        font-style: normal;
-        font-weight: 400;
-        cursor: pointer;
-        appearance: none;
-        width: auto;
-    }
-    input {
-        max-width: 200px;
-    }
-     */
+    cursor: pointer;
+    appearance: none;
+    width: auto;
 }
 
-/*
-.phraseWrapper__select select::placeholder,
+.phraseWrapper__select input {
+    max-width: 200px;
+}
+
 .phraseWrapper__select input::placeholder {
     color: var(--primary-color);
+    opacity: 1;
 }
- */
+
+.phraseWrapper__select select {
+    background-image: none;
+}
 
 .buttonContainer {
     margin-top: 50px;
     display: flex;
+    flex-wrap: wrap;
     gap: 20px;
 }

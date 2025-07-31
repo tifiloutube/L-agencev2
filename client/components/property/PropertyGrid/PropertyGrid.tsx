@@ -7,8 +7,8 @@ import FavoriteButton from '@/components/property/FavoriteButton/FavoriteButton'
 interface Property {
     id: string;
     title: string;
-    city: string;
     description: string;
+    city: string;
     price: number;
     images: { url: string }[];
     isFavorite?: boolean;

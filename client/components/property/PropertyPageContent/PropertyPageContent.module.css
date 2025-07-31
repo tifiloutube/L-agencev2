@@ -18,8 +18,15 @@
     }
 }
 
-.filters {
+.count {
     margin-top: 50px;
+    grid-column: 1/12;
+    font-size: 20px;
+    color: var(--primary-color);
+    font-family: 'Sansation Light', sans-serif;
+}
+
+.filters {
     grid-column: 1/13;
 }
 
