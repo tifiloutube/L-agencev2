@@ -6,20 +6,16 @@ type Props = {
     address: string
     zipCode: string
     city: string
-    country: string
     price: number
+    surface: number
     description: string
+    transactionType: 'vente' | 'location'
 }
 
-export default function PropertyGalleryAndSummary({
-                                                      images,
-                                                      address,
-                                                      zipCode,
-                                                      city,
-                                                      country,
-                                                      price,
-                                                      description,
-                                                  }: Props) {
+export default function PropertyGalleryAndSummary({images, address, zipCode, city, price, surface, description, transactionType,}: Props) {
+    const isLocation = transactionType === 'location'
+    const priceFormatted = price.toLocaleString('fr-FR')
+
     return (
         <section className={styles.container}>
             <div className={styles.gallery}>
@@ -37,12 +33,22 @@ export default function PropertyGalleryAndSummary({
                 <div className={styles.summary}>
                     <div className={styles.infoRow}>
                         <span className={styles.address}>
-                            {address}, {zipCode} {city}, {country}
+                            {address}, {zipCode} {city}
                         </span>
                     </div>
 
                     <div className={styles.infoRow}>
-                        <span className={styles.price}>{price} €</span>
+                        <span className={styles.price}>
+                            {priceFormatted} €
+                        </span>
+
+                        {isLocation ? (
+                            <span className={styles.priceDetail}>/ mois</span>
+                        ) : (
+                            <span className={styles.priceDetail}>
+                                ({Math.round(price / surface).toLocaleString('fr-FR')} € / m²)
+                            </span>
+                        )}
                     </div>
 
                     <div className={`${styles.infoRow} ${styles.description}`}>

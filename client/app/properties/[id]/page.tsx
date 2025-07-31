@@ -8,6 +8,7 @@ import PropertyHeader from '@/components/property/PropertyHeader/PropertyHeader'
 import PropertyGalleryAndSummary from '@/components/property/PropertyGalleryAndSummary/PropertyGalleryAndSummary'
 import PropertyDetails from '@/components/property/PropertyDetails/PropertyDetails'
 import PropertyOwnerContact from '@/components/property/PropertyOwnerContact/PropertyOwnerContact'
+import PropertyMapSection from '@/components/property/PropertyMapSection/PropertyMapSection'
 
 import type { Property, User, PropertyImage } from '@prisma/client'
 
@@ -59,9 +60,10 @@ export default async function PropertyDetailPage({ params }: Props) {
                 address={property.address}
                 zipCode={property.zipCode}
                 city={property.city}
-                country={property.country}
                 price={property.price}
+                surface={property.surface}
                 description={property.description}
+                transactionType={property.transactionType as 'vente' | 'location'}
             />
 
             <section className={styles.container}>
@@ -79,7 +81,7 @@ export default async function PropertyDetailPage({ params }: Props) {
                     title={property.title}
                     latitude={property.latitude!}
                     longitude={property.longitude!}
-                    transactionType={property.transactionType as 'vente' | 'location' }
+                    transactionType={property.transactionType as 'vente' | 'location'}
                     price={property.price}
                     surface={property.surface}
                     rooms={property.rooms}
@@ -87,7 +89,6 @@ export default async function PropertyDetailPage({ params }: Props) {
                     hasGarage={property.hasGarage}
                     floor={property.floor}
                     address={property.address}
-
                     kitchenEquipped={property.kitchenEquipped}
                     terrace={property.terrace}
                     terraceCount={property.terraceCount}
@@ -108,9 +109,20 @@ export default async function PropertyDetailPage({ params }: Props) {
                     energyCostMin={property.energyCostMin}
                     energyCostMax={property.energyCostMax}
                     energyIndexDate={property.energyIndexDate}
-
                 />
             </section>
+
+            {property.latitude !== null && property.longitude !== null && (
+                <section className={styles.map}>
+                    <PropertyMapSection
+                        id={property.id}
+                        title={property.title}
+                        price={property.price}
+                        latitude={property.latitude}
+                        longitude={property.longitude}
+                    />
+                </section>
+            )}
         </main>
     )
 }

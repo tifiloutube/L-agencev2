@@ -30,7 +30,7 @@ export default function ContactOwnerButton({ propertyId }: { propertyId: string 
 
     return (
         <button onClick={handleClick} className={`button`}>
-            💬 Messagerie interne
+            Messagerie interne
         </button>
     )
 }

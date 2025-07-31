@@ -1,6 +1,6 @@
 :root {
   --primary-color: #f9a600;
-  --secondary-color: #3b3b3b;
+  --secondary-color: #000000;
   --tertiary-color: #fff2e0;
   --fourth--color: #ffd47d;
 }
@@ -11,6 +11,12 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+@font-face {
+  font-family: 'Sansation';
+  src: url('../assets/fonts/Sansation-Regular/WOFF2/Sansation_Regular.woff2') format('WOFF2'),
+  url('../assets/fonts/Sansation-Regular/WOFF/Sansation_Regular.woff') format('WOFF')
 }
 
 @font-face {

@@ -1,5 +1,5 @@
 .section {
-    width: 60%;
+    width: 50%;
 }
 
 .mapWrapper {
@@ -7,4 +7,120 @@
     height: 600px;
     border-radius: 12px;
     overflow: hidden;
+}
+
+.subTitle {
+    color: var(--secondary-color);
+    font-family: Sansation, sans-serif;
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    margin-bottom: 20px;
+}
+
+.transactionType {
+    color: var(--secondary-color);
+    font-family: Sansation, sans-serif;
+    font-size: 25px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    display: flex;
+    gap: 10px;
+}
+
+.informations {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin-top: 60px;
+}
+
+.titleInfo {
+    color: var(--primary-color);
+    font-family: Sansation, sans-serif;
+    font-size: 25px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    display: flex;
+    gap: 10px;
+}
+
+.infoBien, .infoInterieur, .infoEcologie {
+    margin-top: 25px;
+    display: grid;
+    row-gap: 20px;
+    grid-template-columns: repeat(2, 1fr);
+    color: var(--secondary-color);
+    font-family: Sansation, sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.diagnostics {
+    margin-top: 70px;
+    display: flex;
+    gap: 50px;
+    .infoRow {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        .diagnosticScale {
+            display: flex;
+            gap: 4px;
+            margin-top: 4px;
+        }
+
+        .scaleItem {
+            display: flex;
+            align-content: center;
+            justify-content: center;
+            margin-top: auto;
+            margin-bottom: auto;
+            width: 24px;
+            height: 10px;
+            border-radius: 2px;
+            font-weight: bold;
+            font-size: 12px;
+            text-align: center;
+            line-height: 16px;
+            color: #000;
+            background-color: #ddd;
+            opacity: 0.4;
+        }
+
+        .active {
+            height: 16px;
+            opacity: 1;
+            color: #000;
+        }
+
+        .scaleA { background-color: #00b050; }
+        .scaleB { background-color: #66c266; }
+        .scaleC { background-color: #ffd966; }
+        .scaleD { background-color: #f6b26b; }
+        .scaleE { background-color: #e06666; }
+        .scaleF { background-color: #a61c00; }
+        .scaleG { background-color: #5b0f00; }
+    }
+    .label {
+        color: var(--secondary-color);
+        font-family: Sansation, sans-serif;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+    }
+    .signification {
+        color: var(--secondary-color);
+        font-family: Sansation, sans-serif;
+        font-size: 13px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+    }
 }

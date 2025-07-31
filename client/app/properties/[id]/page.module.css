@@ -1,5 +1,14 @@
 .container {
+    margin-top: 130px;
     grid-column: 1/13;
     display: flex;
     gap: 20px;
+}
+
+.map {
+    margin-top: 150px;
+    grid-column: 1/13;
+    height: 500px;
+    border-radius: 8px;
+    overflow: hidden;
 }
