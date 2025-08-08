@@ -2,9 +2,8 @@
 
 import { Property, PropertyImage, PropertyStatus } from '@prisma/client'
 import Link from 'next/link'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useToast } from '@/lib/context/ToastContext'
-
 import styles from './AccountProperties.module.css'
 
 type PropertyWithImage = Property & { images: PropertyImage[] }
@@ -16,8 +15,13 @@ type Props = {
 }
 
 export default function AccountProperties({ properties: initialProperties, maxProperties, subscriptionStatus }: Props) {
-    const [properties, setProperties] = useState(initialProperties)
+    const [properties, setProperties] = useState<PropertyWithImage[]>([])
+
     const { showToast } = useToast()
+
+    useEffect(() => {
+        setProperties(initialProperties)
+    }, [initialProperties])
 
     const activeCount = useMemo(
         () => properties.filter(p => p.status === 'PUBLISHED').length,
@@ -73,20 +77,25 @@ export default function AccountProperties({ properties: initialProperties, maxPr
 
     return (
         <section className={styles.container}>
-            <h2 className={`h2 ${styles.h2}`}>Mes biens</h2>
+            <div className={styles.containerHeader}>
+                <div className={styles.containerTitle}>
+                    <h2 className={styles.h2}>Mes biens</h2>
+                    <h3 className={styles.h3}>Gérez vos annonces immobilières</h3>
+                </div>
 
-            <Link href="/properties/new">
-                <button className={`button ${styles.button}`}>Ajouter un nouveau bien</button>
-            </Link>
+                <Link href="/properties/new">
+                    <button className={`button ${styles.button}`}>Ajouter un nouveau bien</button>
+                </Link>
+            </div>
 
             {archivedCount > 0 && subscriptionStatus !== 'active' && (
-                <div className={`${styles.alert}`}>
+                <div className={styles.alert}>
                     ⚠️ Certains de vos biens ont été archivés automatiquement car votre abonnement est inactif. Vous ne pouvez publier que {maxProperties} bien{maxProperties > 1 ? 's' : ''}.
                 </div>
             )}
 
             {properties.length === 0 ? (
-                <p className={`${styles.empty}`}>Vous n'avez encore ajouté aucun bien.</p>
+                <p className={styles.empty}>Vous n'avez encore ajouté aucun bien.</p>
             ) : (
                 <ul className={styles.accountPropertiesList}>
                     {properties.map(property => (
@@ -102,10 +111,27 @@ export default function AccountProperties({ properties: initialProperties, maxPr
                             </div>
 
                             <div className={styles.content}>
-                                <div>
-                                    <strong>{property.title}</strong> — {property.status.toLowerCase()}<br />
-                                    {property.city}, {property.price} €
+                                <div className={styles.contentHeader}>
+                                    <h4>{property.title}</h4>
+                                    <p className={styles.transactionType}>
+                                        <span className={styles.badge}>
+                                            {property.transactionType === 'vente' && 'Vente'}
+                                            {property.transactionType === 'location' && 'Location'}
+                                            {(!property.transactionType || property.transactionType === '') && '❔ Type inconnu'}
+                                        </span>
+                                    </p>
                                 </div>
+
+                                <div className={styles.info}>
+                                    <p>{property.city}</p>
+                                    <p>{property.price} €</p>
+                                </div>
+
+
+                                <p className={styles.status}>{property.status.toLowerCase()}</p>
+                            </div>
+
+                            <div className={styles.actionsColumn}>
                                 <div className={styles.statusActions}>
                                     {property.status === 'DRAFT' && (
                                         <button
@@ -152,9 +178,6 @@ export default function AccountProperties({ properties: initialProperties, maxPr
                                         </button>
                                     )}
                                 </div>
-                            </div>
-
-                            <div className={styles.actionsColumn}>
                                 <Link href={`/properties/${property.id}/edit`}>
                                     <button className="button">Modifier</button>
                                 </Link>

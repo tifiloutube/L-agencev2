@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma/prisma'
 import { authOptions } from '@/lib/auth/auth'
 import { notFound } from 'next/navigation'
 import MessageThread from '@/components/message/MessageThread/MessageThread'
+import styles from './page.module.css'
 
 type Props = {
     params: { conversationId: string }
@@ -34,22 +35,25 @@ export default async function ConversationPage({ params }: Props) {
     }
 
     return (
-        <main className="wrapper" style={{paddingBlock: '40px'}}>
-            <h1>
-                Conversation –&nbsp;
-                {conversation.property ? (
-                    <a href={`/properties/${conversation.property.id}`} style={{textDecoration: 'underline'}}>
-                        {conversation.property.title}
-                    </a>
-                ) : 'Annonce supprimée'}
+        <main className="wrapper">
+            <div className={styles.container}>
+                <h1 className={styles.h1}>
+                    Conversation –{' '}
+                    {conversation.property ? (
+                        <a href={`/properties/${conversation.property.id}`} className="link">
+                            {conversation.property.title}
+                        </a>
+                    ) : (
+                        'Annonce supprimée'
+                    )}
+                </h1>
 
-            </h1>
-
-            <MessageThread
-                conversationId={conversation.id}
-                messages={conversation.messages}
-                currentUserId={session.user.id}
-            />
+                <MessageThread
+                    conversationId={conversation.id}
+                    messages={conversation.messages}
+                    currentUserId={session.user.id}
+                />
+            </div>
         </main>
     )
 }

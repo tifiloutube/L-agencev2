@@ -1,6 +1,7 @@
-import {NextResponse} from "next/server";
-import {sellerPlans} from "@/lib/stripe/plan";
+import { NextResponse } from 'next/server'
+import { getSellerPlans } from '@/lib/stripe/plan'
 
 export async function GET() {
-    return NextResponse.json(sellerPlans)
+    const plans = await getSellerPlans()
+    return NextResponse.json(plans)
 }

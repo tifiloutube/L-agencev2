@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { Favorite, PropertyImage } from '@prisma/client'
 import { useToast } from '@/lib/context/ToastContext'
+import styles from './AccountFavorites.module.css'
 
 type PropertyWithImages = {
     id: string
@@ -21,7 +22,6 @@ type Props = {
 
 export default function AccountFavorites({ favorites: initialFavorites }: Props) {
     const [favorites, setFavorites] = useState(initialFavorites)
-
     const { showToast } = useToast()
 
     const handleRemove = async (propertyId: string) => {
@@ -40,59 +40,40 @@ export default function AccountFavorites({ favorites: initialFavorites }: Props)
     }
 
     return (
-        <section style={{ marginTop: 60 }}>
-            <h2>Biens en favoris</h2>
+        <section className={styles.container}>
+            <div className={styles.header}>
+                <h2 className={styles.h2}>Biens en favoris</h2>
+                <h3 className={styles.h3}>Suivez vos favoris</h3>
+            </div>
 
             {favorites.length === 0 ? (
-                <p>Vous n'avez encore aucun bien en favori.</p>
+                <p className={styles.empty}>Vous n'avez encore aucun bien en favori.</p>
             ) : (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 20 }}>
+                <div className={styles.favoritesGrid}>
                     {favorites.map(fav => (
-                        <div key={fav.id} style={{ position: 'relative' }}>
-                            <Link href={`/properties/${fav.property.id}`}>
-                                <div
-                                    style={{
-                                        border: '1px solid #ccc',
-                                        borderRadius: 8,
-                                        overflow: 'hidden',
-                                        textDecoration: 'none',
-                                        color: 'inherit',
-                                        background: '#fff',
-                                    }}
-                                >
+                        <div key={fav.id} className={styles.favoriteCard}>
+                            <Link href={`/properties/${fav.property.id}`} className={styles.link}>
+                                <div className={styles.imageWrapper}>
                                     {fav.property.images[0] && (
                                         <img
                                             src={fav.property.images[0].url}
                                             alt={fav.property.title}
-                                            style={{ width: '100%', height: 180, objectFit: 'cover' }}
+                                            className={styles.image}
                                         />
                                     )}
-                                    <div style={{ padding: 12 }}>
-                                        <strong>{fav.property.title}</strong><br />
-                                        {fav.property.city}, {fav.property.price} €
-                                    </div>
+                                </div>
+                                <div className={styles.info}>
+                                    <strong>{fav.property.title}</strong>
+                                    <p>{fav.property.city}, {fav.property.price} €</p>
                                 </div>
                             </Link>
 
-                            {/* ❌ Bouton retirer */}
                             <button
                                 onClick={() => handleRemove(fav.property.id)}
-                                style={{
-                                    position: 'absolute',
-                                    top: 8,
-                                    right: 8,
-                                    background: 'rgba(0,0,0,0.6)',
-                                    color: '#fff',
-                                    border: 'none',
-                                    borderRadius: '50%',
-                                    width: 24,
-                                    height: 24,
-                                    fontSize: 16,
-                                    cursor: 'pointer',
-                                }}
+                                className={`button ${styles.button}`}
                                 title="Retirer des favoris"
                             >
-                                ×
+                                Retirer
                             </button>
                         </div>
                     ))}

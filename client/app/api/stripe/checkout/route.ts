@@ -21,17 +21,31 @@ export async function POST(req: NextRequest) {
             where: { id: session.user.id },
         })
 
-        if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 })
+        if (!user) {
+            return NextResponse.json({ error: 'Utilisateur non trouvé' }, { status: 404 })
+        }
 
-        const customer = await stripe.customers.create({
-            email: user.email,
-            metadata: { userId: user.id },
-        })
+        let customerId = user.stripeCustomerId
+
+        if (!customerId) {
+            const customer = await stripe.customers.create({
+                email: user.email,
+                metadata: { userId: user.id },
+            })
+
+            customerId = customer.id
+
+            // ✅ On sauvegarde dans la BDD
+            await prisma.user.update({
+                where: { id: user.id },
+                data: { stripeCustomerId: customerId },
+            })
+        }
 
         const stripeSession = await stripe.checkout.sessions.create({
             mode: 'subscription',
             payment_method_types: ['card'],
-            customer: customer.id,
+            customer: customerId,
             line_items: [
                 {
                     price: priceId,

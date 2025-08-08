@@ -2,47 +2,269 @@
     grid-column: 1/13;
     display: flex;
     flex-direction: column;
-    gap: 25px;
-    margin-top: 100px;
-    .h2 {
-        color: var(--secondary-color);
-        font-family: Sansation, sans-serif;
-        font-size: 55px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: normal;
-    }
+    gap: 40px;
+    margin-top: 80px;
+}
+
+.containerHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.containerTitle {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.h2 {
+    color: var(--secondary-color);
+    font-family: Sansation, sans-serif;
+    font-size: 32px;
+    font-weight: 400;
+}
+
+.h3 {
+    color: var(--secondary-color);
+    font-family: "Sansation Light", sans-serif;
+    font-size: 13px;
+    letter-spacing: 2.4px;
+}
+.container {
+    grid-column: 1/13;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    margin-top: 80px;
+}
+
+.containerHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.containerTitle {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.h2 {
+    color: var(--secondary-color);
+    font-family: Sansation, sans-serif;
+    font-size: 32px;
+    font-weight: 400;
+}
+
+.h3 {
+    color: var(--secondary-color);
+    font-family: "Sansation Light", sans-serif;
+    font-size: 13px;
+    letter-spacing: 2.4px;
+}
+
+.alert {
+    background: #ffe7e7;
+    border: 1px solid #ffabab;
+    color: #b30000;
+    padding: 15px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.empty {
+    text-align: center;
+    font-size: 16px;
+    font-style: italic;
+    color: #666;
+}
+
+.accountPropertiesList {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+}
+
+.accountPropertiesItem {
+    border: 1px solid var(--secondary-color);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 4px #00000040;
+}
+
+.containerImage {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: #eee;
+}
+
+.accountPropertiesImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.contentHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.contentHeader h4 {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--secondary-color);
+}
+
+.transactionType {
+    font-size: 12px;
+    font-weight: bold;
+    background: var(--primary-color);
+    color: var(--secondary-color);
+    padding: 4px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    color: #444;
+    gap: 4px;
+}
+
+.status {
+    font-size: 12px;
+    font-style: italic;
+    color: #999;
+    margin-top: 5px;
+}
+
+.actionsColumn {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 10px;
+    border-top: 1px solid #ddd;
+}
+
+.statusActions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.empty {
+    text-align: center;
+    font-size: 16px;
+    font-style: italic;
+    color: #666;
+}
+
+.accountPropertiesList {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+}
+
+@media (min-width: 768px) {
     .accountPropertiesList {
-        margin-top: 50px;
-        display: flex;
-        flex-direction: column;
-        gap: 50px;
-        .accountPropertiesItem {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            .containerImage {
-                height: 35vh;
-                .accountPropertiesImage {
-                    height: 100%;
-                    width: 100%;
-                    object-fit: cover;
-                    border-radius: 8px;
-                }
-            }
-            .content {
-                display: flex;
-                flex-direction: column;
-                gap: 15px;
-                .statusActions {
-                    display: flex;
-                    gap: 10px;
-                }
-            }
-            .actionsColumn {
-                display: flex;
-                gap: 10px;
-            }
-        }
+        grid-template-columns: repeat(2, 1fr);
     }
+}
+
+.accountPropertiesItem {
+    border: 1px solid var(--secondary-color);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.3s ease;
+}
+
+.containerImage {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+}
+
+.accountPropertiesImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.contentHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.contentHeader h4 {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--secondary-color);
+}
+
+.transactionType {
+    font-size: 12px;
+    font-weight: bold;
+    background: var(--primary-color);
+    color: var(--secondary-color);
+    padding: 4px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    color: #444;
+    gap: 4px;
+}
+
+.status {
+    font-size: 12px;
+    font-style: italic;
+    color: #999;
+    margin-top: 5px;
+}
+
+.actionsColumn {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 10px;
+    border-top: 1px solid #ddd;
+}
+
+.statusActions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
 }

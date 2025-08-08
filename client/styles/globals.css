@@ -25,6 +25,12 @@
             url('../assets/fonts/Sansation-Light/WOFF/Sansation_Light.woff') format('WOFF')
 }
 
+@font-face {
+  font-family: 'Roboto';
+  src: url('../assets/fonts/Roboto/WOFF2/Roboto.woff2') format('WOFF2'),
+  url('../assets/fonts/Roboto/WOFF/Roboto.woff') format('WOFF')
+}
+
 html {
   scroll-behavior: smooth;
 }

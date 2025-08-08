@@ -2,6 +2,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth/auth'
 import { prisma } from '@/lib/prisma/prisma'
 import { NextResponse } from 'next/server'
+import bcrypt from 'bcryptjs'
 
 export async function PATCH(req: Request) {
     const session = await getServerSession(authOptions)
@@ -10,15 +11,55 @@ export async function PATCH(req: Request) {
         return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
     }
 
-    const { name, phone } = await req.json()
+    const {
+        name,
+        phone,
+        email,
+        newPassword,
+        confirmPassword,
+    }: {
+        name: string
+        phone: string
+        email: string
+        newPassword?: string
+        confirmPassword?: string
+    } = await req.json()
+
+    const updates: {
+        name?: string
+        phone?: string
+        email?: string
+        password?: string
+    } = { name, phone }
+
+    // Update email si différent
+    if (email && email !== session.user.email) {
+        updates.email = email
+    }
+
+    // Gestion du mot de passe
+    if (newPassword) {
+        if (newPassword !== confirmPassword) {
+            return NextResponse.json({ error: 'Les mots de passe ne correspondent pas.' }, { status: 400 })
+        }
+
+        if (newPassword.length < 6) {
+            return NextResponse.json({ error: 'Le mot de passe doit faire au moins 6 caractères.' }, { status: 400 })
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10)
+        updates.password = hashedPassword
+    }
 
     await prisma.user.update({
         where: { id: session.user.id },
-        data: {
-            name,
-            phone,
-        },
+        data: updates,
     })
 
-    return NextResponse.json({ message: 'Profil mis à jour' })
+    const shouldLogout = !!updates.email
+
+    return NextResponse.json({
+        message: 'Profil mis à jour',
+        logout: shouldLogout,
+    })
 }

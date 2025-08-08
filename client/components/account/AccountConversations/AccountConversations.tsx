@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import styles from './AccountConversations.module.css'
 
 type Props = {
     conversations: {
@@ -22,60 +23,69 @@ type Props = {
 }
 
 export default function AccountConversations({ conversations, currentUserId }: Props) {
-    if (conversations.length === 0) return null
+    if (!conversations.length) return null
 
     return (
-        <section style={{ marginTop: 40 }}>
-            <h2>💬 Mes discussions</h2>
+        <section className={styles.container}>
+            <h2 className={styles.title}>Mes Discussions</h2>
 
-            <ul style={{ display: 'flex', flexDirection: 'column', gap: 16, marginTop: 16 }}>
-                {conversations.map(convo => {
-                    const otherUser = convo.participants.find(p => p.id !== currentUserId)
-                    const last = convo.messages[0]
+            <ul className={styles.list}>
+                {conversations
+                    .sort((a, b) => {
+                        const aDate = new Date(a.messages[0]?.createdAt ?? 0).getTime()
+                        const bDate = new Date(b.messages[0]?.createdAt ?? 0).getTime()
+                        return bDate - aDate
+                    })
+                    .map((convo) => {
+                        const otherUser = convo.participants.find((p) => p.id !== currentUserId)
+                        const last = convo.messages[0]
+                        const unreadCount = convo.messages.filter(
+                            (m) => !m.read && m.sender.id !== currentUserId
+                        ).length
 
-                    const unreadCount = convo.messages.filter(
-                        m => !m.read && m.sender.id !== currentUserId
-                    ).length
+                        const initials =
+                            otherUser?.name
+                                ?.split(' ')
+                                .map((n) => n[0])
+                                .join('')
+                                .toUpperCase() ?? '??'
 
-                    return (
-                        <li key={convo.id}>
-                            <Link href={`/account/messages/${convo.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                                <div
-                                    style={{
-                                        border: '1px solid #ccc',
-                                        borderRadius: 8,
-                                        padding: 12,
-                                        background: '#fff',
-                                    }}
-                                >
-                                    <p style={{ fontWeight: 'bold' }}>
-                                        {convo.property?.title ?? 'Discussion sans annonce'}
+                        return (
+                            <li key={convo.id}>
+                                <Link href={`/account/messages/${convo.id}`} className={styles.link}>
+                                    <div className={styles.card}>
+                                        <div className={styles.left}>
+                                            <div className={styles.avatar}>{initials}</div>
+                                            <div className={styles.content}>
+                                                <p className={styles.name}>
+                                                    {otherUser?.name ?? 'Utilisateur'}
+                                                    {unreadCount > 0 && <span className={styles.dot} />}
+                                                </p>
+                                                <p className={styles.propertyTitle}>
+                                                    {convo.property?.title ?? 'Discussion sans annonce'}
+                                                </p>
+                                                <p className={styles.preview}>
+                                                    {last?.sender.id === currentUserId ? 'Vous' : last?.sender.name ?? 'Utilisateur'} :{' '}
+                                                    {last?.content.slice(0, 60)}...
+                                                </p>
+                                            </div>
+                                        </div>
 
-                                        {unreadCount > 0 && (
-                                            <span style={{ marginLeft: 8, color: 'red', fontSize: 13, fontWeight: 600 }}>
-                        • {unreadCount} message{unreadCount > 1 ? 's' : ''} non lu{unreadCount > 1 ? 's' : ''}
-                      </span>
+                                        {last && (
+                                            <span className={styles.date}>
+                                                {new Date(last.createdAt).toLocaleDateString('fr-FR', {
+                                                    day: 'numeric',
+                                                    month: 'short',
+                                                    hour: '2-digit',
+                                                    minute: '2-digit',
+                                                })}
+                                              </span>
                                         )}
-                                    </p>
-
-                                    <p style={{ color: '#555' }}>
-                                        Avec : {otherUser?.name ?? 'Utilisateur'}
-                                    </p>
-
-                                    {last && (
-                                        <p style={{ fontSize: 14, marginTop: 4 }}>
-                                            {last.sender.id === currentUserId ? 'Vous :' : `${last.sender.name ?? 'Utilisateur'} :`} {last.content.slice(0, 60)}...
-                                            <br />
-                                            <span style={{ fontSize: 12, color: '#999' }}>
-                                                {new Date(last.createdAt).toLocaleString('fr-FR')}
-                                            </span>
-                                        </p>
-                                    )}
-                                </div>
-                            </Link>
-                        </li>
-                    )
-                })}
+                                    </div>
+                                </Link>
+                            </li>
+                        )
+                    })}
             </ul>
         </section>
     )

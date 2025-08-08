@@ -1,0 +1,83 @@
+.grid {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    margin-top: 2rem;
+}
+
+.card {
+    background-color: #f9f9f9;
+    border: 2px solid transparent;
+    border-radius: 1rem;
+    padding: 2rem;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+}
+
+.card:hover {
+    border-color: var(--primary-color);
+}
+
+.active {
+    border-color: var(--primary-color);
+    background-color: rgba(249, 166, 0, 0.4); /* 40% opaque */
+}
+
+.header {
+    margin-bottom: 1rem;
+}
+
+.name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.price {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #000;
+}
+
+.perMonth {
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: #555;
+    margin-left: 4px;
+}
+
+.features {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0;
+    color: #444;
+    font-size: 0.95rem;
+}
+
+.features li {
+    margin-bottom: 0.5rem;
+}
+
+.buttonDisabled {
+    border: none;
+    padding: 15px 20px;
+    border-radius: 8px;
+    background-color: #666;
+    color: var(--tertiary-color);
+    text-align: center;
+    font-family: Roboto, sans-serif;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 12px; /* 100% */
+    letter-spacing: 2.4px;
+    text-transform: uppercase;
+}
+
+.buttonDisabled:hover {
+    pointer-events: none;
+}

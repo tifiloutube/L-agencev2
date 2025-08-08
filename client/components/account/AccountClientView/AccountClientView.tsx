@@ -2,23 +2,41 @@
 
 import { useEffect, useState } from 'react'
 import styles from './AccountClientView.module.css'
-import type { Property, SellerSubscription, Favorite, Conversation, User } from '@prisma/client'
-import AccountProfile from "@/components/account/AccountProfileForm/AccountProfile";
-import AccountProperties from "@/components/account/AccountProperties/AccountProperties";
-import AccountFavorites from "@/components/account/AccountFavorites/AccountFavorites";
-import AccountSubscription from "@/components/account/AccountSubscription/AccountSubscription";
-import AccountConversations from "@/components/account/AccountConversations/AccountConversations";
-import AccountSimulator from "@/components/account/AccountSimulator/AccountSimulator";
+import type {
+    Property,
+    PropertyImage,
+    SellerSubscription,
+    Favorite,
+    Conversation,
+    User,
+} from '@prisma/client'
+
+import AccountProfile from '@/components/account/AccountProfileForm/AccountProfile'
+import AccountProperties from '@/components/account/AccountProperties/AccountProperties'
+import AccountFavorites from '@/components/account/AccountFavorites/AccountFavorites'
+import AccountSubscription from '@/components/account/AccountSubscription/AccountSubscription'
+import AccountConversations from '@/components/account/AccountConversations/AccountConversations'
+import AccountSimulator from '@/components/account/AccountSimulator/AccountSimulator'
+
+type PropertyWithImage = Property & { images: PropertyImage[] }
+type FavoriteWithProperty = Favorite & { property: PropertyWithImage }
 
 type Props = {
     user: Pick<User, 'id' | 'name' | 'email' | 'phone'>
-    properties: Property[]
-    favorites: Favorite[]
+    properties: PropertyWithImage[]
+    favorites: FavoriteWithProperty[]
     subscription: SellerSubscription | null
     conversations: Conversation[]
 }
 
-type Tab = 'profile' | 'properties' | 'favorites' | 'subscription' | 'conversations' | 'simulator'
+type Tab =
+    | 'profile'
+    | 'properties'
+    | 'favorites'
+    | 'subscription'
+    | 'conversations'
+    | 'simulator'
+
 const STORAGE_KEY = 'account_active_tab'
 
 export default function AccountClientView({
@@ -31,7 +49,8 @@ export default function AccountClientView({
     const [activeTab, setActiveTab] = useState<Tab | null>(null)
 
     const archivedCount = properties.filter(p => p.status === 'ARCHIVED').length
-    const maxProperties = subscription?.status === 'active' ? subscription?.maxProperties ?? 1 : 1
+    const maxProperties =
+        subscription?.status === 'active' ? subscription?.maxProperties ?? 1 : 1
 
     // Load from sessionStorage once
     useEffect(() => {
@@ -45,60 +64,53 @@ export default function AccountClientView({
         }
     }, [activeTab])
 
-    // ⛔️ Wait for activeTab to be determined
     if (!activeTab) return null
 
     return (
         <>
             <div className={styles.buttonsContainer}>
-                <button
-                    onClick={() => setActiveTab('profile')}
-                    className={`button ${activeTab === 'profile' ? styles.active : ''}`}
-                >
+                <button onClick={() => setActiveTab('profile')} className={`button ${activeTab === 'profile' ? styles.active : ''}`}>
                     Profil
                 </button>
 
-                <button
-                    onClick={() => setActiveTab('properties')}
-                    className={`button ${activeTab === 'properties' ? styles.active : ''}`}
-                >
+                <button onClick={() => setActiveTab('properties')} className={`button ${activeTab === 'properties' ? styles.active : ''}`}>
                     Biens
                 </button>
 
-                <button
-                    onClick={() => setActiveTab('favorites')}
-                    className={`button ${activeTab === 'favorites' ? styles.active : ''}`}
-                >
+                <button onClick={() => setActiveTab('favorites')} className={`button ${activeTab === 'favorites' ? styles.active : ''}`}>
                     Favoris
                 </button>
 
-                <button
-                    onClick={() => setActiveTab('subscription')}
-                    className={`button ${activeTab === 'subscription' ? styles.active : ''}`}
-                >
+                <button onClick={() => setActiveTab('subscription')} className={`button ${activeTab === 'subscription' ? styles.active : ''}`}>
                     Abonnements
                 </button>
 
-                <button
-                    onClick={() => setActiveTab('conversations')}
-                    className={`button ${activeTab === 'conversations' ? styles.active : ''}`}
-                >
+                <button onClick={() => setActiveTab('conversations')} className={`button ${activeTab === 'conversations' ? styles.active : ''}`}>
                     Discussions
                 </button>
 
-                <button
-                    onClick={() => setActiveTab('simulator')}
-                    className={`button ${activeTab === 'simulator' ? styles.active : ''}`}
-                >
+                <button onClick={() => setActiveTab('simulator')} className={`button ${activeTab === 'simulator' ? styles.active : ''}`}>
                     Simulation
                 </button>
             </div>
 
-            {activeTab === 'profile' && <AccountProfile user={user}/>}
-            {activeTab === 'properties' && (<AccountProperties properties={properties} maxProperties={maxProperties} subscriptionStatus={subscription?.status ?? null}/>)}
-            {activeTab === 'favorites' && <AccountFavorites favorites={favorites} />}
-            {activeTab === 'subscription' && <AccountSubscription subscription={subscription} />}
-            {activeTab === 'conversations' && (<AccountConversations conversations={conversations} currentUserId={user.id} />)}
+            {activeTab === 'profile' && <AccountProfile user={user} />}
+            {activeTab === 'properties' && (
+                <AccountProperties
+                    properties={properties}
+                    maxProperties={maxProperties}
+                    subscriptionStatus={subscription?.status ?? null}
+                />
+            )}
+            {activeTab === 'favorites' && (
+                <AccountFavorites favorites={favorites} />
+            )}
+            {activeTab === 'subscription' && (
+                <AccountSubscription subscription={subscription} />
+            )}
+            {activeTab === 'conversations' && (
+                <AccountConversations conversations={conversations} currentUserId={user.id} />
+            )}
             {activeTab === 'simulator' && <AccountSimulator />}
         </>
     )

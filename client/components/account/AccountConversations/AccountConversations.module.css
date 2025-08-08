@@ -1,0 +1,96 @@
+.container {
+    margin-top: 80px;
+    grid-column: 1/13;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 50px 16px;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid #eee;
+    transition: background 0.2s;
+}
+
+.card:hover {
+    background-color: #f3f3f3;
+}
+
+.left {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.avatar {
+    width: 44px;
+    height: 44px;
+    background-color: #e6e6e6;
+    color: #444;
+    font-weight: 600;
+    font-size: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.name {
+    font-weight: 600;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    background-color: #0070f3;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.propertyTitle {
+    font-size: 14px;
+    color: #888;
+}
+
+.preview {
+    font-size: 15px;
+    color: #222;
+}
+
+.date {
+    font-size: 13px;
+    color: #999;
+    white-space: nowrap;
+    margin-left: auto;
+}

@@ -19,7 +19,9 @@ export default async function AccountPage() {
             sellerSubscription: true,
             brokerSubscription: true,
             properties: {
-                include: { images: { take: 1 } },
+                include: {
+                    images: { take: 1 },
+                },
                 orderBy: { createdAt: 'desc' },
             },
             favorites: {
@@ -45,12 +47,18 @@ export default async function AccountPage() {
 
     if (!user) redirect('/login')
 
+    const properties = user.properties.map(p => ({
+        ...p,
+        transactionType: p.transactionType || null,
+    }))
+
     return (
         <main className={`wrapper ${styles.wrapper}`}>
-            <h1 className={`h1 ${styles.h1}`}>Mon compte</h1>
+            <h1 className={styles.h1}>Mon compte</h1>
+            <h2 className={styles.h2}>Gérez votre profil et vos biens immobiliers</h2>
             <AccountClientView
                 user={{ id: user.id, name: user.name, email: user.email, phone: user.phone }}
-                properties={user.properties}
+                properties={properties}
                 favorites={user.favorites}
                 subscription={user.sellerSubscription}
                 conversations={user.conversations}

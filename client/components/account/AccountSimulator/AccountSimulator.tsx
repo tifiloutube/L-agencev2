@@ -83,7 +83,7 @@ export default function AccountSimulator() {
                         className={styles.input}
                         type="number"
                         value={amount}
-                        onChange={e => setAmount(Number(e.target.value))}
+                        onChange={(e) => setAmount(Number(e.target.value))}
                     />
                 </label>
 
@@ -93,7 +93,7 @@ export default function AccountSimulator() {
                         className={styles.input}
                         type="number"
                         value={contribution}
-                        onChange={e => setContribution(Number(e.target.value))}
+                        onChange={(e) => setContribution(Number(e.target.value))}
                     />
                 </label>
 
@@ -103,7 +103,7 @@ export default function AccountSimulator() {
                         className={styles.input}
                         type="number"
                         value={income}
-                        onChange={e => setIncome(Number(e.target.value))}
+                        onChange={(e) => setIncome(Number(e.target.value))}
                     />
                 </label>
 
@@ -114,7 +114,7 @@ export default function AccountSimulator() {
                         type="number"
                         step="0.01"
                         value={rate}
-                        onChange={e => setRate(Number(e.target.value))}
+                        onChange={(e) => setRate(Number(e.target.value))}
                     />
                 </label>
 
@@ -126,53 +126,33 @@ export default function AccountSimulator() {
                         min={1}
                         max={25}
                         value={duration}
-                        onChange={e =>
-                            setDuration(Math.min(Number(e.target.value), 25))
-                        }
+                        onChange={(e) => setDuration(Math.min(Number(e.target.value), 25))}
                     />
                 </label>
 
-                <button
-                    className={`button ${styles.button}`}
-                    onClick={simulate}
-                >
+                <button className={`button ${styles.button}`} onClick={simulate}>
                     Simuler
                 </button>
             </div>
 
             {monthly !== null && (
                 <div className={styles.result}>
-                    <p className={styles.line}>
-                        Mensualité estimée :{' '}
-                        <strong>{monthly.toFixed(2)} €</strong> / mois
-                    </p>
-                    <p className={styles.line}>
-                        Endettement max autorisé :{' '}
-                        <strong>{maxAllowedMonthly.toFixed(2)} €</strong> / mois (35% de vos revenus)
-                    </p>
-
-                    {isEligible ? (
-                        <>
-                            <p className={styles.eligible}>
-                                Vous êtes éligible à ce crédit
-                            </p>
-
-                            <button
-                                className={`button ${styles.saveButton}`}
-                                onClick={saveSimulation}
-                                disabled={saving}
-                                style={{ marginTop: 20 }}
-                            >
-                                {saving
-                                    ? 'Sauvegarde en cours...'
-                                    : 'Sauvegarder cette simulation'}
-                            </button>
-                        </>
-                    ) : (
-                        <p className={styles.notEligible}>
-                            Mensualité trop élevée par rapport à votre capacité d'endettement
+                    <div className={styles.resultCard}>
+                        <p className={styles.resultLabel}>Mensualité</p>
+                        <p className={styles.resultValue}>{monthly.toFixed(0)} €</p>
+                    </div>
+                    <div className={styles.resultCard}>
+                        <p className={styles.resultLabel}>Coût total</p>
+                        <p className={styles.resultValue}>
+                            {(monthly * duration * 12).toLocaleString('fr-FR')} €
                         </p>
-                    )}
+                    </div>
+                    <div className={styles.resultCard}>
+                        <p className={styles.resultLabel}>Taux d'endettement</p>
+                        <p className={styles.resultValue}>
+                            {Math.round((monthly / income) * 100)}%
+                        </p>
+                    </div>
                 </div>
             )}
         </div>

@@ -36,6 +36,7 @@ model User {
   favorites          Favorite[]
   sellerSubscription SellerSubscription?
   brokerSubscription BrokerSubscription?
+  stripeCustomerId   String?
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
   conversations      Conversation[]      @relation("ConversationParticipants")
@@ -63,7 +64,6 @@ model Property {
   status          PropertyStatus @default(DRAFT)
   transactionType String?
 
-  // New booleans
   kitchenEquipped Boolean @default(false)
   terrace         Boolean @default(false)
   balcony         Boolean @default(false)
@@ -72,18 +72,15 @@ model Property {
   disabledAccess  Boolean @default(false)
   basement        Boolean @default(false)
 
-  // Terrace / Balcony details
   terraceCount   Int?
   terraceSurface Float?
   balconyCount   Int?
   balconySurface Float?
 
-  // Additional infos
   constructionYear Int?
   landSurface      Float?
   condition        String?
 
-  // Energy balance
   energyConsumption      String?
   greenhouseGasEmission  String?
   finalEnergyConsumption Float?
