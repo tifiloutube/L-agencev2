@@ -1,103 +1,273 @@
 .thread {
-    display: grid;
-    gap: 12px;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 250px); /* Ajustez la hauteur selon le besoin */
+    background: var(--tertiary-color); /* Fond légèrement grisé pour le fil de discussion */
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); /* Utilisation de shadow-md */
+    border: 1px solid var(--fourth--color); /* Bordure claire */
 }
 
 .scroller {
-    border: 1px solid #eee;
-    background: #fafafa;
-    border-radius: 12px;
-    padding: 12px;
-    max-height: 480px;
+    flex: 1;
+    padding: 20px;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    scroll-behavior: smooth; /* Défilement doux */
 }
 
 .row {
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    margin: 8px 0;
+    max-width: 80%; /* Limite la largeur des bulles */
 }
 
 .rowMine {
+    align-self: flex-end;
     align-items: flex-end;
 }
 
 .rowOther {
+    align-self: flex-start;
     align-items: flex-start;
 }
 
 .bubble {
-    max-width: min(75%, 680px);
-    border-radius: 12px;
-    padding: 10px 12px;
-    word-wrap: break-word;
-    white-space: pre-wrap;
+    padding: 12px 18px;
+    border-radius: 20px;
+    font-size: 15px;
+    line-height: 1.5;
+    word-wrap: break-word; /* Gère les longs mots */
+    max-width: 100%; /* Assure que la bulle ne dépasse pas le conteneur */
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); /* Utilisation de shadow-sm */
 }
 
 .bubbleMine {
-    background: #e6f4ef;          /* vert pâle */
-    border: 1px solid #bfe3d3;
+    background: var(--primary-color); /* Couleur primaire pour mes messages */
+    color: var(--tertiary-color); /* Texte clair sur fond primaire */
+    border-bottom-right-radius: 4px; /* Coin inférieur droit moins arrondi */
 }
 
 .bubbleOther {
-    background: #f1f3f4;           /* gris clair */
-    border: 1px solid #e5e7ea;
+    background: var(--tertiary-color); /* Couleur tertiaire pour les autres messages */
+    color: var(--secondary-color); /* Texte sombre sur fond clair */
+    border-bottom-left-radius: 4px; /* Coin inférieur gauche moins arrondi */
 }
 
 .text {
-    color: #111;
-    line-height: 1.4;
+    margin: 0;
 }
 
 .meta {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
+    margin-top: 5px;
     font-size: 12px;
-    color: #777;
+    color: var(--secondary-color); /* Texte secondaire pour les métadonnées */
+    opacity: 0.7; /* Simule un effet 'muted' avec la couleur secondaire */
+}
+
+.rowMine .meta {
+    padding-right: 5px; /* Ajustement pour l'alignement */
+}
+
+.rowOther .meta {
+    padding-left: 5px; /* Ajustement pour l'alignement */
+}
+
+.author {
+    font-weight: 600;
+    color: var(--secondary-color); /* Couleur secondaire pour l'auteur */
 }
 
 .dot {
-    opacity: 0.7;
+    font-size: 10px;
 }
 
+.time {
+    font-style: italic;
+}
+
+/* Composer (Input area) */
 .composer {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 8px;
-    align-items: end;
+    display: flex;
+    padding: 15px 20px;
+    border-top: 1px solid var(--fourth--color); /* Bordure supérieure */
+    background: var(--tertiary-color); /* Fond clair */
+    gap: 15px;
+    align-items: flex-end;
 }
 
 .input {
-    width: 100%;
-    resize: vertical;
-    min-height: 44px;
-    max-height: 200px;
-    padding: 10px 12px;
-    border: 1px solid #ddd;
+    flex: 1;
+    padding: 12px 15px;
+    border: 2px solid var(--fourth--color);
     border-radius: 10px;
-    background: #fff;
-    font-size: 14px;
-    transition: border-color 0.2s ease;
+    font-family: "Sansation Light", sans-serif;
+    font-size: 15px;
+    color: var(--secondary-color);
+    background: var(--tertiary-color); /* Fond clair pour l'input */
+    resize: none; /* Empêche le redimensionnement manuel */
+    min-height: 44px; /* Hauteur minimale pour l'accessibilité */
+    max-height: 120px; /* Hauteur maximale pour éviter un trop grand input */
+    transition: all 0.2s ease;
 }
 
 .input:focus {
     outline: none;
-    border-color: #111;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px var(--fourth--color); /* Utilisation de fourth--color pour l'ombre de focus */
+    background: var(--tertiary-color); /* Fond clair au focus */
+}
+
+.input::placeholder {
+    color: var(--secondary-color);
+    opacity: 0.7; /* Simule un effet 'muted' pour le placeholder */
+    font-style: italic;
 }
 
 .send {
-    align-self: stretch;
-    padding: 0 16px;
+    background: var(--primary-color);
+    color: var(--tertiary-color);
+    padding: 12px 20px;
     border-radius: 10px;
-    background: #111;
-    color: #fff;
-    border: none;
+    font-weight: 600;
+    font-size: 15px;
+    min-width: 100px;
+    transition: all 0.2s ease;
+}
+
+.send:hover:not(:disabled) {
+    background: var(--fourth--color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); /* Utilisation de shadow-md */
 }
 
 .send:disabled {
-    background: #cfcfcf;
-    color: #666;
+    opacity: 0.6;
     cursor: not-allowed;
+    transform: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .thread {
+        height: calc(100vh - 200px); /* Ajustement pour les écrans plus petits */
+    }
+
+    .scroller {
+        padding: 15px;
+        gap: 10px;
+    }
+
+    .row {
+        max-width: 90%;
+    }
+
+    .bubble {
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+
+    .meta {
+        font-size: 11px;
+    }
+
+    .composer {
+        padding: 10px 15px;
+        gap: 10px;
+    }
+
+    .input {
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+
+    .send {
+        padding: 10px 15px;
+        font-size: 14px;
+        min-width: 80px;
+    }
+}
+
+@media (max-width: 480px) {
+    .thread {
+        height: calc(100vh - 180px);
+    }
+
+    .scroller {
+        padding: 10px;
+        gap: 8px;
+    }
+
+    .row {
+        max-width: 100%; /* Pleine largeur sur très petits écrans */
+    }
+
+    .bubble {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+
+    .meta {
+        font-size: 10px;
+    }
+
+    .composer {
+        padding: 8px 10px;
+        gap: 8px;
+    }
+
+    .input {
+        padding: 8px 10px;
+        font-size: 13px;
+    }
+
+    .send {
+        padding: 8px 12px;
+        font-size: 13px;
+        min-width: 70px;
+    }
+}
+
+/* Animations */
+.bubble {
+    animation: slideInFromSide 0.3s ease-out;
+}
+
+@keyframes slideInFromSide {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.rowOther .bubble {
+    animation: slideInFromSideOther 0.3s ease-out;
+}
+
+@keyframes slideInFromSideOther {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Focus amélioré pour l'accessibilité */
+.input:focus-visible,
+.send:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
 }

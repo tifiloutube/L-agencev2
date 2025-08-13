@@ -22,7 +22,7 @@ export default async function EditPropertyPage({ params }: Props) {
     })
 
     if (!property || property.userId !== session.user.id) {
-        redirect('/account') // interdit si pas le bon owner
+        redirect('/account')
     }
 
     return (

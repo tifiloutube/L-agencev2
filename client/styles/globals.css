@@ -1,8 +1,8 @@
 :root {
-  --primary-color: #f9a600;
-  --secondary-color: #000000;
-  --tertiary-color: #fff2e0;
-  --fourth--color: #ffd47d;
+  --primary-color: #2563eb;
+  --secondary-color: #1f2937;
+  --tertiary-color: #f8fafc;
+  --fourth--color: #3b82f6;
 }
 
 *,
@@ -58,15 +58,25 @@ body {
 
 .h1 {
   color: var(--secondary-color);
-  font-family: 'Sansation Regular', sans-serif;
+  font-family: Sansation, sans-serif;
   font-size: 129px;
   text-align: center;
 }
 
 .h1span {
   color: var(--primary-color);
-  font-family: 'Sansation Regular', sans-serif;
+  font-family: Sansation, sans-serif;
   font-size: 129px;
+}
+
+.h2 {
+    color: var(--secondary-color);
+    text-align: center;
+    font-family: Sansation, "Sama Devanagari";
+    font-size: 50px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
 }
 
 a {

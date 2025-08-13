@@ -1,0 +1,340 @@
+.container {
+    background-color: var(--tertiary-color);
+}
+
+/* Hero Section */
+.hero {
+    padding: 80px 0;
+    text-align: center;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+}
+
+.heroWrapper {
+    align-items: center;
+}
+
+.headerContainer {
+    grid-column: 2 / -2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.heroDescription {
+    font-size: 18px;
+    color: var(--secondary-color);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.heroButtons {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* Sections */
+.howItWorks {
+    padding: 80px 0;
+    background-color: white;
+}
+
+.sectionWrapper {
+    align-items: start;
+}
+
+.sectionHeader {
+    grid-column: 1 / -1;
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.sectionTitle {
+    margin-bottom: 20px;
+}
+
+.sectionDescription {
+    font-size: 18px;
+    color: var(--secondary-color);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* Cards Grid */
+.cardsGrid {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 40px;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.cardBuyers {
+    border-color: var(--primary-color);
+}
+
+.cardRenters {
+    border-color: var(--fourth--color);
+}
+
+.cardOwners {
+    border-color: var(--primary-color);
+}
+
+.cardHeader {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.cardIcon {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.cardTitle {
+    font-family: 'Sansation', sans-serif;
+    font-size: 28px;
+    color: var(--secondary-color);
+    margin-bottom: 10px;
+}
+
+.cardSubtitle {
+    font-size: 16px;
+    color: #666;
+}
+
+.stepsList {
+    margin-bottom: 30px;
+}
+
+.step {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stepNumber {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.step p {
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.cardButton {
+    width: 100%;
+}
+
+/* Advantages */
+.advantages {
+    padding: 80px 0;
+    background-color: var(--tertiary-color);
+}
+
+.advantagesGrid {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+}
+
+.advantage {
+    text-align: center;
+    padding: 30px 20px;
+}
+
+.advantageIcon {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.advantageTitle {
+    font-family: 'Sansation', sans-serif;
+    font-size: 20px;
+    color: var(--secondary-color);
+    margin-bottom: 15px;
+}
+
+.advantageText {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.5;
+}
+
+/* CTA Section */
+.cta {
+    padding: 80px 0;
+    background-color: var(--primary-color);
+    text-align: center;
+}
+
+.ctaWrapper {
+    align-items: center;
+}
+
+.ctaTitle {
+    grid-column: 1 / -1;
+    color: var(--secondary-color);
+    margin-bottom: 20px;
+}
+
+.ctaDescription {
+    grid-column: 1 / -1;
+    font-size: 18px;
+    color: var(--secondary-color);
+    margin-bottom: 40px;
+}
+
+.ctaButtons {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Footer */
+.footer {
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 60px 0 20px;
+}
+
+.footerWrapper {
+    align-items: start;
+}
+
+.footerGrid {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.footerBrand .logoText {
+    color: white;
+}
+
+.footerDescription {
+    font-size: 14px;
+    color: #ccc;
+    margin-top: 15px;
+    line-height: 1.5;
+}
+
+.footerColumnTitle {
+    font-family: 'Sansation', sans-serif;
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: white;
+}
+
+.footerLinks {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.footerLinks a {
+    color: #ccc;
+    font-size: 14px;
+    transition: color 0.3s ease;
+}
+
+.footerLinks a:hover {
+    color: var(--primary-color);
+}
+
+.footerBottom {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid #333;
+    font-size: 14px;
+    color: #ccc;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .h1, .h1span {
+        font-size: 64px;
+    }
+
+    .h2 {
+        font-size: 32px;
+    }
+
+    .heroButtons, .ctaButtons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .navContent {
+        flex-direction: column;
+        height: auto;
+        padding: 20px 0;
+        gap: 20px;
+    }
+
+    .cardsGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .advantagesGrid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .wrapper {
+        padding-inline: 20px;
+    }
+
+    .h1, .h1span {
+        font-size: 48px;
+    }
+
+    .h2 {
+        font-size: 24px;
+    }
+
+    .heroDescription, .sectionDescription, .ctaDescription {
+        font-size: 16px;
+    }
+}

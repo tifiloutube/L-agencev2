@@ -1,25 +1,315 @@
-.wrapper {
-    margin-top: 15vh;
+.pageContainer {
+    min-height: 100vh;
+    background: var(--tertiary-color); /* Fond général de la page */
+    padding-top: 40px; /* Espace en haut de la page */
+    padding-bottom: 40px; /* Espace en bas de la page */
 }
 
-.h1 {
-    color: #3B3B3B;
-    font-family: Sansation, sans-serif;
-    font-size: 80px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-    grid-column: 1/13;
+.mainContent {
+    display: flex;
+    flex-direction: column;
+    gap: 40px; /* Espacement entre les sections principales */
+    grid-column: 1 / -1; /* Prend toute la largeur du wrapper */
 }
 
-.h2 {
-    color: #3B3B3B;
-    font-family: Roboto, sans-serif;
-    grid-column: 1/13;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 12px; /* 100% */
-    letter-spacing: 2.4px;
+/* Welcome Section */
+.welcomeSection {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 2px solid var(--primary-color);
+    animation: fadeIn 0.5s ease-out;
+}
+
+.avatarContainer {
+    position: relative;
+}
+
+.avatar {
+    width: 90px;
+    height: 90px;
+    background: var(--tertiary-color); /* Fond clair pour l'avatar */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border: 3px solid var(--primary-color); /* Bordure accentuée */
+}
+
+.avatarIcon {
+    font-size: 36px; /* Taille de l'icône Lucide React */
+    color: var(--secondary-color); /* Couleur sombre pour l'icône */
+}
+
+.welcomeText {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.welcomeTitle {
+    font-family: "Sansation", sans-serif;
+    font-size: 36px;
+    margin: 0;
+    color: var(--secondary-color); /* Texte sombre */
+}
+
+.userName {
+    color: var(--primary-color); /* Couleur primaire pour le nom */
+    font-weight: bold;
+}
+
+.welcomeSubtitle {
+    font-size: 18px;
+    color: var(--neutral-color); /* Texte neutre */
+    margin: 0;
+}
+
+/* Quick Stats */
+.quickStats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 25px;
+    animation: fadeIn 0.7s ease-out;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    padding: 25px;
+    border-radius: 16px;
+    border: 2px solid var(--fourth--color);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.stat:hover {
+    background: var(--fourth--color);
+    border-color: var(--primary-color);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.statIcon {
+    font-size: 32px; /* Taille de l'icône Lucide React */
+    color: var(--primary-color); /* Couleur primaire pour les icônes */
+    transition: color 0.3s ease;
+}
+
+.stat:hover .statIcon {
+    color: white; /* Icône blanche au survol */
+}
+
+.statContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.statNumber {
+    font-family: "Sansation", sans-serif;
+    font-size: 32px;
+    font-weight: bold;
+    color: var(--secondary-color);
+    line-height: 1;
+    transition: color 0.3s ease;
+}
+
+.stat:hover .statNumber {
+    color: white; /* Nombre blanc au survol */
+}
+
+.statLabel {
+    font-size: 14px;
+    color: var(--neutral-color);
     text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: color 0.3s ease;
+}
+
+.stat:hover .statLabel {
+    color: white; /* Label blanc au survol */
+}
+
+/* Account Client View Wrapper */
+.accountClientViewWrapper {
+    grid-column: 1 / -1; /* S'assure que le composant prend toute la largeur */
+    animation: fadeIn 0.9s ease-out;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .welcomeSection {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+        padding: 25px;
+    }
+
+    .welcomeTitle {
+        font-size: 32px;
+    }
+
+    .welcomeSubtitle {
+        font-size: 16px;
+    }
+
+    .quickStats {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 20px;
+    }
+
+    .stat {
+        padding: 20px;
+    }
+
+    .statNumber {
+        font-size: 28px;
+    }
+
+    .statIcon {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 768px) {
+    .pageContainer {
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+
+    .mainContent {
+        gap: 30px;
+    }
+
+    .welcomeSection {
+        margin: 0 -20px; /* Étend sur les bords */
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        padding: 20px;
+    }
+
+    .avatar {
+        width: 70px;
+        height: 70px;
+    }
+
+    .avatarIcon {
+        font-size: 30px;
+    }
+
+    .welcomeTitle {
+        font-size: 28px;
+    }
+
+    .welcomeSubtitle {
+        font-size: 14px;
+    }
+
+    .quickStats {
+        grid-template-columns: 1fr; /* Une colonne sur mobile */
+        gap: 15px;
+        margin: 0 -20px; /* Étend sur les bords */
+    }
+
+    .stat {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        padding: 15px;
+        flex-direction: row; /* Revenir à une ligne pour les stats */
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .statContent {
+        align-items: flex-start; /* Aligner le texte à gauche */
+    }
+
+    .statNumber {
+        font-size: 24px;
+    }
+
+    .statIcon {
+        font-size: 24px;
+    }
+
+    .statLabel {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .pageContainer {
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+    .mainContent {
+        gap: 20px;
+    }
+
+    .welcomeSection {
+        padding: 15px;
+        gap: 15px;
+    }
+
+    .avatar {
+        width: 60px;
+        height: 60px;
+    }
+
+    .avatarIcon {
+        font-size: 24px;
+    }
+
+    .welcomeTitle {
+        font-size: 24px;
+    }
+
+    .welcomeSubtitle {
+        font-size: 12px;
+    }
+
+    .quickStats {
+        gap: 10px;
+    }
+
+    .stat {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .statNumber {
+        font-size: 20px;
+    }
+
+    .statIcon {
+        font-size: 20px;
+    }
+
+    .statLabel {
+        font-size: 10px;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

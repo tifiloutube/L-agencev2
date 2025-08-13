@@ -1,0 +1,419 @@
+.container {
+    background: var(--tertiary-color); /* Utilisation de tertiary-color pour le fond */
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    border: 2px solid var(--tertiary-color); /* Utilisation de tertiary-color pour les bordures claires */
+    margin-bottom: 24px;
+}
+
+/* Header */
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid var(--tertiary-color); /* Utilisation de tertiary-color pour la bordure */
+}
+
+.sectionTitle {
+    font-family: "Sansation", sans-serif;
+    font-size: 28px;
+    color: var(--secondary-color); /* Utilisation de secondary-color pour le texte principal */
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.sectionTitle::before {
+    content: "📊";
+    font-size: 32px;
+}
+
+.sectionDescription {
+    font-size: 16px;
+    color: var(--secondary-color); /* Utilisation de secondary-color pour le texte secondaire */
+    line-height: 1.5;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Form Groups */
+.formGroup {
+    margin-bottom: 32px;
+}
+
+.labelContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.label {
+    font-family: "Sansation", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--secondary-color); /* Utilisation de secondary-color pour le texte principal */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.labelIcon {
+    font-size: 18px;
+}
+
+.required {
+    color: var(--primary-color); /* Utilisation de primary-color pour l'accentuation (remplace error-color) */
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Surface Container */
+.surfaceContainer {
+    position: relative;
+    display: flex;
+    align-items: center;
+    max-width: 200px;
+}
+
+.surfaceInput {
+    width: 100%;
+    padding: 16px 50px 16px 20px;
+    border: 2px solid var(--fourth--color); /* Utilisation de fourth--color pour les bordures d'input */
+    border-radius: 12px;
+    font-family: "Sansation Light", sans-serif;
+    font-size: 16px;
+    color: var(--secondary-color); /* Utilisation de secondary-color pour le texte */
+    background: var(--tertiary-color); /* Utilisation de tertiary-color pour le fond des inputs */
+    transition: all 0.2s ease;
+    min-height: 44px;
+}
+
+.surfaceInput:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); /* Utilisation de primary-color pour l'ombre de focus */
+}
+
+.surfaceInput:hover {
+    border-color: var(--fourth--color);
+}
+
+.unit {
+    position: absolute;
+    right: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--primary-color);
+    pointer-events: none;
+}
+
+/* Hints */
+.inputHint {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.hintIcon {
+    font-size: 14px;
+}
+
+.hintText {
+    font-size: 14px;
+    color: var(--secondary-color); /* Utilisation de secondary-color pour le texte d'aide */
+    line-height: 1.4;
+}
+
+/* Counters Grid */
+.countersGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.counterGroup {
+    background: var(--tertiary-color); /* Utilisation de tertiary-color pour le fond */
+    border-radius: 12px;
+    padding: 20px;
+    border: 2px solid var(--tertiary-color); /* Utilisation de tertiary-color pour la bordure */
+    transition: all 0.2s ease;
+}
+
+.counterGroup:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.counterLabel {
+    font-family: "Sansation", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--secondary-color); /* Utilisation de secondary-color pour le texte principal */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.counter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    background: var(--tertiary-color); /* Utilisation de tertiary-color pour le fond */
+    border-radius: 8px;
+    border: 2px solid var(--fourth--color); /* Utilisation de fourth--color pour la bordure */
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.counterButton {
+    background: var(--tertiary-color); /* Utilisation de tertiary-color pour le fond */
+    border: none;
+    padding: 12px 16px;
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--primary-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.counterButton:hover:not(:disabled) {
+    background: var(--primary-color);
+    color: var(--tertiary-color); /* Utilisation de tertiary-color pour le texte */
+}
+
+.counterButton:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.counterInput {
+    border: none;
+    background: transparent;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--secondary-color); /* Utilisation de secondary-color pour le texte */
+    width: 60px;
+    padding: 12px 8px;
+    outline: none;
+}
+
+.counterHint {
+    font-size: 12px;
+    color: var(--secondary-color); /* Utilisation de secondary-color pour le texte d'aide */
+    opacity: 0.7; /* Ajout d'opacité pour un effet "muted" */
+    text-align: center;
+    font-style: italic;
+}
+
+/* Options Grid */
+.optionsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.checkboxGroup {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    background: var(--tertiary-color); /* Utilisation de tertiary-color pour le fond */
+    border-radius: 12px;
+    border: 2px solid var(--tertiary-color); /* Utilisation de tertiary-color pour la bordure */
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.checkboxGroup:hover {
+    border-color: var(--primary-color);
+    background: var(--tertiary-color); /* Utilisation de tertiary-color pour le fond */
+}
+
+.checkbox {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--fourth--color); /* Utilisation de fourth--color pour la bordure */
+    border-radius: 4px;
+    background: var(--tertiary-color); /* Utilisation de tertiary-color pour le fond */
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.checkbox:checked {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.checkbox:checked::after {
+    content: "✓";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--tertiary-color); /* Utilisation de tertiary-color pour le texte */
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.checkboxLabel {
+    font-family: "Sansation", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--secondary-color); /* Utilisation de secondary-color pour le texte */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    flex: 1;
+}
+
+.checkboxIcon {
+    font-size: 16px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        padding: 24px 20px;
+        margin: 0 -20px 20px -20px;
+        border-radius: 0;
+    }
+
+    .sectionTitle {
+        font-size: 24px;
+    }
+
+    .countersGrid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .optionsGrid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 20px 16px;
+        margin: 0 -16px 16px -16px;
+    }
+
+    .sectionTitle {
+        font-size: 20px;
+    }
+
+    .sectionDescription {
+        font-size: 14px;
+    }
+
+    .countersGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .counterGroup {
+        padding: 16px;
+    }
+
+    .counterButton {
+        padding: 10px 12px;
+        min-width: 40px;
+        min-height: 40px;
+    }
+
+    .counterInput {
+        width: 50px;
+    }
+}
+
+/* Animation d'entrée */
+.container {
+    animation: slideInUp 0.4s ease-out;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Focus amélioré pour l'accessibilité */
+.surfaceInput:focus-visible,
+.counterButton:focus-visible,
+.counterInput:focus-visible,
+.checkbox:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* États de validation */
+.surfaceInput:valid {
+    border-color: var(--primary-color); /* Utilisation de primary-color pour les bordures valides */
+}
+
+.surfaceInput:invalid:not(:placeholder-shown) {
+    border-color: var(--primary-color); /* Utilisation de primary-color pour les bordures invalides */
+}
+
+/* Amélioration des interactions */
+.counterGroup:focus-within {
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.checkboxGroup:focus-within {
+    border-color: var(--primary-color);
+    background: rgba(37, 99, 235, 0.05); /* Utilisation de primary-color avec opacité pour le fond */
+}
+
+/* Indicateurs visuels pour les valeurs */
+.counter:has(.counterInput[value="0"]) {
+    opacity: 0.7;
+}
+
+.checkboxGroup:has(.checkbox:checked) {
+    border-color: var(--primary-color);
+    background: rgba(37, 99, 235, 0.05); /* Utilisation de primary-color avec opacité pour le fond */
+}
+
+/* Placeholder styling */
+.surfaceInput::placeholder {
+    color: var(--secondary-color); /* Utilisation de secondary-color pour le placeholder */
+    opacity: 0.7; /* Ajout d'opacité pour un effet "muted" */
+    font-style: italic;
+}
+
+/* États hover améliorés */
+.formGroup:hover .label {
+    color: var(--primary-color);
+}
+
+/* Indicateurs visuels pour les champs requis */
+.formGroup:has(.surfaceInput:invalid:not(:placeholder-shown)) .label {
+    color: var(--primary-color); /* Utilisation de primary-color pour les labels invalides */
+}
+
+.formGroup:has(.surfaceInput:valid) .label {
+    color: var(--primary-color); /* Utilisation de primary-color pour les labels valides */
+}

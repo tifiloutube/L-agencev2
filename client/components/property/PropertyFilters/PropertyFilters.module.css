@@ -1,52 +1,274 @@
-.phraseWrapper {
+.filterContainer {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border: 2px solid var(--primary-color);
+    margin-bottom: 30px;
+}
+
+.filterHeader {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.filterTitle {
+    font-family: 'Sansation', sans-serif;
+    font-size: 28px;
+    color: var(--secondary-color);
+    margin-bottom: 10px;
+}
+
+.filterSubtitle {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 0;
+}
+
+.filterForm {
     display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Section principale */
+.mainFilters {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.filterGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+    min-width: 200px;
+}
+
+.filterLabel {
+    font-family: 'Sansation', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--secondary-color);
+    margin-bottom: 5px;
+}
+
+.filterRow {
+    display: flex;
+    gap: 20px;
     flex-wrap: wrap;
-    gap: 6px;
+}
+
+/* Toggle pour type de transaction */
+.transactionToggle {
+    display: flex;
+    background: var(--tertiary-color);
+    border-radius: 8px;
+    padding: 4px;
+    gap: 4px;
+}
+
+.toggleButton {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
     color: var(--secondary-color);
     font-family: 'Sansation Light', sans-serif;
-    font-size: 40px;
-    font-style: normal;
-    font-weight: 400;
-}
-
-.phraseWrapper_phrase {
-    line-height: 1.3em;
-}
-
-.phraseWrapper__select {
-    margin: 0 15px;
-}
-
-.phraseWrapper__select select,
-.phraseWrapper__select input {
-    background-color: transparent;
-    border: none;
-    color: var(--primary-color);
-    font-family: 'Sansation Light', sans-serif;
-    font-size: 40px;
-    font-style: normal;
-    font-weight: 400;
+    font-size: 14px;
     cursor: pointer;
-    appearance: none;
-    width: auto;
+    transition: all 0.3s ease;
 }
 
-.phraseWrapper__select input {
-    max-width: 200px;
+.toggleButton:hover {
+    background: var(--fourth--color);
 }
 
-.phraseWrapper__select input::placeholder {
-    color: var(--primary-color);
-    opacity: 1;
+.toggleButton.active {
+    background: var(--primary-color);
+    color: var(--secondary-color);
+    font-weight: 600;
 }
 
-.phraseWrapper__select select {
-    background-image: none;
+/* Inputs et selects */
+.filterSelect,
+.filterInput {
+    padding: 12px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-family: 'Sansation Light', sans-serif;
+    font-size: 14px;
+    color: var(--secondary-color);
+    background: white;
+    transition: border-color 0.3s ease;
 }
 
-.buttonContainer {
-    margin-top: 50px;
+.filterSelect:focus,
+.filterInput:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.filterSelect:hover,
+.filterInput:hover {
+    border-color: var(--fourth--color);
+}
+
+/* Sections */
+.budgetSection,
+.characteristicsSection {
+    padding: 20px;
+    background: var(--tertiary-color);
+    border-radius: 8px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.sectionTitle {
+    font-family: 'Sansation', sans-serif;
+    font-size: 18px;
+    color: var(--secondary-color);
+    margin-bottom: 15px;
     display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Bouton simulation */
+.simulationButton {
+    padding: 10px 16px;
+    background: var(--fourth--color);
+    border: 2px solid var(--primary-color);
+    border-radius: 8px;
+    color: var(--secondary-color);
+    font-family: 'Sansation Light', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.simulationButton:hover {
+    background: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+/* Boutons d'action */
+.actionButtons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
     flex-wrap: wrap;
-    gap: 20px;
+    padding-top: 20px;
+    border-top: 2px solid var(--tertiary-color);
+}
+
+.searchButton {
+    background: var(--primary-color);
+    color: var(--secondary-color);
+    font-weight: 600;
+    min-width: 150px;
+}
+
+.searchButton:hover {
+    background: var(--fourth--color);
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .filterContainer {
+        padding: 20px;
+        margin: 0 -20px 20px -20px;
+        border-radius: 0;
+    }
+
+    .filterTitle {
+        font-size: 24px;
+    }
+
+    .filterRow {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .filterGroup {
+        min-width: auto;
+    }
+
+    .transactionToggle {
+        flex-direction: column;
+    }
+
+    .toggleButton {
+        text-align: center;
+    }
+
+    .actionButtons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .actionButtons .button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .filterContainer {
+        padding: 15px;
+    }
+
+    .filterTitle {
+        font-size: 20px;
+    }
+
+    .sectionTitle {
+        font-size: 16px;
+    }
+
+    .budgetSection,
+    .characteristicsSection {
+        padding: 15px;
+    }
+}
+
+/* Animation pour les sections */
+.budgetSection,
+.characteristicsSection {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* États des inputs */
+.filterInput:invalid {
+    border-color: #ff6b6b;
+}
+
+.filterInput:valid {
+    border-color: #51cf66;
+}
+
+/* Placeholder styling */
+.filterInput::placeholder {
+    color: #999;
+    font-style: italic;
+}
+
+/* Focus states améliorés */
+.filterSelect:focus,
+.filterInput:focus {
+    box-shadow: 0 0 0 3px rgba(249, 166, 0, 0.1);
 }

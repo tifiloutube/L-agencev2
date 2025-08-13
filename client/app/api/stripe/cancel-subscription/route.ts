@@ -22,8 +22,7 @@ export async function POST(req: NextRequest) {
         if (!subscription?.stripeSubscriptionId) {
             return NextResponse.json({ error: 'Aucun abonnement trouvé' }, { status: 400 })
         }
-
-        // Stripe : annule à la fin de la période actuelle
+        
         await stripe.subscriptions.update(subscription.stripeSubscriptionId, {
             cancel_at_period_end: true,
         })

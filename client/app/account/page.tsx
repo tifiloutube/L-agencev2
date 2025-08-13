@@ -1,15 +1,14 @@
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth/auth'
-import { prisma } from '@/lib/prisma/prisma'
-import { redirect } from 'next/navigation'
-import { enforceUserPropertyQuota } from '@/lib/services/enforceUserPropertyQuota'
-import styles from './page.module.css'
-
-import AccountClientView from '@/components/account/AccountClientView/AccountClientView'
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth/auth"
+import { prisma } from "@/lib/prisma/prisma"
+import { redirect } from "next/navigation"
+import { enforceUserPropertyQuota } from "@/lib/services/enforceUserPropertyQuota"
+import styles from "./page.module.css"
+import AccountClientView from "@/components/account/AccountClientView/AccountClientView"
 
 export default async function AccountPage() {
     const session = await getServerSession(authOptions)
-    if (!session?.user?.id) redirect('/login')
+    if (!session?.user?.id) redirect("/login")
 
     await enforceUserPropertyQuota(session.user.id)
 
@@ -22,7 +21,7 @@ export default async function AccountPage() {
                 include: {
                     images: { take: 1 },
                 },
-                orderBy: { createdAt: 'desc' },
+                orderBy: { createdAt: "desc" },
             },
             favorites: {
                 include: {
@@ -35,7 +34,7 @@ export default async function AccountPage() {
                 include: {
                     property: true,
                     messages: {
-                        orderBy: { createdAt: 'desc' },
+                        orderBy: { createdAt: "desc" },
                         take: 1,
                         include: { sender: true },
                     },
@@ -45,24 +44,64 @@ export default async function AccountPage() {
         },
     })
 
-    if (!user) redirect('/login')
+    if (!user) redirect("/login")
 
-    const properties = user.properties.map(p => ({
+    const properties = user.properties.map((p) => ({
         ...p,
         transactionType: p.transactionType || null,
     }))
 
     return (
-        <main className={`wrapper ${styles.wrapper}`}>
-            <h1 className={styles.h1}>Mon compte</h1>
-            <h2 className={styles.h2}>Gérez votre profil et vos biens immobiliers</h2>
-            <AccountClientView
-                user={{ id: user.id, name: user.name, email: user.email, phone: user.phone }}
-                properties={properties}
-                favorites={user.favorites}
-                subscription={user.sellerSubscription}
-                conversations={user.conversations}
-            />
-        </main>
+        <div className={styles.pageContainer}>
+            <main className={`wrapper ${styles.mainContent}`}>
+                <section className={styles.welcomeSection}>
+                    <div className={styles.avatarContainer}>
+                        <div className={styles.avatar}>
+                            <span className={styles.avatarIcon}>👤</span>
+                        </div>
+                    </div>
+                    <div className={styles.welcomeText}>
+                        <h1 className={styles.welcomeTitle}>
+                            Bonjour, <span className={styles.userName}>{user.name}</span> !
+                        </h1>
+                        <p className={styles.welcomeSubtitle}>Gérez votre profil et vos biens immobiliers</p>
+                    </div>
+                </section>
+
+                <section className={styles.quickStats}>
+                    <div className={styles.stat}>
+                        <span className={styles.statIcon}>🏠</span>
+                        <div className={styles.statContent}>
+                            <div className={styles.statNumber}>{user.properties.length}</div>
+                            <div className={styles.statLabel}>Biens</div>
+                        </div>
+                    </div>
+                    <div className={styles.stat}>
+                        <span className={styles.statIcon}>❤️</span>
+                        <div className={styles.statContent}>
+                            <div className={styles.statNumber}>{user.favorites.length}</div>
+                            <div className={styles.statLabel}>Favoris</div>
+                        </div>
+                    </div>
+                    <div className={styles.stat}>
+                        <span className={styles.statIcon}>💬</span>
+                        <div className={styles.statContent}>
+                            <div className={styles.statNumber}>{user.conversations.length}</div>
+                            <div className={styles.statLabel}>Discussions</div>
+                        </div>
+                    </div>
+                </section>
+
+                <div className={styles.accountClientViewWrapper}>
+                    <AccountClientView
+                        user={{ id: user.id, name: user.name, email: user.email, phone: user.phone }}
+                        properties={properties}
+                        favorites={user.favorites}
+                        subscription={user.sellerSubscription}
+                        conversations={user.conversations}
+                    />
+                </div>
+            </main>
+        </div>
     )
 }

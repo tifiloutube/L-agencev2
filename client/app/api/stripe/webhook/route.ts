@@ -13,7 +13,6 @@ export const config = {
     },
 }
 
-// Convertir ReadableStream vers Buffer
 async function buffer(readable: ReadableStream<Uint8Array>) {
     const reader = readable.getReader()
     const chunks: Uint8Array[] = []
@@ -42,7 +41,6 @@ export async function POST(req: NextRequest) {
         return new Response('Webhook error', { status: 400 })
     }
 
-    // Log de l’event entier pour inspecter
     console.log('📦 EVENT TYPE:', event.type)
     console.log('📦 EVENT OBJECT:', JSON.stringify(event.data.object, null, 2))
 
@@ -66,7 +64,6 @@ export async function POST(req: NextRequest) {
             return new Response('Missing data', { status: 400 })
         }
 
-        // Log final avant insertion
         console.log('📥 Sauvegarde dans la BDD :', {
             userId,
             plan,

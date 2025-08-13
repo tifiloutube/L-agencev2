@@ -246,7 +246,7 @@ export default function PropertyForm({ mode = 'create', property, transactionTyp
                     setEnergyIndexDate={setEnergyIndexDate}
                 />
 
-                <button type="submit" disabled={loading}>
+                <button type="submit" disabled={loading} className={`button`}>
                     {loading ? 'En cours...' : mode === 'edit' ? 'Mettre à jour' : 'Créer le bien'}
                 </button>
             </form>

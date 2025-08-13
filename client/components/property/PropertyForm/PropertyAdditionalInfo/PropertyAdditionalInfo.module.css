@@ -1,0 +1,370 @@
+.container {
+    background: var(--tertiary-color); /* Utilisation de tertiary-color pour le fond */
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    border: 2px solid var(--tertiary-color); /* Utilisation de tertiary-color pour les bordures claires */
+    margin-bottom: 24px;
+}
+
+/* Header */
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid var(--tertiary-color); /* Utilisation de tertiary-color pour la bordure */
+}
+
+.sectionTitle {
+    font-family: "Sansation", sans-serif;
+    font-size: 28px;
+    color: var(--secondary-color); /* Utilisation de secondary-color pour le texte principal */
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.sectionTitle::before {
+    content: "✨";
+    font-size: 32px;
+}
+
+.sectionDescription {
+    font-size: 16px;
+    color: var(--secondary-color); /* Utilisation de secondary-color pour le texte secondaire */
+    line-height: 1.5;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Form Groups */
+.formGroup {
+    margin-bottom: 32px;
+}
+
+.labelContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.label {
+    font-family: "Sansation", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--secondary-color); /* Utilisation de secondary-color pour le texte principal */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.labelIcon {
+    font-size: 18px;
+}
+
+/* Toggle Switch (Oui/Non) */
+.toggleSwitch {
+    display: flex;
+    background: var(--tertiary-color); /* Utilisation de tertiary-color pour le fond */
+    border-radius: 12px;
+    padding: 4px;
+    gap: 4px;
+    max-width: 200px;
+}
+
+.toggleButton {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--secondary-color); /* Utilisation de secondary-color pour le texte */
+    font-family: "Sansation Light", sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-height: 44px;
+}
+
+.toggleButton:hover {
+    background: var(--fourth--color);
+}
+
+.toggleButton.active {
+    background: var(--primary-color);
+    color: var(--tertiary-color); /* Utilisation de tertiary-color pour le texte */
+    font-weight: 600;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Compteur (Étage) */
+.counter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    background: var(--tertiary-color); /* Utilisation de tertiary-color pour le fond */
+    border-radius: 12px;
+    border: 2px solid var(--fourth--color); /* Utilisation de fourth--color pour la bordure */
+    overflow: hidden;
+    max-width: 200px;
+}
+
+.counterButton {
+    background: var(--tertiary-color); /* Utilisation de tertiary-color pour le fond */
+    border: none;
+    padding: 12px 16px;
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--primary-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.counterButton:hover:not(:disabled) {
+    background: var(--primary-color);
+    color: var(--tertiary-color); /* Utilisation de tertiary-color pour le texte */
+}
+
+.counterButton:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.counterInput {
+    border: none;
+    background: transparent;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--secondary-color); /* Utilisation de secondary-color pour le texte */
+    width: 60px;
+    padding: 12px 8px;
+    outline: none;
+}
+
+/* Hints */
+.inputHint {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.hintIcon {
+    font-size: 14px;
+}
+
+.hintText {
+    font-size: 14px;
+    color: var(--secondary-color); /* Utilisation de secondary-color pour le texte d'aide */
+    line-height: 1.4;
+}
+
+/* Image Upload & Preview */
+.imagePreviewGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.imagePreviewCard {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid var(--fourth--color); /* Utilisation de fourth--color pour la bordure */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+.imagePreviewCard:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.previewImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.removeImageButton {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: var(--secondary-color); /* Utilisation de secondary-color pour le fond */
+    color: var(--tertiary-color); /* Utilisation de tertiary-color pour le texte */
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.removeImageButton:hover {
+    background: var(--primary-color); /* Utilisation de primary-color pour le fond */
+    transform: scale(1.1);
+}
+
+.noImagesHint {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px;
+    background: var(--tertiary-color); /* Utilisation de tertiary-color pour le fond */
+    border-radius: 12px;
+    border: 1px dashed var(--primary-color); /* Utilisation de primary-color pour la bordure */
+    color: var(--secondary-color); /* Utilisation de secondary-color pour le texte */
+    font-size: 14px;
+    margin-top: 20px;
+}
+
+.editModeMessage {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px;
+    background: var(--tertiary-color); /* Utilisation de tertiary-color pour le fond */
+    border-radius: 12px;
+    border: 1px solid var(--fourth--color); /* Utilisation de fourth--color pour la bordure */
+    color: var(--secondary-color); /* Utilisation de secondary-color pour le texte */
+    font-size: 14px;
+    margin-top: 20px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        padding: 24px 20px;
+        margin: 0 -20px 20px -20px;
+        border-radius: 0;
+    }
+
+    .sectionTitle {
+        font-size: 24px;
+    }
+
+    .toggleSwitch {
+        max-width: 100%;
+    }
+
+    .counter {
+        max-width: 100%;
+    }
+
+    .imagePreviewGrid {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 20px 16px;
+        margin: 0 -16px 16px -16px;
+    }
+
+    .sectionTitle {
+        font-size: 20px;
+    }
+
+    .sectionDescription {
+        font-size: 14px;
+    }
+
+    .toggleButton {
+        padding: 10px 15px;
+        font-size: 13px;
+    }
+
+    .counterButton {
+        padding: 10px 12px;
+        min-width: 40px;
+        min-height: 40px;
+    }
+
+    .counterInput {
+        width: 50px;
+    }
+
+    .imagePreviewCard {
+        width: 100px;
+        height: 100px;
+    }
+
+    .removeImageButton {
+        width: 24px;
+        height: 24px;
+        font-size: 14px;
+    }
+}
+
+/* Animation d'entrée */
+.container {
+    animation: slideInUp 0.4s ease-out;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Focus amélioré pour l'accessibilité */
+.toggleButton:focus-visible,
+.counterButton:focus-visible,
+.counterInput:focus-visible,
+.removeImageButton:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* États de validation */
+.counterInput:valid {
+    border-color: var(--primary-color); /* Utilisation de primary-color pour les bordures valides */
+}
+
+.counterInput:invalid:not(:placeholder-shown) {
+    border-color: var(--primary-color); /* Utilisation de primary-color pour les bordures invalides */
+}
+
+/* Amélioration des interactions */
+.formGroup:hover .label {
+    color: var(--primary-color);
+}
+
+.toggleSwitch:focus-within {
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); /* Utilisation de primary-color avec opacité pour l'ombre */
+}
+
+.counter:focus-within {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); /* Utilisation de primary-color avec opacité pour l'ombre */
+}
+
+.imagePreviewCard:focus-within {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); /* Utilisation de primary-color avec opacité pour l'ombre */
+}

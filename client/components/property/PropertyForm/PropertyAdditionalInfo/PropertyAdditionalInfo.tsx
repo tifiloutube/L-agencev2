@@ -1,6 +1,6 @@
-'use client'
-
-import PropertyImageUpload from '@/components/property/PropertyImageUpload/PropertyImageUpload'
+"use client"
+import PropertyImageUpload from "@/components/property/PropertyImageUpload/PropertyImageUpload"
+import styles from "./PropertyAdditionalInfo.module.css"
 
 type Props = {
     hasGarage: boolean
@@ -9,7 +9,7 @@ type Props = {
     setFloor: (v: string) => void
     images: string[]
     setImages: (v: string[]) => void
-    mode: 'create' | 'edit'
+    mode: "create" | "edit"
 }
 
 export default function PropertyAdditionalInfo({
@@ -21,82 +21,134 @@ export default function PropertyAdditionalInfo({
                                                    setImages,
                                                    mode,
                                                }: Props) {
+    const handleIncrement = (value: string, setter: (v: string) => void, max = 20) => {
+        const current = Number.parseInt(value) || 0
+        if (current < max) {
+            setter((current + 1).toString())
+        }
+    }
+
+    const handleDecrement = (value: string, setter: (v: string) => void, min = 0) => {
+        const current = Number.parseInt(value) || 0
+        if (current > min) {
+            setter((current - 1).toString())
+        }
+    }
+
+    const handleInputChange = (value: string, setter: (v: string) => void, max = 20) => {
+        const numValue = Number.parseInt(value) || 0
+        if (numValue >= 0 && numValue <= max) {
+            setter(numValue.toString())
+        }
+    }
+
+    const handleRemoveImage = (urlToRemove: string) => {
+        setImages((prev) => prev.filter((imgUrl) => imgUrl !== urlToRemove))
+    }
+
     return (
-        <section>
-            <h2>Informations supplémentaires</h2>
+        <section className={styles.container}>
+            <div className={styles.header}>
+                <h2 className={styles.sectionTitle}>Informations supplémentaires</h2>
+                <p className={styles.sectionDescription}>
+                    Ajoutez des détails complémentaires et des photos pour valoriser votre bien
+                </p>
+            </div>
 
-            <div>
-                <h3>Garage ou place de parking :</h3>
-                <label>
-                    Garage
+            {/* Garage ou parking */}
+            <div className={styles.formGroup}>
+                <div className={styles.labelContainer}>
+                    <label className={styles.label}>
+                        <span className={styles.labelIcon}>🅿️</span>
+                        Garage ou place de parking
+                    </label>
+                </div>
+                <div className={styles.toggleSwitch}>
+                    <button
+                        type="button"
+                        className={`${styles.toggleButton} ${hasGarage ? styles.active : ""}`}
+                        onClick={() => setHasGarage(true)}
+                        aria-pressed={hasGarage}
+                    >
+                        Oui
+                    </button>
+                    <button
+                        type="button"
+                        className={`${styles.toggleButton} ${!hasGarage ? styles.active : ""}`}
+                        onClick={() => setHasGarage(false)}
+                        aria-pressed={!hasGarage}
+                    >
+                        Non
+                    </button>
+                </div>
+            </div>
+
+            {/* Nombre d'étages */}
+            <div className={styles.formGroup}>
+                <div className={styles.labelContainer}>
+                    <label htmlFor="property-floor" className={styles.label}>
+                        <span className={styles.labelIcon}>🪜</span>
+                        Étage du bien
+                    </label>
+                </div>
+                <div className={styles.counter}>
+                    <button
+                        type="button"
+                        onClick={() => handleDecrement(floor, setFloor, 0)}
+                        className={styles.counterButton}
+                        disabled={Number.parseInt(floor) <= 0}
+                        aria-label="Diminuer le nombre d'étages"
+                    >
+                        −
+                    </button>
                     <input
-                        type="checkbox"
-                        checked={hasGarage}
-                        onChange={(e) => setHasGarage(e.target.checked)}
+                        id="property-floor"
+                        type="number"
+                        placeholder="0"
+                        value={floor}
+                        onChange={(e) => handleInputChange(e.target.value, setFloor, 50)}
+                        className={styles.counterInput}
+                        min="0"
+                        max="50"
+                        aria-label="Étage du bien"
                     />
-                    <button className={`button`}>Oui</button>
-                    <button className={`button`}>Non</button>
-                </label>
+                    <button
+                        type="button"
+                        onClick={() => handleIncrement(floor, setFloor, 50)}
+                        className={styles.counterButton}
+                        disabled={Number.parseInt(floor) >= 50}
+                        aria-label="Augmenter le nombre d'étages"
+                    >
+                        +
+                    </button>
+                </div>
+                <div className={styles.inputHint}>
+                    <span className={styles.hintIcon}>💡</span>
+                    <span className={styles.hintText}>Indiquez l'étage où se situe le bien (0 pour rez-de-chaussée)</span>
+                </div>
             </div>
 
-            <div>
-                <h3>Combien d'étage votre bien possède t'il ? :</h3>
-                <button className={`button`}>-</button>
-                <input
-                    placeholder="Étage"
-                    type="number"
-                    value={floor}
-                    onChange={(e) => setFloor(e.target.value)}
-                />
-                <button className={`button`}>+</button>
-            </div>
-
-            <div>
-                <h3>Ajouter des photos :</h3>
-
-                {mode === 'create' && (
+            {/* Ajout de photos */}
+            <div className={styles.formGroup}>
+                <div className={styles.labelContainer}>
+                    <label className={styles.label}>
+                        <span className={styles.labelIcon}>📸</span>
+                        Photos du bien
+                    </label>
+                </div>
+                {mode === "create" && (
                     <>
                         <PropertyImageUpload onImageUploaded={(url) => setImages((prev) => [...prev, url])} />
-
                         {images.length > 0 && (
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginTop: 16 }}>
+                            <div className={styles.imagePreviewGrid}>
                                 {images.map((url, index) => (
-                                    <div
-                                        key={index}
-                                        style={{
-                                            position: 'relative',
-                                            width: 100,
-                                            height: 100,
-                                            borderRadius: 8,
-                                            overflow: 'hidden',
-                                            border: '1px solid #ccc',
-                                        }}
-                                    >
-                                        <img
-                                            src={url}
-                                            alt={`Image ${index + 1}`}
-                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                        />
+                                    <div key={index} className={styles.imagePreviewCard}>
+                                        <img src={url || "/placeholder.svg"} alt={`Image ${index + 1}`} className={styles.previewImage} />
                                         <button
                                             type="button"
-                                            onClick={() =>
-                                                setImages((prev) => prev.filter((img) => img !== url))
-                                            }
-                                            style={{
-                                                position: 'absolute',
-                                                top: 4,
-                                                right: 4,
-                                                background: 'rgba(0,0,0,0.6)',
-                                                color: '#fff',
-                                                border: 'none',
-                                                borderRadius: '50%',
-                                                width: 20,
-                                                height: 20,
-                                                fontSize: 12,
-                                                cursor: 'pointer',
-                                                lineHeight: '20px',
-                                                textAlign: 'center',
-                                            }}
+                                            onClick={() => handleRemoveImage(url)}
+                                            className={styles.removeImageButton}
+                                            aria-label={`Supprimer l'image ${index + 1}`}
                                         >
                                             ×
                                         </button>
@@ -104,7 +156,21 @@ export default function PropertyAdditionalInfo({
                                 ))}
                             </div>
                         )}
+                        {images.length === 0 && (
+                            <div className={styles.noImagesHint}>
+                                <span className={styles.hintIcon}>💡</span>
+                                <span className={styles.hintText}>Ajoutez au moins une photo pour que votre bien soit visible.</span>
+                            </div>
+                        )}
                     </>
+                )}
+                {mode === "edit" && (
+                    <div className={styles.editModeMessage}>
+                        <span className={styles.hintIcon}>ℹ️</span>
+                        <span className={styles.hintText}>
+              La gestion des images en mode édition se fait via une section dédiée.
+            </span>
+                    </div>
                 )}
             </div>
         </section>
