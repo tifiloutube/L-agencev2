@@ -25,7 +25,7 @@ export default function AccountProfile({ user }: Props) {
     const [confirmPassword, setConfirmPassword] = useState("")
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
-    const { showToast } = useToast()
+    const {showToast} = useToast()
     const router = useRouter()
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -35,7 +35,7 @@ export default function AccountProfile({ user }: Props) {
 
         if (newPassword && newPassword !== confirmPassword) {
             setError("Les mots de passe ne correspondent pas.")
-            showToast({ message: "Les mots de passe ne correspondent pas.", type: "error" })
+            showToast({message: "Les mots de passe ne correspondent pas.", type: "error"})
             setLoading(false)
             return
         }
@@ -43,7 +43,7 @@ export default function AccountProfile({ user }: Props) {
         try {
             const res = await fetch("/api/account/update", {
                 method: "PATCH",
-                headers: { "Content-Type": "application/json" },
+                headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({
                     name: name,
                     phone: phone,
@@ -57,25 +57,25 @@ export default function AccountProfile({ user }: Props) {
 
             if (!res.ok) {
                 setError(data.error || "Erreur lors de la mise à jour")
-                showToast({ message: data.error || "Erreur lors de la mise à jour", type: "error" })
+                showToast({message: data.error || "Erreur lors de la mise à jour", type: "error"})
                 return
             }
 
             if (data.logout) {
-                showToast({ message: "Email modifié. Déconnexion en cours..." })
-                await signOut({ redirect: false })
+                showToast({message: "Email modifié. Déconnexion en cours..."})
+                await signOut({redirect: false})
                 router.push("/login")
                 return
             }
 
-            showToast({ message: "Profil mis à jour" })
+            showToast({message: "Profil mis à jour"})
             setNewPassword("")
             setConfirmPassword("")
             // No need to reset name, phone, email as they are bound to state and will reflect the updated user prop on re-render if needed
         } catch (err) {
             console.error(err)
             setError("Une erreur est survenue")
-            showToast({ message: "Une erreur est survenue", type: "error" })
+            showToast({message: "Une erreur est survenue", type: "error"})
         } finally {
             setLoading(false)
         }
@@ -188,3 +188,4 @@ export default function AccountProfile({ user }: Props) {
             </form>
         </section>
     )
+}
