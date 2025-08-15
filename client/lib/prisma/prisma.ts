@@ -4,7 +4,6 @@ const globalForPrisma = globalThis as unknown as {
     prisma: PrismaClient | undefined
 }
 
-// Singleton pour éviter les multiples instances en dev
 export const prisma =
     globalForPrisma.prisma ??
     new PrismaClient({

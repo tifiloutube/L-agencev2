@@ -3,65 +3,90 @@
 import Link from 'next/link'
 import { useSession, signOut } from 'next-auth/react'
 import { usePathname } from 'next/navigation'
-import { useState } from 'react'
+import { useState, FocusEvent } from 'react'
 import styles from './Header.module.css'
 
 export default function Header() {
     const { data: session } = useSession()
     const pathname = usePathname()
-    const [isHovered, setIsHovered] = useState(false)
+    const [isOpen, setIsOpen] = useState(false)
 
     const isActive = (href: string) => pathname === href
+
+    const handleBlur = (e: FocusEvent<HTMLDivElement>) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node)) setIsOpen(false)
+    }
 
     return (
         <div
             className={styles.wrapper}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            onMouseEnter={() => setIsOpen(true)}
+            onMouseLeave={() => setIsOpen(false)}
+            onFocus={() => setIsOpen(true)}
+            onBlur={handleBlur}
         >
-            <header className={`${styles.header} ${isHovered ? styles.headerVisible : ''}`}>
-                <nav className={styles.nav}>
-                    <Link
-                        href="/"
-                        className={`${styles.navItem} ${isActive('/') ? styles.active : ''}`}
-                    >
-                        Acceuil
-                    </Link>
-
-                    <Link
-                        href="/properties"
-                        className={`${styles.navItem} ${isActive('/properties') ? styles.active : ''}`}
-                    >
-                        Biens
-                    </Link>
-
-                    {session?.user && (
-                        <>
+            <header
+                role="banner"
+                className={`${styles.header} ${isOpen ? styles.headerVisible : ''}`}
+            >
+                <nav className={styles.nav} aria-label="Navigation principale">
+                    <ul className={styles.list} role="list">
+                        <li>
                             <Link
-                                href="/account"
-                                className={`${styles.navItem} ${styles.link} ${isActive('/account') ? styles.active : ''}`}
+                                href="/"
+                                aria-current={isActive('/') ? 'page' : undefined}
+                                className={`${styles.navItem} ${isActive('/') ? styles.active : ''}`}
                             >
-                                Mon compte
+                                Accueil
                             </Link>
-                            <button
-                                onClick={() => signOut({ callbackUrl: '/' })}
-                                className={`${styles.navItem} ${styles.logout}`}
-                            >
-                                Déconnexion
-                            </button>
-                        </>
-                    )}
+                        </li>
 
-                    {!session?.user && (
-                        <Link
-                            href="/login"
-                            className={`${styles.navItem} ${isActive('/login') ? styles.active : ''}`}
-                        >
-                            Connexion
-                        </Link>
-                    )}
+                        <li>
+                            <Link
+                                href="/properties"
+                                aria-current={isActive('/properties') ? 'page' : undefined}
+                                className={`${styles.navItem} ${isActive('/properties') ? styles.active : ''}`}
+                            >
+                                Biens
+                            </Link>
+                        </li>
+
+                        {session?.user ? (
+                            <>
+                                <li>
+                                    <Link
+                                        href="/account"
+                                        aria-current={isActive('/account') ? 'page' : undefined}
+                                        className={`${styles.navItem} ${styles.link} ${isActive('/account') ? styles.active : ''}`}
+                                    >
+                                        Mon compte
+                                    </Link>
+                                </li>
+                                <li>
+                                    <button
+                                        type="button"
+                                        onClick={() => signOut({ callbackUrl: '/' })}
+                                        className={`${styles.navItem} ${styles.logout}`}
+                                    >
+                                        Déconnexion
+                                    </button>
+                                </li>
+                            </>
+                        ) : (
+                            <li>
+                                <Link
+                                    href="/login"
+                                    aria-current={isActive('/login') ? 'page' : undefined}
+                                    className={`${styles.navItem} ${isActive('/login') ? styles.active : ''}`}
+                                >
+                                    Connexion
+                                </Link>
+                            </li>
+                        )}
+                    </ul>
                 </nav>
-                <span className={styles.line}></span>
+
+                <span className={styles.line} aria-hidden="true"></span>
             </header>
         </div>
     )

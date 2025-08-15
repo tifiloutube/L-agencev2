@@ -1,65 +1,55 @@
-'use client';
+'use client'
 
-import Link from 'next/link';
-import Styles from './PropertyGrid.module.css';
-import FavoriteButton from '@/components/property/FavoriteButton/FavoriteButton';
+import Link from 'next/link'
+import Image from 'next/image'
+import Styles from './PropertyGrid.module.css'
+import FavoriteButton from '@/components/property/FavoriteButton/FavoriteButton'
 
 interface Property {
-    id: string;
-    title: string;
-    description: string;
-    city: string;
-    price: number;
-    images: { url: string }[];
-    isFavorite?: boolean;
+    id: string; title: string; description: string; city: string; price: number;
+    images: { url: string }[]; isFavorite?: boolean;
 }
 
-interface Props {
-    properties: Property[];
-    className?: string;
-}
-
-export default function PropertyGrid({ properties, className }: Props) {
-    if (properties.length === 0) {
-        return <p>Aucun bien publié pour le moment.</p>;
-    }
+export default function PropertyGrid({ properties, className }: { properties: Property[]; className?: string; }) {
+    if (properties.length === 0) return <p>Aucun bien publié pour le moment.</p>
 
     return (
-        <section className={`${Styles.propertyGrid} ${className || ''}`}>
+        <section className={`${Styles.propertyGrid} ${className || ''}`} aria-label="Liste des biens">
             <div className={Styles.container}>
-                {properties.map((property) => (
-                    <div key={property.id} className={Styles.card}>
+                {properties.map((p) => (
+                    <article key={p.id} className={Styles.card} aria-labelledby={`title-${p.id}`}>
                         <div className={Styles.imageContainer}>
-                            {property.images[0] && (
-                                <img
-                                    src={property.images[0].url}
-                                    alt={property.title}
-                                    className={Styles.image}
-                                />
+                            {p.images[0] ? (
+                                <Link href={`/properties/${p.id}`} aria-label={`Voir le bien ${p.title}`}>
+                                    <Image
+                                        src={p.images[0].url}
+                                        alt={p.title}
+                                        className={Styles.image}
+                                        width={800}
+                                        height={600}
+                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                    />
+                                </Link>
+                            ) : (
+                                <div className={Styles.imagePlaceholder} aria-hidden="true" />
                             )}
                         </div>
+
                         <div className={Styles.detailsContainer}>
                             <div className={Styles.details}>
-                                <h2 className={Styles.title}>{property.title}</h2>
-                                <p className={Styles.description}>{property.description}</p>
-                                <p className={Styles.meta}>{property.city}</p>
-                                <p className={Styles.meta}>
-                                    {property.price.toLocaleString('fr-FR')} €
-                                </p>
+                                <h2 id={`title-${p.id}`} className={Styles.title}>{p.title}</h2>
+                                <p className={Styles.description}>{p.description}</p>
+                                <p className={Styles.meta}>{p.city}</p>
+                                <p className={Styles.meta}>{p.price.toLocaleString('fr-FR')} €</p>
                             </div>
                             <div className={Styles.actions}>
-                                <Link href={`/properties/${property.id}`} className="button">
-                                    Voir le bien
-                                </Link>
-                                <FavoriteButton
-                                    propertyId={property.id}
-                                    initialIsFavorite={property.isFavorite ?? false}
-                                />
+                                <Link href={`/properties/${p.id}`} className="button">Voir le bien</Link>
+                                <FavoriteButton propertyId={p.id} initialIsFavorite={p.isFavorite ?? false} />
                             </div>
                         </div>
-                    </div>
+                    </article>
                 ))}
             </div>
         </section>
-    );
+    )
 }

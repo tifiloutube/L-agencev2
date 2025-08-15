@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { prisma } from '@/lib/prisma/prisma'
 import { notFound } from 'next/navigation'
 import { getServerSession } from 'next-auth'
@@ -12,20 +13,55 @@ import PropertyMapSection from '@/components/property/PropertyMapSection/Propert
 
 import type { Property, User, PropertyImage } from '@prisma/client'
 
-type Props = {
-    params: { id: string }
-}
+type Props = { params: { id: string } }
 
 type FullProperty = Property & {
     user: User
     images: PropertyImage[]
 }
 
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+    const prop = await prisma.property.findUnique({
+        where: { id: params.id },
+        select: { id: true, title: true, city: true, country: true, description: true, price: true, status: true, transactionType: true, images: { select: { url: true }, take: 1 } },
+    })
+
+    if (!prop || prop.status !== 'PUBLISHED') {
+        return { title: 'Bien non trouvé | La Crémaillère', description: "Ce bien n'est plus disponible." }
+    }
+
+    const txLabel = prop.transactionType === 'vente' ? 'À vendre' : prop.transactionType === 'location' ? 'À louer' : ''
+    const where = prop.city ? ` à ${prop.city}` : prop.country ? ` en ${prop.country}` : ''
+    const title = `${prop.title} — ${txLabel}${where} | La Crémaillère`
+    const desc =
+        (prop.description?.slice(0, 155) ?? `${txLabel}${where}.`) +
+        (prop.price ? ` Prix : ${prop.price.toLocaleString('fr-FR')} €.` : '')
+    const ogImg = prop.images[0]?.url || '/og-default.jpg'
+
+    return {
+        title,
+        description: desc.trim(),
+        alternates: { canonical: `/properties/${prop.id}` },
+        openGraph: {
+            type: 'article',
+            url: `/properties/${prop.id}`,
+            title,
+            description: desc.trim(),
+            images: [{ url: ogImg }],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title,
+            description: desc.trim(),
+            images: [ogImg],
+        },
+    }
+}
+
 export default async function PropertyDetailPage({ params }: Props) {
     const session = await getServerSession(authOptions)
 
     let isFavorite = false
-
     if (session?.user?.id) {
         const favorite = await prisma.favorite.findUnique({
             where: {
@@ -38,20 +74,42 @@ export default async function PropertyDetailPage({ params }: Props) {
         isFavorite = !!favorite
     }
 
-    const property = await prisma.property.findUnique({
+    const property = (await prisma.property.findUnique({
         where: { id: params.id },
-        include: {
-            images: true,
-            user: true,
-        },
-    }) as FullProperty
+        include: { images: true, user: true },
+    })) as FullProperty | null
 
     if (!property || property.status !== 'PUBLISHED') {
         notFound()
     }
 
+    const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'RealEstateListing',
+        name: property.title,
+        description: property.description,
+        url: `/properties/${property.id}`,
+        image: property.images?.map((i) => i.url) ?? [],
+        address: {
+            '@type': 'PostalAddress',
+            streetAddress: property.address ?? undefined,
+            addressLocality: property.city ?? undefined,
+            postalCode: property.zipCode ?? undefined,
+            addressCountry: property.country ?? undefined,
+        },
+        offers: {
+            '@type': 'Offer',
+            priceCurrency: 'EUR',
+            price: property.price,
+            availability: 'https://schema.org/InStock',
+        },
+        areaServed: property.city ?? property.country ?? undefined,
+    }
+
     return (
-        <main className="wrapper">
+        <div className="wrapper" role="region">
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+
             <PropertyHeader title={property.title} />
 
             <PropertyGalleryAndSummary
@@ -113,7 +171,7 @@ export default async function PropertyDetailPage({ params }: Props) {
             </section>
 
             {property.latitude !== null && property.longitude !== null && (
-                <section className={styles.map}>
+                <section className={styles.map} aria-label="Localisation du bien">
                     <PropertyMapSection
                         id={property.id}
                         title={property.title}
@@ -123,6 +181,6 @@ export default async function PropertyDetailPage({ params }: Props) {
                     />
                 </section>
             )}
-        </main>
+        </div>
     )
 }

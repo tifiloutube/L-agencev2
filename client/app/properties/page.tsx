@@ -1,7 +1,54 @@
+import type { Metadata } from 'next'
 import { prisma } from '@/lib/prisma/prisma'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth/auth'
 import PropertyPageContent from '@/components/property/PropertyPageContent/PropertyPageContent'
+
+export function generateMetadata(
+    { searchParams }: { searchParams: Record<string, string | string[] | undefined> }
+): Metadata {
+    const tx =
+        typeof searchParams.transactionType === 'string' &&
+        ['vente', 'location'].includes(searchParams.transactionType)
+            ? (searchParams.transactionType as 'vente' | 'location')
+            : undefined
+
+    const city = typeof searchParams.city === 'string' ? searchParams.city : undefined
+    const country = typeof searchParams.country === 'string' ? searchParams.country : undefined
+    const type = typeof searchParams.type === 'string' ? searchParams.type : undefined
+
+    const parts: string[] = []
+    if (type) parts.push(type)
+    parts.push('Biens')
+    if (tx === 'vente') parts.push('à vendre')
+    if (tx === 'location') parts.push('à louer')
+    if (city) parts.push(`à ${city}`)
+    else if (country) parts.push(`en ${country}`)
+
+    const title = `${parts.join(' ')} | La Crémaillère`
+    const desc = `Explorez ${
+        type ? `${type.toLowerCase()} ` : 'les biens '
+    }${tx === 'vente' ? 'à vendre' : tx === 'location' ? 'à louer' : ''}${
+        city ? ` à ${city}` : country ? ` en ${country}` : ''
+    }. Filtrez par prix, surface, pièces et plus.`.replace(/\s+/g, ' ').trim()
+
+    return {
+        title,
+        description: desc,
+        alternates: { canonical: '/properties' },
+        openGraph: {
+            title,
+            description: desc,
+            url: '/properties',
+            type: 'website',
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title,
+            description: desc,
+        },
+    }
+}
 
 export default async function PropertiesPage({
                                                  searchParams,

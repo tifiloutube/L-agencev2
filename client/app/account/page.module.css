@@ -1,18 +1,17 @@
 .pageContainer {
     min-height: 100vh;
-    background: var(--tertiary-color); /* Fond général de la page */
-    padding-top: 40px; /* Espace en haut de la page */
-    padding-bottom: 40px; /* Espace en bas de la page */
+    background: var(--tertiary-color);
+    padding-top: 40px;
+    padding-bottom: 40px;
 }
 
 .mainContent {
     display: flex;
     flex-direction: column;
-    gap: 40px; /* Espacement entre les sections principales */
-    grid-column: 1 / -1; /* Prend toute la largeur du wrapper */
+    gap: 40px;
+    grid-column: 1 / -1;
 }
 
-/* Welcome Section */
 .welcomeSection {
     display: flex;
     align-items: center;
@@ -32,18 +31,18 @@
 .avatar {
     width: 90px;
     height: 90px;
-    background: var(--tertiary-color); /* Fond clair pour l'avatar */
+    background: var(--tertiary-color);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    border: 3px solid var(--primary-color); /* Bordure accentuée */
+    border: 3px solid var(--primary-color);
 }
 
 .avatarIcon {
-    font-size: 36px; /* Taille de l'icône Lucide React */
-    color: var(--secondary-color); /* Couleur sombre pour l'icône */
+    font-size: 36px;
+    color: var(--secondary-color);
 }
 
 .welcomeText {
@@ -56,21 +55,20 @@
     font-family: "Sansation", sans-serif;
     font-size: 36px;
     margin: 0;
-    color: var(--secondary-color); /* Texte sombre */
+    color: var(--secondary-color);
 }
 
 .userName {
-    color: var(--primary-color); /* Couleur primaire pour le nom */
+    color: var(--primary-color);
     font-weight: bold;
 }
 
 .welcomeSubtitle {
     font-size: 18px;
-    color: var(--neutral-color); /* Texte neutre */
+    color: var(--secondary-color);
     margin: 0;
 }
 
-/* Quick Stats */
 .quickStats {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -99,13 +97,13 @@
 }
 
 .statIcon {
-    font-size: 32px; /* Taille de l'icône Lucide React */
-    color: var(--primary-color); /* Couleur primaire pour les icônes */
+    font-size: 32px;
+    color: var(--primary-color);
     transition: color 0.3s ease;
 }
 
 .stat:hover .statIcon {
-    color: white; /* Icône blanche au survol */
+    color: white;
 }
 
 .statContent {
@@ -124,28 +122,26 @@
 }
 
 .stat:hover .statNumber {
-    color: white; /* Nombre blanc au survol */
+    color: white;
 }
 
 .statLabel {
     font-size: 14px;
-    color: var(--neutral-color);
+    color: var(--secondary-color);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     transition: color 0.3s ease;
 }
 
 .stat:hover .statLabel {
-    color: white; /* Label blanc au survol */
+    color: white;
 }
 
-/* Account Client View Wrapper */
 .accountClientViewWrapper {
-    grid-column: 1 / -1; /* S'assure que le composant prend toute la largeur */
+    grid-column: 1 / -1;
     animation: fadeIn 0.9s ease-out;
 }
 
-/* Responsive */
 @media (max-width: 1024px) {
     .welcomeSection {
         flex-direction: column;
@@ -191,7 +187,7 @@
     }
 
     .welcomeSection {
-        margin: 0 -20px; /* Étend sur les bords */
+        margin: 0 -20px;
         border-radius: 0;
         border-left: none;
         border-right: none;
@@ -216,9 +212,9 @@
     }
 
     .quickStats {
-        grid-template-columns: 1fr; /* Une colonne sur mobile */
+        grid-template-columns: 1fr;
         gap: 15px;
-        margin: 0 -20px; /* Étend sur les bords */
+        margin: 0 -20px;
     }
 
     .stat {
@@ -226,13 +222,13 @@
         border-left: none;
         border-right: none;
         padding: 15px;
-        flex-direction: row; /* Revenir à une ligne pour les stats */
+        flex-direction: row;
         justify-content: center;
         gap: 15px;
     }
 
     .statContent {
-        align-items: flex-start; /* Aligner le texte à gauche */
+        align-items: flex-start;
     }
 
     .statNumber {
@@ -302,7 +298,6 @@
     }
 }
 
-/* Animations */
 @keyframes fadeIn {
     from {
         opacity: 0;

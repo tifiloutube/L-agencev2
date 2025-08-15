@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth/auth"
 import { prisma } from "@/lib/prisma/prisma"
@@ -5,6 +6,13 @@ import { redirect } from "next/navigation"
 import { enforceUserPropertyQuota } from "@/lib/services/enforceUserPropertyQuota"
 import styles from "./page.module.css"
 import AccountClientView from "@/components/account/AccountClientView/AccountClientView"
+
+export const metadata: Metadata = {
+    title: 'Mon compte | La Crémaillère',
+    description: 'Gérez votre profil, vos favoris, vos discussions et vos biens immobiliers.',
+    robots: { index: false, follow: false },
+    alternates: { canonical: '/account' },
+}
 
 export default async function AccountPage() {
     const session = await getServerSession(authOptions)

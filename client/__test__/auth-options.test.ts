@@ -1,109 +1,120 @@
-import { authOptions } from '@/lib/auth/auth'
-import { prisma } from '@/lib/prisma/prisma'
-import bcrypt from 'bcryptjs'
+/**
+ * __test__/auth-options.test.ts
+ * - Vérifie la config NextAuth (providers/session/pages)
+ * - Teste la logique d’auth via authorizeCredentials (user introuvable, mauvais mdp, OK)
+ * - Mocks de prisma & bcryptjs alignés sur tes imports (default pour bcryptjs)
+ */
 
-// Neutralise l'adapter (pas d'I/O)
+import { jest } from '@jest/globals'
+
+// Mocks AVANT import des modules testés
 jest.mock('@next-auth/prisma-adapter', () => ({
     PrismaAdapter: jest.fn(() => ({})),
 }))
 
-// Mock léger de bcrypt
+jest.mock('@/lib/prisma/prisma', () => ({
+    prisma: {
+        user: { findUnique: jest.fn() },
+    },
+}))
+
 jest.mock('bcryptjs', () => ({
     __esModule: true,
     default: { compare: jest.fn() },
 }))
 
-function getCredentialsProvider(): any {
-    const providers = (authOptions as any).providers as any[]
-    const cred = providers[0]
-    if (!cred || cred.id !== 'credentials') throw new Error('Credentials provider non trouvé')
-    return cred
-}
+// Imports APRES mocks
+let authOptions: any
+let authorizeCredentials: any
+let prismaMock: any
+let bcryptMock: any
 
-describe('lib/auth/auth.ts — authOptions', () => {
-    beforeEach(() => {
-        jest.clearAllMocks()
-        jest.restoreAllMocks()
-    })
+beforeAll(async () => {
+    const authMod = await import('@/lib/auth/auth')
+    authOptions = authMod.authOptions
+    authorizeCredentials = authMod.authorizeCredentials
 
-    it('expose une config NextAuth valide', () => {
+    const prismaMod = await import('@/lib/prisma/prisma')
+    prismaMock = prismaMod.prisma
+
+    const b = await import('bcryptjs')
+    bcryptMock = b.default // <-- default export avec compare()
+})
+
+beforeEach(() => {
+    jest.clearAllMocks()
+})
+
+describe('authOptions — config NextAuth', () => {
+    it('expose une config valide', () => {
         expect(authOptions).toBeDefined()
-        expect(Array.isArray((authOptions as any).providers)).toBe(true)
-        expect((authOptions as any).session?.strategy).toBe('jwt')
-        expect((authOptions as any).pages?.signIn).toBe('/login')
+        expect(Array.isArray(authOptions.providers)).toBe(true)
+        expect(authOptions.session?.strategy).toBe('jwt')
+        expect(authOptions.pages?.signIn).toBe('/login')
+    })
+})
+
+describe('authorizeCredentials (logique d’auth)', () => {
+    it('retourne null si credentials manquants', async () => {
+        const r1 = await authorizeCredentials(undefined)
+        const r2 = await authorizeCredentials({ email: '', password: '' })
+        expect(r1).toBeNull()
+        expect(r2).toBeNull()
+        expect(prismaMock.user.findUnique).not.toHaveBeenCalled()
+        expect(bcryptMock.compare).not.toHaveBeenCalled()
     })
 
-    describe('CredentialsProvider.authorize', () => {
-        it('retourne null si credentials manquants', async () => {
-            const cred = getCredentialsProvider()
+    it('retourne null si user introuvable', async () => {
+        prismaMock.user.findUnique.mockResolvedValueOnce(null)
 
-            const r1 = await cred.authorize?.(undefined)
-            expect(r1).toBeNull()
-
-            const r2 = await cred.authorize?.({ email: '', password: '' })
-            expect(r2).toBeNull()
-        })
-
-        it('retourne null si user introuvable', async () => {
-            const cred = getCredentialsProvider()
-                // Remplace directement la méthode par un jest.fn()
-            ;(prisma.user as any).findUnique = jest.fn().mockResolvedValue(null)
-
-            const res = await cred.authorize?.({ email: 'a@b.com', password: 'x' })
-            expect(res).toBeNull()
-
-            // On peut vérifier l'appel sur NOTRE fn mockée (pas un spy sur une autre instance)
-            expect((prisma.user as any).findUnique).toHaveBeenCalledWith({
-                where: { email: 'a@b.com' },
-            })
-        })
-
-        it('retourne null si mot de passe invalide', async () => {
-            const cred = getCredentialsProvider()
-            ;(prisma.user as any).findUnique = jest.fn().mockResolvedValue({
-                id: 'u1',
-                email: 'a@b.com',
-                name: 'Alice',
-                password: 'HASH',
-            })
-            ;(bcrypt as any).compare.mockResolvedValue(false)
-
-            const res = await cred.authorize?.({ email: 'a@b.com', password: 'wrong' })
-            expect(res).toBeNull()
-            expect((bcrypt as any).compare).toHaveBeenCalledWith('wrong', 'HASH')
-        })
-
-        it('retourne (id, email, name) si credentials valides', async () => {
-            const cred = getCredentialsProvider()
-            ;(prisma.user as any).findUnique = jest.fn().mockResolvedValue({
-                id: 'u1',
-                email: 'a@b.com',
-                name: 'Alice',
-                password: 'HASH',
-            })
-            ;(bcrypt as any).compare.mockResolvedValue(true)
-
-            const res = await cred.authorize?.({ email: 'a@b.com', password: 'secret' })
-            expect(res).toEqual({ id: 'u1', email: 'a@b.com', name: 'Alice' })
-            expect((bcrypt as any).compare).toHaveBeenCalledWith('secret', 'HASH')
-        })
+        const res = await authorizeCredentials({ email: 'a@b.com', password: 'x' })
+        expect(res).toBeNull()
+        expect(prismaMock.user.findUnique).toHaveBeenCalledWith({ where: { email: 'a@b.com' } })
     })
 
-    describe('callbacks.session', () => {
-        it('ajoute user.id à la session quand token.sub existe', async () => {
-            const out = await (authOptions as any).callbacks.session({
-                session: { user: {} },
-                token: { sub: 'u1' },
-            })
-            expect(out.user.id).toBe('u1')
+    it('retourne null si mot de passe invalide', async () => {
+        prismaMock.user.findUnique.mockResolvedValueOnce({
+            id: 'u1',
+            email: 'a@b.com',
+            name: 'Alice',
+            password: 'HASH',
         })
+        bcryptMock.compare.mockResolvedValueOnce(false)
 
-        it('ne crashe pas quand token est absent', async () => {
-            const out = await (authOptions as any).callbacks.session({
-                session: { user: {} },
-                token: undefined,
-            })
-            expect(out.user).toEqual({})
+        const res = await authorizeCredentials({ email: 'a@b.com', password: 'wrong' })
+        expect(res).toBeNull()
+        expect(bcryptMock.compare).toHaveBeenCalledWith('wrong', 'HASH')
+    })
+
+    it('retourne (id, email, name) si credentials valides', async () => {
+        prismaMock.user.findUnique.mockResolvedValueOnce({
+            id: 'u1',
+            email: 'a@b.com',
+            name: 'Alice',
+            password: 'HASH',
         })
+        bcryptMock.compare.mockResolvedValueOnce(true)
+
+        const res = await authorizeCredentials({ email: 'a@b.com', password: 'secret' })
+        expect(bcryptMock.compare).toHaveBeenCalledWith('secret', 'HASH')
+        expect(res).toEqual({ id: 'u1', email: 'a@b.com', name: 'Alice' })
+    })
+})
+
+describe('callbacks.session', () => {
+    it('ajoute user.id lorsque token.sub existe', async () => {
+        const out = await authOptions.callbacks.session({
+            session: { user: {} },
+            token: { sub: 'u1' },
+        })
+        expect(out.user.id).toBe('u1')
+    })
+
+    it("ne crashe pas quand token est absent", async () => {
+        const out = await authOptions.callbacks.session({
+            session: { user: {} },
+            token: undefined,
+        })
+        expect(out.user).toEqual({})
     })
 })

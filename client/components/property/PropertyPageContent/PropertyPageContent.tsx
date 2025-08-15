@@ -28,7 +28,7 @@ type Props = {
 
 export default function PropertyPageContent({ properties, cities, types, countries }: Props) {
     return (
-        <main className="wrapper">
+        <div className="wrapper">
             <h1 className={styles.h1}>
                 Trouvez votre <br />
                 <span className={styles.tag}>chez vous</span>
@@ -48,6 +48,6 @@ export default function PropertyPageContent({ properties, cities, types, countri
             />
 
             <PropertyGrid className={styles.cards} properties={properties} />
-        </main>
+        </div>
     )
 }
