@@ -1,4 +1,3 @@
-// app/page.tsx (ou HomePage.tsx si c'est ta racine)
 import Link from 'next/link'
 import styles from './page.module.css'
 
@@ -43,7 +42,6 @@ export default function HomePage() {
                     </div>
 
                     <div className={styles.cardsGrid}>
-                        {/* Acheteurs */}
                         <article className={`${styles.card} ${styles.cardBuyers}`} aria-labelledby="buyers-title">
                             <div className={styles.cardHeader}>
                                 <span className={styles.cardIcon} aria-hidden="true" role="img">🔍</span>
@@ -63,7 +61,6 @@ export default function HomePage() {
                             </div>
                         </article>
 
-                        {/* Locataires */}
                         <article className={`${styles.card} ${styles.cardRenters}`} aria-labelledby="renters-title">
                             <div className={styles.cardHeader}>
                                 <span className={styles.cardIcon} aria-hidden="true" role="img">📍</span>
@@ -83,7 +80,6 @@ export default function HomePage() {
                             </div>
                         </article>
 
-                        {/* Propriétaires */}
                         <article className={`${styles.card} ${styles.cardOwners}`} aria-labelledby="owners-title">
                             <div className={styles.cardHeader}>
                                 <span className={styles.cardIcon} aria-hidden="true" role="img">🔑</span>
