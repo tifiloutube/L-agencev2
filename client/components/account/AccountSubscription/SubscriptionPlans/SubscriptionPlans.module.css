@@ -23,7 +23,7 @@
 
 .active {
     border-color: var(--primary-color);
-    background-color: rgba(249, 166, 0, 0.4); /* 40% opaque */
+    background-color: rgba(37,99,235, 0.4);
 }
 
 .header {
