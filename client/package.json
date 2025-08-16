@@ -7,6 +7,8 @@
     "stripe": "stripe listen --forward-to localhost:3000/api/stripe/webhook",
     "prisma": "npx prisma studio",
     "build": "next build",
+    "vercel-build": "prisma generate && next build",
+    "postinstall": "prisma generate",
     "start": "next start -p 3000",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
