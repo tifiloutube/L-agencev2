@@ -44,7 +44,9 @@ export default function PropertyGalleryAndSummary({images, address, zipCode, cit
 
                         {isLocation ? (
                             <span className={styles.priceDetail}>/ mois</span>
-                        ) : (
+                        )
+                            :
+                            (
                             <span className={styles.priceDetail}>
                                 ({Math.round(price / surface).toLocaleString('fr-FR')} € / m²)
                             </span>
