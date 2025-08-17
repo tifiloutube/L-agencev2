@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🏡 L’Agence — Plateforme de gestion immobilière
 
-## Getting Started
+## 📖 Description
 
-First, run the development server:
+**L’Agence** est une plateforme **SaaS** de mise en relation dans l’immobilier.  
+Elle permet aux utilisateurs de rechercher des biens, publier des annonces, contacter des agents, simuler des crédits et gérer des abonnements.
 
+Le projet est développé en **Next.js** avec une **architecture serverless**, et repose sur :
+
+- **PostgreSQL (Neon)**
+- **Prisma**
+- **Stripe** (paiements)
+- **Mailjet** (emails)
+- **Vercel** (déploiement & stockage)
+
+---
+
+## 🏗️ Architecture
+
+- **Frontend & Backend** : Next.js 14 (App Router)
+- **ORM** : Prisma
+- **Base de données** : PostgreSQL hébergée sur Neon
+- **Authentification** : NextAuth (Email + OAuth)
+- **Paiements** : Stripe
+- **Emails** : Mailjet
+- **Stockage fichiers** : Vercel Blob Storage
+- **Monitoring** : Sentry
+- **CI/CD** : GitHub Actions + Vercel
+
+---
+
+## 📂 Organisation du code
+
+app/ # Pages Next.js (App Router)
+components/ # Composants réutilisables (UI, formulaires, etc.)
+lib/ # Helpers, utils et configs
+prisma/ # Schéma Prisma + migrations
+tests/ # Tests unitaires Jest
+
+yaml
+Copier
+Modifier
+
+---
+
+## ⚙️ Installation locale
+
+### 1. Prérequis
+- Node.js >= 18
+- Yarn
+
+2. Installer les dépendances
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+   yarn install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3. Générer le client Prisma & exécuter les migrations
+```bash
+   yarn prisma generate
+   yarn prisma migrate dev
+```
 
-You can start editing the page by modifying `app/page.ts`. The page auto-updates as you edit the file.
+4. Lancer le projet
+```bash
+yarn dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+👉 Disponible sur http://localhost:3000.
